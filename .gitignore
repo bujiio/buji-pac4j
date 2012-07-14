@@ -3,4 +3,5 @@
 .settings/
 target/
 test-output/
+bin/
 
