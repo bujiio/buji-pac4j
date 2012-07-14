@@ -2,17 +2,25 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
+  <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>io.buji</groupId>
     <artifactId>buji-parent</artifactId>
     <version>1</version>
   </parent>
 
-  <modelVersion>4.0.0</modelVersion>
   <artifactId>buji-oauth</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
   <name>Apache Shiro :: Support :: OAuth</name>
   <packaging>bundle</packaging>
-
+  
+  <properties>
+    <shiroVersion>1.2.0</shiroVersion>
+    <servletVersion>2.5</servletVersion>
+    <slf4jVersion>1.6.4</slf4jVersion>
+    <junitVersion>4.8.2</junitVersion>
+  </properties>
+  
   <scm>
     <connection>scm:git:git@github.com:bujiio/buji-oauth.git</connection>
     <developerConnection>scm:git:git@github.com:bujiio/buji-oauth.git</developerConnection>
@@ -23,20 +31,28 @@
     <dependency>
       <groupId>org.apache.shiro</groupId>
       <artifactId>shiro-web</artifactId>
+      <version>${shiroVersion}</version>
     </dependency>
     <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>servlet-api</artifactId>
+      <version>${servletVersion}</version>
     </dependency>
     <dependency>
       <groupId>org.scribe</groupId>
       <artifactId>scribe-up</artifactId>
       <version>1.1.0-SNAPSHOT</version>
     </dependency>
-		<!-- test -->
+    <!-- test -->
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>${junitVersion}</version>
+    </dependency>    
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-log4j12</artifactId>
+      <version>${slf4jVersion}</version>
     </dependency>
   </dependencies>
 
