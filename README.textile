@@ -1,0 +1,31 @@
+h2. What is buji-oauth ?
+
+**buji-oauth is a web library to add OAuth client support to the Apache Shiro project**. It means that you can create a web application for Facebook, Twitter... : when trying to access a protected area, the user is redirected to the OAuth provider to login and when redirected back to the application, the user is authenticated and its profile is retrieved form the OAuth provider and therefore available in the Shiro application.
+It's based on "ScribeUP":https://github.com/leleuj/scribe-up and available under the Apache 2 license.
+
+h2. OAuth providers supported
+
+| Facebook | Github | Google | LinkedIn | Twitter | Windows Live | WordPress | Yahoo |
+
+Look at the "description of the providers and profiles":https://github.com/leleuj/scribe-up/wiki/Description-of-providers-and-profiles. Follow the guide to "extend or add a new provider":https://github.com/leleuj/scribe-up/wiki/Extend-or-add-a-new-provider.
+
+h2. How to configure and use it ?
+
+* First step is "to setup the configuration":https://github.com/bujiio/buji-oauth/wiki/configuration for your OAuth provider.
+* Then you can "use the Shiro security context":https://github.com/bujiio/buji-oauth/wiki/use-it built from the OAuth provider.
+
+To help you, a demo is available at : "https://github.com/leleuj/scribe-up-shiro-demo":https://github.com/leleuj/scribe-up-shiro-demo.
+
+h2. Versions
+
+<pre><code><dependency>
+   <groupId>io.buji</groupId>
+   <artifactId>buji-oauth</artifactId>
+   <version>1.0.0-SNAPSHOT</version>
+</dependency>
+</code></pre>
+The version 1.0.0-SNAPSHOT is the first version of this project. It's stable even if being still under development. It's available on "Sonatype snapshots repository":https://oss.sonatype.org/content/repositories/snapshots/.
+
+h2. Contact
+
+For any question or problem, don't hesitate to post it on the "Shiro user mailing list":http://shiro-user.582556.n2.nabble.com/ or on the "Shiro developer mailing list":http://shiro-developer.582600.n2.nabble.com/.
