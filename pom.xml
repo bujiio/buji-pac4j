@@ -37,6 +37,7 @@
     <servletVersion>2.5</servletVersion>
     <slf4jVersion>1.6.4</slf4jVersion>
     <junitVersion>4.8.2</junitVersion>
+    <scribeUpVersion>1.2.0-SNAPSHOT</scribeUpVersion>
   </properties>
   
   <scm>
@@ -59,7 +60,7 @@
     <dependency>
       <groupId>org.scribe</groupId>
       <artifactId>scribe-up</artifactId>
-      <version>1.1.0-SNAPSHOT</version>
+      <version>${scribeUpVersion}</version>
     </dependency>
     <!-- test -->
     <dependency>
