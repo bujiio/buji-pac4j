@@ -5,7 +5,7 @@ It's based on "ScribeUP":https://github.com/leleuj/scribe-up and available under
 
 h2. OAuth providers supported
 
-| Facebook | Github | Google | LinkedIn | Twitter | Windows Live | WordPress | Yahoo |
+| DropBox | Facebook | Github | Google | LinkedIn | Twitter | Windows Live | WordPress | Yahoo |
 
 Look at the "description of the providers and profiles":https://github.com/leleuj/scribe-up/wiki/Description-of-providers-and-profiles. Follow the guide to "extend or add a new provider":https://github.com/leleuj/scribe-up/wiki/Extend-or-add-a-new-provider.
 
