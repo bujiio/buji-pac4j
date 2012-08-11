@@ -19,7 +19,10 @@
 package io.buji.oauth;
 
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.UnavailableSecurityManagerException;
 import org.scribe.up.session.UserSession;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This implementation uses the Shiro session for the user session.
@@ -29,8 +32,15 @@ import org.scribe.up.session.UserSession;
  */
 public final class ShiroUserSession implements UserSession {
     
+    private static Logger log = LoggerFactory.getLogger(OAuthFilter.class);
+    
     public void setAttribute(String key, Object value) {
-        SecurityUtils.getSubject().getSession().setAttribute(key, value);
+        // TODO : find a better solution
+        try {
+            SecurityUtils.getSubject().getSession().setAttribute(key, value);
+        } catch (UnavailableSecurityManagerException e) {
+            log.warn("Should happen just once at startup in some specific case of Shiro Spring configuration", e);
+        }
     }
     
     public Object getAttribute(String key) {
