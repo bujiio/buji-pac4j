@@ -19,26 +19,35 @@
 package io.buji.oauth.filter;
 
 import io.buji.oauth.ShiroUserSession;
-
 import org.apache.shiro.web.filter.authz.RolesAuthorizationFilter;
 import org.scribe.up.provider.OAuthProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class specializes the RolesAuthorizationFilter to have a login url which is the authorization url of the OAuth provider.
- * 
+ *
  * @author Jerome Leleu
  * @since 1.0.0
  */
 public final class OAuthRolesAuthorizationFilter extends RolesAuthorizationFilter {
-    
+
+    private static Logger log = LoggerFactory.getLogger(OAuthRolesAuthorizationFilter.class);
+
     private OAuthProvider provider;
-    
+
     private ShiroUserSession shiroUserSession = new ShiroUserSession();
-    
+
     public String getLoginUrl() {
-        return provider.getAuthorizationUrl(shiroUserSession);
+        String url = "";
+        try {
+            url = provider.getAuthorizationUrl(shiroUserSession);
+        } catch (Exception e) {
+            log.warn("Should happen just once at startup in some specific case of Shiro Spring configuration. Detail info:\n{}", e.getMessage());
+        }
+        return url;
     }
-    
+
     public void setProvider(OAuthProvider provider) {
         this.provider = provider;
     }
