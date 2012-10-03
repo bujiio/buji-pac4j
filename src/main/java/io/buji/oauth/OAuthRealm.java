@@ -33,6 +33,7 @@ import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.apache.shiro.util.CollectionUtils;
 import org.apache.shiro.util.StringUtils;
 import org.scribe.up.credential.OAuthCredential;
+import org.scribe.up.profile.ProfileHelper;
 import org.scribe.up.profile.UserProfile;
 import org.scribe.up.provider.OAuthProvider;
 import org.slf4j.Logger;
@@ -60,6 +61,8 @@ public class OAuthRealm extends AuthorizingRealm {
     
     public OAuthRealm() {
         setAuthenticationTokenClass(OAuthToken.class);
+        // optimization for CPU / memory consumption
+        ProfileHelper.setKeepRawData(false);
     }
     
     /**
@@ -69,26 +72,26 @@ public class OAuthRealm extends AuthorizingRealm {
      * @throws AuthenticationException if there is an error during authentication.
      */
     @Override
-    protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken)
+    protected AuthenticationInfo doGetAuthenticationInfo(final AuthenticationToken authenticationToken)
         throws AuthenticationException {
-        OAuthToken oauthToken = (OAuthToken) authenticationToken;
+        final OAuthToken oauthToken = (OAuthToken) authenticationToken;
         // token must be provided
         if (oauthToken == null) {
             return null;
         }
         
         // OAuth credential
-        OAuthCredential credential = (OAuthCredential) oauthToken.getCredentials();
+        final OAuthCredential credential = (OAuthCredential) oauthToken.getCredentials();
         log.debug("credential : {}", credential);
         
         // credential should be not null and for the right provider
-        if (credential == null || !provider.getType().equals(credential.getProviderType())) {
+        if (credential == null || !this.provider.getType().equals(credential.getProviderType())) {
             return null;
         }
         
         UserProfile userProfile = null;
         // finish OAuth authentication process : get the user profile
-        userProfile = provider.getUserProfile(credential);
+        userProfile = this.provider.getUserProfile(credential);
         log.debug("userProfile : {}", userProfile);
         if (userProfile == null || !StringUtils.hasText(userProfile.getId())) {
             log.error("Unable to get user profile for OAuth credentials : [{}]", credential);
@@ -97,11 +100,11 @@ public class OAuthRealm extends AuthorizingRealm {
         }
         
         // refresh authentication token with user id
-        String userId = userProfile.getTypedId();
+        final String userId = userProfile.getTypedId();
         oauthToken.setUserId(userId);
         // create simple authentication info
-        List<? extends Object> principals = CollectionUtils.asList(userId, userProfile);
-        PrincipalCollection principalCollection = new SimplePrincipalCollection(principals, getName());
+        final List<? extends Object> principals = CollectionUtils.asList(userId, userProfile);
+        final PrincipalCollection principalCollection = new SimplePrincipalCollection(principals, getName());
         return new SimpleAuthenticationInfo(principalCollection, credential);
     }
     
@@ -112,13 +115,13 @@ public class OAuthRealm extends AuthorizingRealm {
      * @return the AuthorizationInfo associated with this principals.
      */
     @Override
-    protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
+    protected AuthorizationInfo doGetAuthorizationInfo(final PrincipalCollection principals) {
         // create simple authorization info
-        SimpleAuthorizationInfo simpleAuthorizationInfo = new SimpleAuthorizationInfo();
+        final SimpleAuthorizationInfo simpleAuthorizationInfo = new SimpleAuthorizationInfo();
         // add default roles
-        simpleAuthorizationInfo.addRoles(split(defaultRoles));
+        simpleAuthorizationInfo.addRoles(split(this.defaultRoles));
         // add default permissions
-        simpleAuthorizationInfo.addStringPermissions(split(defaultPermissions));
+        simpleAuthorizationInfo.addStringPermissions(split(this.defaultPermissions));
         return simpleAuthorizationInfo;
     }
     
@@ -128,11 +131,11 @@ public class OAuthRealm extends AuthorizingRealm {
      * @param s the input string
      * @return the list of not empty and trimmed strings
      */
-    protected List<String> split(String s) {
-        List<String> list = new ArrayList<String>();
-        String[] elements = StringUtils.split(s, ',');
+    protected List<String> split(final String s) {
+        final List<String> list = new ArrayList<String>();
+        final String[] elements = StringUtils.split(s, ',');
         if (elements != null && elements.length > 0) {
-            for (String element : elements) {
+            for (final String element : elements) {
                 if (StringUtils.hasText(element)) {
                     list.add(element.trim());
                 }
@@ -141,15 +144,15 @@ public class OAuthRealm extends AuthorizingRealm {
         return list;
     }
     
-    public void setProvider(OAuthProvider provider) {
+    public void setProvider(final OAuthProvider provider) {
         this.provider = provider;
     }
     
-    public void setDefaultRoles(String defaultRoles) {
+    public void setDefaultRoles(final String defaultRoles) {
         this.defaultRoles = defaultRoles;
     }
     
-    public void setDefaultPermissions(String defaultPermissions) {
+    public void setDefaultPermissions(final String defaultPermissions) {
         this.defaultPermissions = defaultPermissions;
     }
 }
