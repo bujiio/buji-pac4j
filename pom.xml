@@ -37,7 +37,7 @@
     <servletVersion>2.5</servletVersion>
     <slf4jVersion>1.6.4</slf4jVersion>
     <junitVersion>4.8.2</junitVersion>
-    <scribeUpVersion>1.2.0-SNAPSHOT</scribeUpVersion>
+    <scribeUpVersion>1.2.0-RC1</scribeUpVersion>
   </properties>
   
   <scm>
