@@ -37,7 +37,7 @@
     <servletVersion>2.5</servletVersion>
     <slf4jVersion>1.6.4</slf4jVersion>
     <junitVersion>4.8.2</junitVersion>
-    <scribeUpVersion>1.2.0-RC1</scribeUpVersion>
+    <scribeUpVersion>1.2.0</scribeUpVersion>
   </properties>
   
   <scm>
@@ -94,9 +94,9 @@
             <Export-Package>io.buji.oauth*;version=${project.version}</Export-Package>
             <Import-Package>
               org.apache.shiro*;version="[1.3, 2)",
-              org.scribe.up*;version="[1.1, 1.2)",
+              org.scribe.up*;version="[1.1, 1.3)",
               org.scribe*;version="[1.3,1.4)",
-              org.codehaus.jackson*;version="[1.9, 2.0)",
+              org.codehaus.jackson*;version="[1.9, 2.1)",
               *
             </Import-Package>
           </instructions>
