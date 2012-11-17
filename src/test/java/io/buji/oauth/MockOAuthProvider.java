@@ -20,9 +20,10 @@ package io.buji.oauth;
 
 import java.util.Map;
 
+import org.scribe.model.Token;
 import org.scribe.up.credential.OAuthCredential;
 import org.scribe.up.profile.UserProfile;
-import org.scribe.up.provider.OAuthProvider;
+import org.scribe.up.provider.BaseOAuthProvider;
 import org.scribe.up.session.UserSession;
 
 /**
@@ -31,7 +32,7 @@ import org.scribe.up.session.UserSession;
  * @author Jerome Leleu
  * @since 1.0.0
  */
-public final class MockOAuthProvider implements OAuthProvider {
+public final class MockOAuthProvider extends BaseOAuthProvider {
     
     public final static String TYPE = "mockType";
     
@@ -73,5 +74,40 @@ public final class MockOAuthProvider implements OAuthProvider {
     
     public OAuthCredential getCredential(UserSession userSession, Map<String, String[]> parameters) {
         return null;
+    }
+
+	@Override
+	protected BaseOAuthProvider newProvider() {
+		return null;
+	}
+
+	@Override
+	protected void internalInit() {
+	}
+
+	@Override
+	protected Token getAccessToken(OAuthCredential credential) {
+		return null;
+	}
+
+	@Override
+	protected String getProfileUrl() {
+		return null;
+	}
+
+	@Override
+	protected UserProfile extractUserProfile(String body) {
+		return null;
+	}
+
+	@Override
+	protected OAuthCredential extractCredentialFromParameters(
+			UserSession session, Map<String, String[]> parameters) {
+		return null;
+	}
+
+	@Override
+	public String getCallbackUrl() {
+        return "http://someCallbackUrl";
     }
 }

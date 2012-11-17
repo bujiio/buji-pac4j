@@ -19,6 +19,7 @@
 package io.buji.oauth;
 
 import java.io.IOException;
+import java.util.Map;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -29,7 +30,9 @@ import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.filter.authc.AuthenticatingFilter;
 import org.apache.shiro.web.util.WebUtils;
 import org.scribe.up.credential.OAuthCredential;
+import org.scribe.up.profile.ProfileHelper;
 import org.scribe.up.provider.OAuthProvider;
+import org.scribe.up.provider.ProvidersDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,11 +50,16 @@ public final class OAuthFilter extends AuthenticatingFilter {
     // the url where the application is redirected if the OAuth authentication fails
     private String failureUrl;
     
-    // the provider which is used for delegating authentication (Facebook, Twitter...)
-    private OAuthProvider provider;
+    // the providers definition
+    private ProvidersDefinition providersDefinition;
     
     private ShiroUserSession shiroUserSession = new ShiroUserSession();
     
+    public OAuthFilter() {
+        // optimization for CPU / memory consumption
+        ProfileHelper.setKeepRawData(false);
+    }
+
     /**
      * The token created for this authentication is an OAuthToken containing the OAuth credential received after authentication at the OAuth
      * provider. These information are received on the callback url (on which the filter must be configured).
@@ -60,10 +68,13 @@ public final class OAuthFilter extends AuthenticatingFilter {
      * @param response the outgoing response
      * @throws Exception if there is an error processing the request.
      */
-    @Override
+    @SuppressWarnings("unchecked")
+	@Override
     protected AuthenticationToken createToken(ServletRequest request, ServletResponse response) throws Exception {
-        @SuppressWarnings("unchecked")
-        OAuthCredential credential = provider.getCredential(shiroUserSession, request.getParameterMap());
+        Map<String, String[]> parameters = request.getParameterMap();
+        OAuthProvider provider = providersDefinition.findProvider(parameters);
+        log.debug("provider : {}", provider);
+        OAuthCredential credential = provider.getCredential(shiroUserSession, parameters);
         log.debug("credential : {}", credential);
         return new OAuthToken(credential);
     }
@@ -145,6 +156,12 @@ public final class OAuthFilter extends AuthenticatingFilter {
     }
     
     public void setProvider(OAuthProvider provider) {
-        this.provider = provider;
+        providersDefinition = new ProvidersDefinition(provider);
+        providersDefinition.init();
     }
+
+	public void setProvidersDefinition(ProvidersDefinition providersDefinition) {
+        this.providersDefinition = providersDefinition;
+        this.providersDefinition.init();
+	}
 }

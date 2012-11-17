@@ -36,6 +36,7 @@ import org.scribe.up.credential.OAuthCredential;
 import org.scribe.up.profile.ProfileHelper;
 import org.scribe.up.profile.UserProfile;
 import org.scribe.up.provider.OAuthProvider;
+import org.scribe.up.provider.ProvidersDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,8 +51,8 @@ public class OAuthRealm extends AuthorizingRealm {
     
     private static Logger log = LoggerFactory.getLogger(OAuthRealm.class);
     
-    // the provider which is used for delegating authentication (Facebook, Twitter...)
-    private OAuthProvider provider;
+    // the providers definition
+    private ProvidersDefinition providersDefinition;
     
     // default roles applied to authenticated user
     private String defaultRoles;
@@ -75,6 +76,7 @@ public class OAuthRealm extends AuthorizingRealm {
     protected AuthenticationInfo doGetAuthenticationInfo(final AuthenticationToken authenticationToken)
         throws AuthenticationException {
         final OAuthToken oauthToken = (OAuthToken) authenticationToken;
+        log.debug("oauthToken : {}", oauthToken);
         // token must be provided
         if (oauthToken == null) {
             return null;
@@ -83,15 +85,21 @@ public class OAuthRealm extends AuthorizingRealm {
         // OAuth credential
         final OAuthCredential credential = (OAuthCredential) oauthToken.getCredentials();
         log.debug("credential : {}", credential);
-        
-        // credential should be not null and for the right provider
-        if (credential == null || !this.provider.getType().equals(credential.getProviderType())) {
+        // credential should be not null
+        if (credential == null) {
+            return null;
+        }
+
+        // OAuth provider
+        OAuthProvider provider = providersDefinition.findProvider(credential.getProviderType());
+        log.debug("provider : {}", provider);
+        // no provider found
+        if (provider == null) {
             return null;
         }
         
-        UserProfile userProfile = null;
         // finish OAuth authentication process : get the user profile
-        userProfile = this.provider.getUserProfile(credential);
+         UserProfile userProfile = provider.getUserProfile(credential);
         log.debug("userProfile : {}", userProfile);
         if (userProfile == null || !StringUtils.hasText(userProfile.getId())) {
             log.error("Unable to get user profile for OAuth credentials : [{}]", credential);
@@ -144,11 +152,17 @@ public class OAuthRealm extends AuthorizingRealm {
         return list;
     }
     
-    public void setProvider(final OAuthProvider provider) {
-        this.provider = provider;
+    public void setProvider(OAuthProvider provider) {
+        providersDefinition = new ProvidersDefinition(provider);
+        providersDefinition.init();
     }
-    
-    public void setDefaultRoles(final String defaultRoles) {
+
+	public void setProvidersDefinition(ProvidersDefinition providersDefinition) {
+        this.providersDefinition = providersDefinition;
+        this.providersDefinition.init();
+	}
+
+	public void setDefaultRoles(final String defaultRoles) {
         this.defaultRoles = defaultRoles;
     }
     
