@@ -27,13 +27,6 @@ import org.scribe.up.profile.UserProfile;
  * @since 1.0.0
  */
 public class MockUserProfile extends UserProfile {
-    
-    private static final long serialVersionUID = 3079771089205505215L;
-    
-    public MockUserProfile() {
-    }
-    
-    public MockUserProfile(Object id) {
-        super(id);
-    }
+
+	private static final long serialVersionUID = -1977603390985172554L;    
 }

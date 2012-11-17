@@ -63,9 +63,12 @@ public final class MockOAuthProvider extends BaseOAuthProvider {
         } else if (USER_PROFILE_WITH_EMPTY_ID.equals(token)) {
             return new MockUserProfile();
         } else if (USER_PROFILE_WITHOUT_ATTRIBUTE.equals(token)) {
-            return new MockUserProfile(token);
+        	UserProfile userProfile = new MockUserProfile();
+        	userProfile.setId(token);
+            return userProfile;
         } else if (USER_PROFILE_WITH_ONE_ATTRIBUTE.equals(token)) {
-            MockUserProfile userProfile = new MockUserProfile(token);
+        	UserProfile userProfile = new MockUserProfile();
+        	userProfile.setId(token);
             userProfile.addAttribute(ATTRIBUTE_KEY, ATTRIBUTE_VALUE);
             return userProfile;
         }

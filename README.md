@@ -120,5 +120,5 @@ See the <a href="https://github.com/bujiio/buji-oauth/wiki/Release-Notes">releas
 
 <h2>Contact</h2>
 
-For any question or problem, don't hesitate to post it on the "Shiro user mailing list":http://shiro-user.582556.n2.nabble.com/ or on the "Shiro developer mailing list":http://shiro-developer.582600.n2.nabble.com/.
+For any question or problem, don't hesitate to post it on the <a href="http://shiro-user.582556.n2.nabble.com/">Shiro user mailing list</a> or on the <a href="http://shiro-developer.582600.n2.nabble.com/">Shiro developer mailing list</a>.
 
