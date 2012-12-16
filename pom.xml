@@ -36,7 +36,7 @@
     <servletVersion>2.5</servletVersion>
     <slf4jVersion>1.6.4</slf4jVersion>
     <junitVersion>4.8.2</junitVersion>
-    <scribeUpVersion>1.3.0-SNAPSHOT</scribeUpVersion>
+    <scribeUpVersion>1.3.1</scribeUpVersion>
   </properties>
   
   <scm>
@@ -95,7 +95,7 @@
               org.apache.shiro*;version="[1.3, 2)",
               org.scribe.up*;version="[1.3, 1.5)",
               org.scribe*;version="[1.3, 1.4)",
-              org.codehaus.jackson*;version="[2.0, 2.1)",
+              com.fasterxml.jackson*;version="[2.0, 2.1)",
               *
             </Import-Package>
           </instructions>
