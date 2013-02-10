@@ -43,7 +43,7 @@ import org.slf4j.LoggerFactory;
  * @author Jerome Leleu
  * @since 1.0.0
  */
-public final class OAuthFilter extends AuthenticatingFilter {
+public class OAuthFilter extends AuthenticatingFilter {
     
     private static Logger log = LoggerFactory.getLogger(OAuthFilter.class);
     
