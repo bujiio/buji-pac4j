@@ -29,7 +29,7 @@ import org.scribe.up.provider.OAuthProvider;
  * @author Jerome Leleu
  * @since 1.0.0
  */
-public final class OAuthPermissionsAuthorizationFilter extends PermissionsAuthorizationFilter {
+public class OAuthPermissionsAuthorizationFilter extends PermissionsAuthorizationFilter {
     
     private OAuthProvider provider;
     
