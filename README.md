@@ -8,6 +8,7 @@
 
 It's available under the Apache 2 license and based on my <a href="https://github.com/leleuj/scribe-up">scribe-up</a> library (which deals with OAuth authentication and user profile retrieval).
 
+
 <h2>OAuth providers supported</h2>
 
 <table>
