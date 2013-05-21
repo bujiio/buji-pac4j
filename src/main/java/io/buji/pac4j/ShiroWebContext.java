@@ -16,34 +16,46 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package io.buji.oauth;
+package io.buji.pac4j;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.UnavailableSecurityManagerException;
-import org.scribe.up.session.UserSession;
+import org.pac4j.core.context.J2EContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * This implementation uses the Shiro session for the user session.
+ * This implementation leverages the J2E context with Shiro session.
  * 
  * @author Jerome Leleu
- * @since 1.0.0
+ * @since 1.2.0
  */
-public final class ShiroUserSession implements UserSession {
+public class ShiroWebContext extends J2EContext {
     
-    private static Logger log = LoggerFactory.getLogger(OAuthFilter.class);
+    protected static Logger log = LoggerFactory.getLogger(ShiroWebContext.class);
     
-    public void setAttribute(String key, Object value) {
-        // TODO : find a better solution
+    public ShiroWebContext() {
+        super(null, null);
+    }
+    
+    public ShiroWebContext(final HttpServletRequest request, final HttpServletResponse response) {
+        super(request, response);
+    }
+    
+    @Override
+    public void setSessionAttribute(final String name, final Object value) {
         try {
-            SecurityUtils.getSubject().getSession().setAttribute(key, value);
-        } catch (UnavailableSecurityManagerException e) {
+            SecurityUtils.getSubject().getSession().setAttribute(name, value);
+        } catch (final UnavailableSecurityManagerException e) {
             log.warn("Should happen just once at startup in some specific case of Shiro Spring configuration", e);
         }
     }
     
-    public Object getAttribute(String key) {
-        return SecurityUtils.getSubject().getSession().getAttribute(key);
+    @Override
+    public Object getSessionAttribute(final String name) {
+        return SecurityUtils.getSubject().getSession().getAttribute(name);
     }
 }

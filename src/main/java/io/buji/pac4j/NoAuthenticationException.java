@@ -16,30 +16,21 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package io.buji.oauth.filter;
+package io.buji.pac4j;
 
-import io.buji.oauth.ShiroUserSession;
-
-import org.apache.shiro.web.filter.authz.PermissionsAuthorizationFilter;
-import org.scribe.up.provider.OAuthProvider;
+import org.apache.shiro.authc.AuthenticationException;
 
 /**
- * This class specializes the PermissionsAuthorizationFilter to have a login url which is the authorization url of the OAuth provider.
+ * This exception is thrown when no authentication has been achieved (cancelled at the provider or just check for authentication).
  * 
  * @author Jerome Leleu
- * @since 1.0.0
+ * @since 1.2.0
  */
-public class OAuthPermissionsAuthorizationFilter extends PermissionsAuthorizationFilter {
+public class NoAuthenticationException extends AuthenticationException {
     
-    private OAuthProvider provider;
+    private static final long serialVersionUID = 2642292107933837159L;
     
-    private ShiroUserSession shiroUserSession = new ShiroUserSession();
-    
-    public String getLoginUrl() {
-        return provider.getAuthorizationUrl(shiroUserSession);
-    }
-    
-    public void setProvider(OAuthProvider provider) {
-        this.provider = provider;
+    public NoAuthenticationException(final String message) {
+        super(message);
     }
 }

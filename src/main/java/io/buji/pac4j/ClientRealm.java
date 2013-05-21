@@ -16,7 +16,9 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package io.buji.oauth;
+package io.buji.pac4j;
+
+import io.buji.pac4j.filter.FilterHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,27 +34,27 @@ import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.apache.shiro.util.CollectionUtils;
 import org.apache.shiro.util.StringUtils;
-import org.scribe.up.credential.OAuthCredential;
-import org.scribe.up.profile.ProfileHelper;
-import org.scribe.up.profile.UserProfile;
-import org.scribe.up.provider.OAuthProvider;
-import org.scribe.up.provider.ProvidersDefinition;
+import org.pac4j.core.client.BaseClient;
+import org.pac4j.core.client.Clients;
+import org.pac4j.core.credentials.Credentials;
+import org.pac4j.core.exception.TechnicalException;
+import org.pac4j.core.profile.CommonProfile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * This realm implementation is dedicated to OAuth authentication. It acts on OAuth credential after user authenticates at the OAuth
- * provider (Facebook, Twitter...) and finishes the OAuth authentication process by getting the user profile from the OAuth provider.
+ * This realm implementation is dedicated to authentication. It acts on credentials after the user authenticates at the provider and
+ * finishes the authentication process by getting the user profile from the provider.
  * 
  * @author Jerome Leleu
  * @since 1.0.0
  */
-public class OAuthRealm extends AuthorizingRealm {
+public class ClientRealm extends AuthorizingRealm {
     
-    private static Logger log = LoggerFactory.getLogger(OAuthRealm.class);
+    private static Logger log = LoggerFactory.getLogger(ClientRealm.class);
     
-    // the providers definition
-    private ProvidersDefinition providersDefinition;
+    // the clients definition
+    private Clients clients;
     
     // default roles applied to authenticated user
     private String defaultRoles;
@@ -60,10 +62,8 @@ public class OAuthRealm extends AuthorizingRealm {
     // default permissions applied to authenticated user
     private String defaultPermissions;
     
-    public OAuthRealm() {
-        setAuthenticationTokenClass(OAuthToken.class);
-        // optimization for CPU / memory consumption
-        ProfileHelper.setKeepRawData(false);
+    public ClientRealm() {
+        setAuthenticationTokenClass(ClientToken.class);
     }
     
     /**
@@ -75,45 +75,56 @@ public class OAuthRealm extends AuthorizingRealm {
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(final AuthenticationToken authenticationToken)
         throws AuthenticationException {
-        final OAuthToken oauthToken = (OAuthToken) authenticationToken;
-        log.debug("oauthToken : {}", oauthToken);
+        try {
+            return internalGetAuthenticationInfo(authenticationToken);
+        } catch (final TechnicalException e) {
+            throw new AuthenticationException(e);
+        }
+    }
+    
+    /**
+     * Authenticates a user and retrieves its user profile.
+     * 
+     * @param authenticationToken the authentication token
+     */
+    @SuppressWarnings("unchecked")
+    protected AuthenticationInfo internalGetAuthenticationInfo(final AuthenticationToken authenticationToken) {
+        final ClientToken clientToken = (ClientToken) authenticationToken;
+        log.debug("clientToken : {}", clientToken);
         // token must be provided
-        if (oauthToken == null) {
+        if (clientToken == null) {
             return null;
         }
         
-        // OAuth credential
-        final OAuthCredential credential = (OAuthCredential) oauthToken.getCredentials();
-        log.debug("credential : {}", credential);
-        // credential should be not null
-        if (credential == null) {
-            return null;
-        }
-
-        // OAuth provider
-        OAuthProvider provider = providersDefinition.findProvider(credential.getProviderType());
-        log.debug("provider : {}", provider);
-        // no provider found
-        if (provider == null) {
-            return null;
-        }
+        // credentials
+        final Credentials credentials = (Credentials) clientToken.getCredentials();
+        log.debug("credentials : {}", credentials);
         
-        // finish OAuth authentication process : get the user profile
-         UserProfile userProfile = provider.getUserProfile(credential);
-        log.debug("userProfile : {}", userProfile);
-        if (userProfile == null || !StringUtils.hasText(userProfile.getId())) {
-            log.error("Unable to get user profile for OAuth credentials : [{}]", credential);
-            throw new OAuthAuthenticationException("Unable to get user profile for OAuth credential : [" + credential
-                                                   + "]");
+        // client
+        final BaseClient<Credentials, CommonProfile> client = (BaseClient<Credentials, CommonProfile>) this.clients
+            .findClient(clientToken.getClientName());
+        log.debug("client : {}", client);
+        
+        // finish authentication process : get the user profile
+        final CommonProfile profile = client.getUserProfile(credentials);
+        log.debug("profile : {}", profile);
+        // no profile
+        if (profile == null) {
+            final String message = "No profile retrieved from authentication using client : " + client
+                                   + " and credentials : " + credentials;
+            log.info(message);
+            // save that this kind of authentication has already been attempted and returns a null profile
+            FilterHelper.setValue(client, "true");
+            throw new NoAuthenticationException(message);
         }
         
         // refresh authentication token with user id
-        final String userId = userProfile.getTypedId();
-        oauthToken.setUserId(userId);
+        final String userId = profile.getTypedId();
+        clientToken.setUserId(userId);
         // create simple authentication info
-        final List<? extends Object> principals = CollectionUtils.asList(userId, userProfile);
+        final List<? extends Object> principals = CollectionUtils.asList(userId, profile);
         final PrincipalCollection principalCollection = new SimplePrincipalCollection(principals, getName());
-        return new SimpleAuthenticationInfo(principalCollection, credential);
+        return new SimpleAuthenticationInfo(principalCollection, credentials);
     }
     
     /**
@@ -152,18 +163,25 @@ public class OAuthRealm extends AuthorizingRealm {
         return list;
     }
     
-    public void setProvider(OAuthProvider provider) {
-        providersDefinition = new ProvidersDefinition(provider);
-        providersDefinition.init();
+    public Clients getClients() {
+        return this.clients;
     }
-
-	public void setProvidersDefinition(ProvidersDefinition providersDefinition) {
-        this.providersDefinition = providersDefinition;
-        this.providersDefinition.init();
-	}
-
-	public void setDefaultRoles(final String defaultRoles) {
+    
+    public void setClients(final Clients clients) throws TechnicalException {
+        this.clients = clients;
+        this.clients.init();
+    }
+    
+    public String getDefaultRoles() {
+        return this.defaultRoles;
+    }
+    
+    public void setDefaultRoles(final String defaultRoles) {
         this.defaultRoles = defaultRoles;
+    }
+    
+    public String getDefaultPermissions() {
+        return this.defaultPermissions;
     }
     
     public void setDefaultPermissions(final String defaultPermissions) {
