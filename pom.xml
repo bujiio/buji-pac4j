@@ -91,11 +91,12 @@
         <extensions>true</extensions>
         <configuration>
           <instructions>
-            <Bundle-SymbolicName>io.buji.oauth</Bundle-SymbolicName>
-            <Export-Package>io.buji.oauth*;version=${project.version}</Export-Package>
+            <Bundle-SymbolicName>io.buji.pac4j</Bundle-SymbolicName>
+            <Export-Package>io.buji.pac4j*;version=${project.version}</Export-Package>
             <Import-Package>
               org.apache.shiro*;version="[1.2, 2)",
               org.pac4j*;version="[1.4, 1.5)",
+              org.scribe*;version="[1.3, 1.4)",
               *
             </Import-Package>
           </instructions>
