@@ -190,19 +190,19 @@ String accessToken = facebookProfile.getAccessToken();</code></pre>
 A demo with Facebook, Twitter, CAS, form authentication, basic auth authentication and myopenid.com providers is available with <a href="https://github.com/leleuj/buji-pac4j-demo">buji-pac4j-demo</a>.
 
 
-<h2>Versions</h2>
+## Versions
 
-The current version <b>1.2.0-SNAPSHOT</b> is under development. This is the first version of the <b>buji-pac4j</b> project.
+The current version **1.2.1-SNAPSHOT** is under development. It's available on the [Sonatype snapshots repository](https://oss.sonatype.org/content/repositories/snapshots/io/buji) as a Maven dependency :
 
-The last released version is the <b>buji-oauth 1.1.0</b> library (which only supports OAuth) :
-<pre><code>&lt;dependency&gt;
-    &lt;groupId&gt;io.buji&lt;/groupId&gt;
-    &lt;artifactId&gt;buji-oauth&lt;/artifactId&gt;
-    &lt;version&gt;1.1.0&lt;/version&gt;
-&lt;/dependency&gt;</code></pre>
+The last released version is the **1.2.0** :
 
-See the <a href="https://github.com/bujiio/buji-pac4j/wiki/Release-Notes">release notes</a>.
+    <dependency>
+        <groupId>io.buji</groupId>
+        <artifactId>buji-pac4j</artifactId>
+        <version>1.2.0</version>
+    </dependency>
 
+See the [release notes](https://github.com/bujiio/buji-pac4j/wiki/Release-notes).
 
 <h2>Contact</h2>
 
