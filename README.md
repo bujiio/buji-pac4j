@@ -13,7 +13,7 @@ It supports these 4 protocols on client side :
 It's available under the Apache 2 license and based on my <a href="https://github.com/leleuj/pac4j">pac4j</a> library.
 
 
-<h2>Providers supported</h2>
+## Providers supported
 
 <table>
 <tr><th>Provider</th><th>Protocol</th><th>Maven dependency</th><th>Client class</th><th>Profile class</th></tr>
@@ -31,6 +31,7 @@ It's available under the Apache 2 license and based on my <a href="https://githu
 <tr><td>Web sites with basic auth authentication</td><td>HTTP</td><td>pac4j-http</td><td>BasicAuthClient</td><td>HttpProfile</td></tr>
 <tr><td>Web sites with form authentication</td><td>HTTP</td><td>pac4j-http</td><td>FormClient</td><td>HttpProfile</td></tr>
 <tr><td>MyOpenId</td><td>OpenID</td><td>pac4j-openid</td><td>MyOpenIdClient</td><td>MyOpenIdProfile</td></tr>
+<tr><td>Google</td><td>OpenID</td><td>pac4j-openid</td><td>GoogleOpenIdClient</td><td>GoogleOpenIdProfile</td></tr>
 </table>
 
 
@@ -70,7 +71,7 @@ For example, to add OAuth support, add the following XML snippet :
 <pre><code>&lt;dependency&gt;
     &lt;groupId&gt;org.pac4j&lt;/groupId&gt;
     &lt;artifactId&gt;pac4j-oauth&lt;/artifactId&gt;
-    &lt;version&gt;1.4.1-SNAPSHOT&lt;/version&gt;
+    &lt;version&gt;1.4.2-SNAPSHOT&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
 
 As these snapshot dependencies are only available in the <a href="https://oss.sonatype.org/content/repositories/snapshots/org/pac4j/">Sonatype Snapshots repository</a>, the appropriate repository must be added in the <i>pom.xml</i> file also :
