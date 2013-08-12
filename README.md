@@ -193,20 +193,21 @@ A demo with Facebook, Twitter, CAS, form authentication, basic auth authenticati
 
 ## Versions
 
-The current version **1.2.1-SNAPSHOT** is under development. It's available on the [Sonatype snapshots repository](https://oss.sonatype.org/content/repositories/snapshots/io/buji) as a Maven dependency :
+The current version **1.2.2-SNAPSHOT** is under development. It's available on the [Sonatype snapshots repository](https://oss.sonatype.org/content/repositories/snapshots/io/buji) as a Maven dependency :
 
-The last released version is the **1.2.0** :
+The last released version is the **1.2.1** :
 
     <dependency>
         <groupId>io.buji</groupId>
         <artifactId>buji-pac4j</artifactId>
-        <version>1.2.0</version>
+        <version>1.2.1</version>
     </dependency>
 
 See the [release notes](https://github.com/bujiio/buji-pac4j/wiki/Release-notes).
 
-<h2>Contact</h2>
+## Contact
 
-For any question or problem, don't hesitate to post it on the <a href="http://shiro-user.582556.n2.nabble.com/">Shiro user mailing list</a> or on the <a href="http://shiro-developer.582600.n2.nabble.com/">Shiro developer mailing list</a>.
+For any question or problem, don't hesitate to post it on the [Shiro user mailing list](http://shiro-user.582556.n2.nabble.com/) or on the [Shiro developer mailing list](http://shiro-developer.582600.n2.nabble.com/).
 
-Find me on <a href="http://www.linkedin.com/in/jleleu">LinkedIn</a> or by email : leleuj@gmail.com
+Find me on [LinkedIn](http://www.linkedin.com/in/jleleu) or by email : leleuj@gmail.com
+
