@@ -209,5 +209,7 @@ See the [release notes](https://github.com/bujiio/buji-pac4j/wiki/Release-notes)
 
 For any question or problem, don't hesitate to post it on the [Shiro user mailing list](http://shiro-user.582556.n2.nabble.com/) or on the [Shiro developer mailing list](http://shiro-developer.582600.n2.nabble.com/).
 
-Find me on [LinkedIn](http://www.linkedin.com/in/jleleu) or by email : leleuj@gmail.com
+Or please use the dedicated mailing lists :
+- [pac4j users](https://groups.google.com/forum/?hl=en#!forum/pac4j-users)
+- [pac4j developers](https://groups.google.com/forum/?hl=en#!forum/pac4j-dev)
 
