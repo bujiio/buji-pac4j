@@ -106,7 +106,7 @@ public class ClientRealm extends AuthorizingRealm {
         log.debug("client : {}", client);
         
         // finish authentication process : get the user profile
-        final CommonProfile profile = client.getUserProfile(credentials);
+        final CommonProfile profile = client.getUserProfile(credentials, null);
         log.debug("profile : {}", profile);
         // no profile
         if (profile == null) {

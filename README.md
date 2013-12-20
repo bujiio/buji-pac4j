@@ -1,16 +1,15 @@
-<h2>What is the buji-pac4j library ?</h2>
+## What is the buji-pac4j library ?
 
-The <b>buji-pac4j</b> library is a web multi-protocols client for <a href="http://shiro.apache.org/">Apache Shiro</a>.
+The **buji-pac4j** library is a web multi-protocols client for [Apache Shiro](http://shiro.apache.org/).
 
 It supports these 4 protocols on client side : 
-<ol>
-<li>OAuth (1.0 & 2.0)</li>
-<li>CAS (1.0, 2.0, SAML, logout & proxy)</li>
-<li>HTTP (form & basic auth authentications)</li>
-<li>OpenID.</li>
-</ol>
 
-It's available under the Apache 2 license and based on my <a href="https://github.com/leleuj/pac4j">pac4j</a> library.
+1. OAuth (1.0 & 2.0)
+2. CAS (1.0, 2.0, SAML, logout & proxy)
+3. HTTP (form & basic auth authentications)
+4. OpenID.
+
+It's available under the Apache 2 license and based on my [pac4j](https://github.com/leleuj/pac4j) library.
 
 
 ## Providers supported
@@ -28,6 +27,7 @@ It's available under the Apache 2 license and based on my <a href="https://githu
 <tr><td>Windows Live</td><td>OAuth 2.0</td><td>pac4j-oauth</td><td>WindowsLiveClient</td><td>WindowsLiveProfile</td></tr>
 <tr><td>WordPress</td><td>OAuth 2.0</td><td>pac4j-oauth</td><td>WordPressClient</td><td>WordPressProfile</td></tr>
 <tr><td>Yahoo</td><td>OAuth 1.0</td><td>pac4j-oauth</td><td>YahooClient</td><td>YahooProfile</td></tr>
+<tr><td>PayPal</td><td>OAuth 2.0</td><td>pac4j-oauth</td><td>PayPalClient</td><td>PayPalProfile</td></tr>
 <tr><td>Web sites with basic auth authentication</td><td>HTTP</td><td>pac4j-http</td><td>BasicAuthClient</td><td>HttpProfile</td></tr>
 <tr><td>Web sites with form authentication</td><td>HTTP</td><td>pac4j-http</td><td>FormClient</td><td>HttpProfile</td></tr>
 <tr><td>MyOpenId</td><td>OpenID</td><td>pac4j-openid</td><td>MyOpenIdClient</td><td>MyOpenIdProfile</td></tr>
