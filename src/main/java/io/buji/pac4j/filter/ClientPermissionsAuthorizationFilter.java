@@ -18,17 +18,18 @@
  */
 package io.buji.pac4j.filter;
 
+import io.buji.pac4j.ShiroWebContext;
+
 import java.io.IOException;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.apache.shiro.web.filter.authz.PermissionsAuthorizationFilter;
 import org.apache.shiro.web.util.WebUtils;
 import org.pac4j.core.client.BaseClient;
 import org.pac4j.core.credentials.Credentials;
+import org.pac4j.core.exception.RequiresHttpAction;
 import org.pac4j.core.profile.CommonProfile;
 
 /**
@@ -38,33 +39,32 @@ import org.pac4j.core.profile.CommonProfile;
  * @since 1.0.0
  */
 public class ClientPermissionsAuthorizationFilter extends PermissionsAuthorizationFilter {
-    
-    private BaseClient<Credentials, CommonProfile> client;
-    
-    public String getLoginUrl(final ServletRequest request, final ServletResponse response) {
-        return FilterHelper.getLoginUrl(this.client, (HttpServletRequest) request, (HttpServletResponse) response);
-    }
-    
-    @Override
-    protected boolean isLoginRequest(final ServletRequest request, final ServletResponse response) {
-        return pathsMatch(getLoginUrl(request, response), request);
-    }
-    
-    @Override
-    protected void redirectToLogin(final ServletRequest request, final ServletResponse response) throws IOException {
-        final String loginUrl = getLoginUrl(request, response);
-        WebUtils.issueRedirect(request, response, loginUrl);
-    }
-    
-    @Override
-    protected boolean onAccessDenied(final ServletRequest request, final ServletResponse response) throws IOException {
-        if (!FilterHelper.hasProcessedAlready(this.client, response)) {
-            return super.onAccessDenied(request, response);
-        }
-        return false;
-    }
-    
-    public void setClient(final BaseClient<Credentials, CommonProfile> client) {
-        this.client = client;
-    }
+
+	private BaseClient<Credentials, CommonProfile> client;
+
+	public String getLoginUrl(final ServletRequest request, final ServletResponse response) throws RequiresHttpAction {
+		return client.getRedirectionUrl(new ShiroWebContext(WebUtils.toHttp(request), WebUtils.toHttp(response)), true, false);
+	}
+
+	@Override
+	protected boolean isLoginRequest(final ServletRequest request, final ServletResponse response) {
+		try {
+			return pathsMatch(getLoginUrl(request, response), request);
+		} catch (RequiresHttpAction e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	@Override
+	protected void redirectToLogin(final ServletRequest request, final ServletResponse response) throws IOException {
+		try {
+			String loginUrl = getLoginUrl(request, response);
+			WebUtils.issueRedirect(request, response, loginUrl);
+		} catch (RequiresHttpAction e) {
+		}
+	}
+
+	public void setClient(final BaseClient<Credentials, CommonProfile> client) {
+		this.client = client;
+	}
 }
