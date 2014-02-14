@@ -1,4 +1,4 @@
-## What is the buji-pac4j library ?
+## What is the buji-pac4j library ? [![Build Status](https://travis-ci.org/bujiio/buji-pac4j.png?branch=master)](https://travis-ci.org/bujiio/buji-pac4j)
 
 The **buji-pac4j** library is a web multi-protocols client for [Apache Shiro](http://shiro.apache.org/).
 
