@@ -30,7 +30,6 @@ It's available under the Apache 2 license and based on my [pac4j](https://github
 <tr><td>PayPal</td><td>OAuth 2.0</td><td>pac4j-oauth</td><td>PayPalClient</td><td>PayPalProfile</td></tr>
 <tr><td>Web sites with basic auth authentication</td><td>HTTP</td><td>pac4j-http</td><td>BasicAuthClient</td><td>HttpProfile</td></tr>
 <tr><td>Web sites with form authentication</td><td>HTTP</td><td>pac4j-http</td><td>FormClient</td><td>HttpProfile</td></tr>
-<tr><td>MyOpenId</td><td>OpenID</td><td>pac4j-openid</td><td>MyOpenIdClient</td><td>MyOpenIdProfile</td></tr>
 <tr><td>Google</td><td>OpenID</td><td>pac4j-openid</td><td>GoogleOpenIdClient</td><td>GoogleOpenIdProfile</td></tr>
 </table>
 
@@ -113,12 +112,10 @@ If you want to authenticate at an OAuth or OpenID provider, at a CAS server or t
     casClient = org.pac4j.cas.client.CasClient
     casClient.casLoginUrl = http://localhost:8888/cas/login
     
-    myopenidClient = org.pac4j.openid.client.MyOpenIdClient
-    
     # application is started on localhost:8080
     clients = org.pac4j.core.client.Clients
     clients.callbackUrl = http://localhost:8080/callback
-    clients.clientsList = $facebookClient,$twitterClient,$formClient,$basicAuthClient,$casClient,$myopenidClient
+    clients.clientsList = $facebookClient,$twitterClient,$formClient,$basicAuthClient,$casClient
 
 ### Define the filter and realm
 
@@ -151,14 +148,11 @@ For example:
     formRoles.client = $formClient
     casRoles = io.buji.pac4j.filter.ClientRolesAuthorizationFilter
     casRoles.client = $casClient
-    myopenidRoles = io.buji.pac4j.filter.ClientRolesAuthorizationFilter
-    myopenidRoles.client = $myopenidClient
     
     [urls] 
     /facebook/** = facebookRoles[ROLE_USER]
     /form/** = formRoles[ROLE_USER]
     /cas/** = casRoles[ROLE_USER]
-    /myopenid/** = myopenidRoles[ROLE_USER]
     /callback = clientsFilter
     /logout = logout
     /** = anon
@@ -196,7 +190,7 @@ Or for all the OAuth profiles, to get the access token:
 
 ### Demo
 
-A demo with Facebook, Twitter, CAS, form authentication, basic auth authentication and myopenid.com providers is available with [buji-pac4j-demo](https://github.com/leleuj/buji-pac4j-demo).
+A demo with Facebook, Twitter, CAS, form authentication and basic auth authentication providers is available with [buji-pac4j-demo](https://github.com/leleuj/buji-pac4j-demo).
 
 
 ## Versions
