@@ -55,6 +55,9 @@ public class ClientFilter extends AuthenticatingFilter {
     // the clients definition
     private Clients clients;
     
+    // cas passThrough setting
+    private boolean casPassThrough = false;
+    
     /**
      * The token created for this authentication is a ClientToken containing the credentials received after authentication at the provider.
      * These information are received on the callback url (on which the filter must be configured).
@@ -130,8 +133,14 @@ public class ClientFilter extends AuthenticatingFilter {
     @Override
     protected boolean onLoginSuccess(final AuthenticationToken token, final Subject subject,
                                      final ServletRequest request, final ServletResponse response) throws Exception {
-        issueSuccessRedirect(request, response);
-        return false;
+        
+        if(true == casPassThrough)
+            return true;
+        else
+        {
+            issueSuccessRedirect(request, response);
+            return false;
+        }
     }
     
     /**
@@ -180,4 +189,16 @@ public class ClientFilter extends AuthenticatingFilter {
         this.clients = clients;
         this.clients.init();
     }
+
+    public boolean isCasPassThrough()
+    {
+        return casPassThrough;
+    }
+
+    public void setCasPassThrough(boolean casPassThrough)
+    {
+        this.casPassThrough = casPassThrough;
+    }
+    
+    
 }
