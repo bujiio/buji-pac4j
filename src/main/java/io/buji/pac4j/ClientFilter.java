@@ -55,6 +55,9 @@ public class ClientFilter extends AuthenticatingFilter {
     // the clients definition
     private Clients clients;
     
+    // This flag controls the behaviour of the filter after successful redirection
+    private boolean redirectAfterSuccessfulAuthentication = true;
+    
     /**
      * The token created for this authentication is a ClientToken containing the credentials received after authentication at the provider.
      * These information are received on the callback url (on which the filter must be configured).
@@ -130,8 +133,14 @@ public class ClientFilter extends AuthenticatingFilter {
     @Override
     protected boolean onLoginSuccess(final AuthenticationToken token, final Subject subject,
                                      final ServletRequest request, final ServletResponse response) throws Exception {
-        issueSuccessRedirect(request, response);
-        return false;
+        
+        if(false == redirectAfterSuccessfulAuthentication)
+            return true;
+        else
+        {
+            issueSuccessRedirect(request, response);
+            return false;
+        }
     }
     
     /**
@@ -180,4 +189,25 @@ public class ClientFilter extends AuthenticatingFilter {
         this.clients = clients;
         this.clients.init();
     }
+
+    /**
+     * This redirectAfterSuccessfulAuthentication property controls the behaviour of the filter after successful login.
+     * If redirection is enabled (default) the filter will redirect the request to original requested url.
+     * 
+     * In case redirection is disabled the filter will allow the request to passthrough the filter chain. This is useful for cas
+     * proxy (proxied application) where the credential receptor url is same as the resource url.
+     * 
+     * @return current value of the property
+     */
+    public boolean getRedirectAfterSuccessfulAuthentication()
+    {
+        return redirectAfterSuccessfulAuthentication;
+    }
+
+    public void setRedirectAfterSuccessfulAuthentication(boolean casPassThrough)
+    {
+        this.redirectAfterSuccessfulAuthentication = casPassThrough;
+    }
+    
+    
 }
