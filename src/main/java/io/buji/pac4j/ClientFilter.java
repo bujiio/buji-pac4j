@@ -55,8 +55,8 @@ public class ClientFilter extends AuthenticatingFilter {
     // the clients definition
     private Clients clients;
     
-    // cas passThrough setting
-    private boolean casPassThrough = false;
+    // This flag controls the behaviour of the filter after successful redirection
+    private boolean redirectAfterSuccessfulAuthentication = false;
     
     /**
      * The token created for this authentication is a ClientToken containing the credentials received after authentication at the provider.
@@ -134,7 +134,7 @@ public class ClientFilter extends AuthenticatingFilter {
     protected boolean onLoginSuccess(final AuthenticationToken token, final Subject subject,
                                      final ServletRequest request, final ServletResponse response) throws Exception {
         
-        if(true == casPassThrough)
+        if(false == redirectAfterSuccessfulAuthentication)
             return true;
         else
         {
@@ -190,14 +190,23 @@ public class ClientFilter extends AuthenticatingFilter {
         this.clients.init();
     }
 
-    public boolean isCasPassThrough()
+    /**
+     * This redirectAfterSuccessfulAuthentication property controls the behaviour of the filter after successful login.
+     * If redirection is enabled (default) the filter will redirect the request to original requested url.
+     * 
+     * In case redirection is disabled the filter will allow the request to passthrough the filter chain. This is useful for cas
+     * proxy (proxied application) where the credential receptor url is same as the resource url.
+     * 
+     * @return current value of the property
+     */
+    public boolean getRedirectAfterSuccessfulAuthentication()
     {
-        return casPassThrough;
+        return redirectAfterSuccessfulAuthentication;
     }
 
-    public void setCasPassThrough(boolean casPassThrough)
+    public void setRedirectAfterSuccessfulAuthentication(boolean casPassThrough)
     {
-        this.casPassThrough = casPassThrough;
+        this.redirectAfterSuccessfulAuthentication = casPassThrough;
     }
     
     
