@@ -56,7 +56,7 @@ public class ClientFilter extends AuthenticatingFilter {
     private Clients clients;
     
     // This flag controls the behaviour of the filter after successful redirection
-    private boolean redirectAfterSuccessfulAuthentication = false;
+    private boolean redirectAfterSuccessfulAuthentication = true;
     
     /**
      * The token created for this authentication is a ClientToken containing the credentials received after authentication at the provider.
