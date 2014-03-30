@@ -33,38 +33,30 @@ import org.pac4j.core.exception.RequiresHttpAction;
 import org.pac4j.core.profile.CommonProfile;
 
 /**
- * This class specializes the PermissionsAuthorizationFilter to have a login url which is the redirection url to the provider.
+ * This class specializes the PermissionsAuthorizationFilter to have a login url which is the redirection url to the
+ * provider.
  * 
  * @author Jerome Leleu
  * @since 1.0.0
  */
 public class ClientPermissionsAuthorizationFilter extends PermissionsAuthorizationFilter {
 
-	private BaseClient<Credentials, CommonProfile> client;
+    private BaseClient<Credentials, CommonProfile> client;
 
-	public String getLoginUrl(final ServletRequest request, final ServletResponse response) throws RequiresHttpAction {
-		return client.getRedirectionUrl(new ShiroWebContext(WebUtils.toHttp(request), WebUtils.toHttp(response)), true, false);
-	}
+    @Override
+    protected boolean isLoginRequest(final ServletRequest request, final ServletResponse response) {
+        return false;
+    }
 
-	@Override
-	protected boolean isLoginRequest(final ServletRequest request, final ServletResponse response) {
-		try {
-			return pathsMatch(getLoginUrl(request, response), request);
-		} catch (RequiresHttpAction e) {
-			throw new RuntimeException(e);
-		}
-	}
+    @Override
+    protected void redirectToLogin(final ServletRequest request, final ServletResponse response) throws IOException {
+        try {
+            this.client.redirect(new ShiroWebContext(WebUtils.toHttp(request), WebUtils.toHttp(response)), true, false);
+        } catch (RequiresHttpAction e) {
+        }
+    }
 
-	@Override
-	protected void redirectToLogin(final ServletRequest request, final ServletResponse response) throws IOException {
-		try {
-			String loginUrl = getLoginUrl(request, response);
-			WebUtils.issueRedirect(request, response, loginUrl);
-		} catch (RequiresHttpAction e) {
-		}
-	}
-
-	public void setClient(final BaseClient<Credentials, CommonProfile> client) {
-		this.client = client;
-	}
+    public void setClient(final BaseClient<Credentials, CommonProfile> client) {
+        this.client = client;
+    }
 }
