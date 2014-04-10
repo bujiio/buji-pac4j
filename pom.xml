@@ -32,7 +32,7 @@
   <packaging>bundle</packaging>
   
   <properties>
-    <shiroVersion>1.2.1</shiroVersion>
+    <shiroVersion>1.2.3</shiroVersion>
     <servletVersion>2.5</servletVersion>
     <slf4jVersion>1.6.4</slf4jVersion>
     <junitVersion>4.8.2</junitVersion>
