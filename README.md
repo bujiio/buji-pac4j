@@ -72,7 +72,7 @@ For example, to add OAuth support, add the following XML snippet:
     <dependency>
       <groupId>org.pac4</groupId>
       <artifactId>pac4j-oauth</artifactId>
-      <version>1.4.2-SNAPSHOT</version>
+      <version>1.5.0</version>
     </dependency>
 
 As these snapshot dependencies are only available in the [Sonatype snapshots repository](https://oss.sonatype.org/content/repositories/snapshots/org/pac4j/), the appropriate repository may need be added in the *pom.xml* file also:
@@ -199,14 +199,14 @@ A demo with Facebook, Twitter, CAS, form authentication and basic auth authentic
 
 ## Versions
 
-The current version **1.2.2-SNAPSHOT** is under development. It's available on the [Sonatype snapshots repository](https://oss.sonatype.org/content/repositories/snapshots/io/buji) as a Maven dependency:
+The current version **1.2.3-SNAPSHOT** is under development. It's available on the [Sonatype snapshots repository](https://oss.sonatype.org/content/repositories/snapshots/io/buji) as a Maven dependency:
 
-The last released version is the **1.2.1**:
+The last released version is the **1.2.2**:
 
     <dependency>
         <groupId>io.buji</groupId>
         <artifactId>buji-pac4j</artifactId>
-        <version>1.2.1</version>
+        <version>1.2.2</version>
     </dependency>
 
 See the [release notes](https://github.com/bujiio/buji-pac4j/wiki/Release-notes).
