@@ -12,7 +12,7 @@ import org.apache.shiro.web.mgt.DefaultWebSubjectFactory;
  * @author Michael Remond
  * @since 1.2.3
  */
-public class Pac4jSubjectFactory extends DefaultWebSubjectFactory {
+public class ClientSubjectFactory extends DefaultWebSubjectFactory {
 
     @Override
     public Subject createSubject(SubjectContext context) {

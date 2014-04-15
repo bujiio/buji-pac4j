@@ -40,16 +40,17 @@ It's available under the Apache 2 license and based on my [pac4j](https://github
 
 ## Technical description
 
-This library has **just 8 classes**:
+This library has **just 9 classes**:
 
 1. the **ClientFilter** class is called after the authentication at the provider: it creates the ClientToken to be used by the ClientRealm
 2. the **ClientToken** class is the token representing the credentials and the profile of the user
 3. the **ClientRealm** class is the realm responsible for authenticating a ClientToken: it finishes the authentication process by retrieving the profile of the authenticated user and computing its default roles and permissions
-4. the **ShiroWebContext** class is a Shiro wrapper for the user request, response and session
-5. the **ClientPermissionsAuthorizationFilter** class is a filter to protect the application if the user has not the right permissions
-6. the **ClientRolesAuthorizationFilter** class is a filter to protect the application if the user has not the right roles
-7. the **ClientUserFilter** class is a filter to protect the application if the user is not authenticated
-8. the **NoAuthenticationException** class is an exception when no user profile is returned.
+4. the **ClientSubjectFactory** class is the factory responsible for creating a Subject based on the authentication information (isRemembered...).
+5. the **ShiroWebContext** class is a Shiro wrapper for the user request, response and session
+6. the **ClientPermissionsAuthorizationFilter** class is a filter to protect the application if the user has not the right permissions
+7. the **ClientRolesAuthorizationFilter** class is a filter to protect the application if the user has not the right roles
+8. the **ClientUserFilter** class is a filter to protect the application if the user is not authenticated
+9. the **NoAuthenticationException** class is an exception when no user profile is returned.
 
 and is based on the <i>pac4j-*</i> libraries.
 
@@ -120,6 +121,14 @@ If you want to authenticate at an OAuth or OpenID provider, at a CAS server or t
     clients = org.pac4j.core.client.Clients
     clients.callbackUrl = http://localhost:8080/callback
     clients.clientsList = $facebookClient,$twitterClient,$formClient,$basicAuthClient,$casClient
+
+### Customize the SecurityManager
+
+To have a correct subject populated, you need to define the subject factory:
+
+    [main]
+    subjectFactory = io.buji.pac4j.ClientSubjectFactory
+    securityManager.subjectFactory = $subjectFactory
 
 ### Define the filter and realm
 
