@@ -18,7 +18,7 @@
  */
 package io.buji.pac4j;
 
-import org.apache.shiro.authc.AuthenticationToken;
+import org.apache.shiro.authc.RememberMeAuthenticationToken;
 import org.pac4j.core.credentials.Credentials;
 import org.pac4j.core.util.CommonHelper;
 
@@ -28,40 +28,50 @@ import org.pac4j.core.util.CommonHelper;
  * @author Jerome Leleu
  * @since 1.0.0
  */
-public final class ClientToken implements AuthenticationToken {
-    
+public final class ClientToken implements RememberMeAuthenticationToken {
+
     private static final long serialVersionUID = 3141878022445836151L;
-    
+
     private final String clientName;
-    
+
     private final Credentials credentials;
-    
+
     private String userId;
-    
+
+    private boolean isRememberMe;
+
     public ClientToken(final String clientName, final Credentials credentials) {
         this.clientName = clientName;
         this.credentials = credentials;
     }
-    
+
     public void setUserId(final String userId) {
         this.userId = userId;
     }
-    
+
+    public void setRememberMe(boolean isRememberMe) {
+        this.isRememberMe = isRememberMe;
+    }
+
     public String getClientName() {
         return this.clientName;
     }
-    
+
     public Object getCredentials() {
         return this.credentials;
     }
-    
+
     public Object getPrincipal() {
         return this.userId;
     }
-    
+
     @Override
     public String toString() {
         return CommonHelper.toString(ClientToken.class, "clientName", this.clientName, "credentials", this.credentials,
-                                     "userId", this.userId);
+                "userId", this.userId);
+    }
+
+    public boolean isRememberMe() {
+        return isRememberMe;
     }
 }
