@@ -36,7 +36,7 @@
     <servletVersion>2.5</servletVersion>
     <slf4jVersion>1.6.4</slf4jVersion>
     <junitVersion>4.8.2</junitVersion>
-    <pac4jVersion>1.5.1-SNAPSHOT</pac4jVersion>
+    <pac4jVersion>1.5.1</pac4jVersion>
   </properties>
   
   <scm>
