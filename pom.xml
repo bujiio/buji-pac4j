@@ -27,7 +27,7 @@
   </parent>
 
   <artifactId>buji-pac4j</artifactId>
-  <version>1.2.3</version>
+  <version>1.2.4-SNAPSHOT</version>
   <name>Apache Shiro :: Support :: client protocols (pac4j)</name>
   <packaging>bundle</packaging>
   
