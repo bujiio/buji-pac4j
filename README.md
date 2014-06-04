@@ -67,14 +67,15 @@ If you want to use a specific client support, you need to add the appropriate Ma
 1. for OAuth support, the *pac4j-oauth* dependency is required
 2. for CAS support, the *pac4j-cas* dependency is required
 3. for HTTP support, the *pac4j-http* dependency is required
-4. for OpenID support, the *pac4j-openid* dependency is required.
+4. for OpenID support, the *pac4j-openid* dependency is required
+5. for SAML support, the *pac4j-saml* dependency is required.
 
 For example, to add OAuth support, add the following XML snippet:
 
     <dependency>
       <groupId>org.pac4</groupId>
       <artifactId>pac4j-oauth</artifactId>
-      <version>1.5.0</version>
+      <version>1.5.1</version>
     </dependency>
 
 As these snapshot dependencies are only available in the [Sonatype snapshots repository](https://oss.sonatype.org/content/repositories/snapshots/org/pac4j/), the appropriate repository may need be added in the *pom.xml* file also:
@@ -209,14 +210,14 @@ A demo with Facebook, Twitter, CAS, form authentication and basic auth authentic
 
 ## Versions
 
-The current version **1.2.3-SNAPSHOT** is under development. It's available on the [Sonatype snapshots repository](https://oss.sonatype.org/content/repositories/snapshots/io/buji) as a Maven dependency:
+The current version **1.2.4-SNAPSHOT** is under development. It's available on the [Sonatype snapshots repository](https://oss.sonatype.org/content/repositories/snapshots/io/buji) as a Maven dependency:
 
-The last released version is the **1.2.2**:
+The last released version is the **1.2.3**:
 
     <dependency>
         <groupId>io.buji</groupId>
         <artifactId>buji-pac4j</artifactId>
-        <version>1.2.2</version>
+        <version>1.2.3</version>
     </dependency>
 
 See the [release notes](https://github.com/bujiio/buji-pac4j/wiki/Release-notes).
