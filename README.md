@@ -13,6 +13,15 @@ It supports these 5 protocols on client side:
 It's available under the Apache 2 license and based on my [pac4j](https://github.com/leleuj/pac4j) library.
 
 
+## Libraries
+
+As of 1.3.0, this project exports two libraries: buji-pac4j-core and buji-pac4j-servlet. Both are intended to be used in web-based environments.
+buji-pac4j-servlet is to be used in servlet environments and depends on buji-pac4j-core. It is the library to be used for most Java
+web projects (e.g. anything running on Tomcat, Glassfish, Jetty, etc.) buji-pac4j-core is a library without any servlet dependencies
+and thus is meant to be used with some newer Java web frameworks which do not support servlets such as Play Framework or Vert.x.
+
+In versions previous to 1.3.0, there was a single library buji-pac4j, which was the combination of buji-pac4j-core and buji-pac4j-servlet.
+
 ## Providers supported
 
 <table>
@@ -183,7 +192,7 @@ You can also explicitely compute a redirection url to a provider for authenticat
 
 ### Use the appropriate profile
 
-After successfull authentication, the first principal is the *typedId* (a unique id accross providers and users) and the second principal is the user profile:
+After successful authentication, the first principal is the *typedId* (a unique id accross providers and users) and the second principal is the user profile:
 
     String typedId = (String) SecurityUtils.getSubject().getPrincipal();
     // common profile to all providers
@@ -210,7 +219,7 @@ A demo with Facebook, Twitter, CAS, form authentication and basic auth authentic
 
 ## Versions
 
-The current version **1.2.4-SNAPSHOT** is under development. It's available on the [Sonatype snapshots repository](https://oss.sonatype.org/content/repositories/snapshots/io/buji) as a Maven dependency:
+The current version **1.3.0-SNAPSHOT** is under development. It's available on the [Sonatype snapshots repository](https://oss.sonatype.org/content/repositories/snapshots/io/buji) as a Maven dependency:
 
 The last released version is the **1.2.3**:
 
