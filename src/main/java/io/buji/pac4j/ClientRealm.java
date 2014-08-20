@@ -19,7 +19,10 @@
 package io.buji.pac4j;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
@@ -44,7 +47,7 @@ import org.slf4j.LoggerFactory;
  * This realm implementation is dedicated to authentication. It acts on
  * credentials after the user authenticates at the provider and finishes the
  * authentication process by getting the user profile from the provider.
- * 
+ *
  * @author Jerome Leleu
  * @since 1.0.0
  */
@@ -67,7 +70,7 @@ public class ClientRealm extends AuthorizingRealm {
 
     /**
      * Authenticates a user and retrieves its user profile.
-     * 
+     *
      * @param authenticationToken
      *            the authentication token
      * @throws AuthenticationException
@@ -85,7 +88,7 @@ public class ClientRealm extends AuthorizingRealm {
 
     /**
      * Authenticates a user and retrieves its user profile.
-     * 
+     *
      * @param authenticationToken
      *            the authentication token
      */
@@ -130,7 +133,7 @@ public class ClientRealm extends AuthorizingRealm {
 
     /**
      * Retrieves the AuthorizationInfo for the given principals.
-     * 
+     *
      * @param principals
      *            the primary identifying principals of the AuthorizationInfo
      *            that should be retrieved.
@@ -138,19 +141,29 @@ public class ClientRealm extends AuthorizingRealm {
      */
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(final PrincipalCollection principals) {
+        Set<String> roles = new HashSet<String>(split(this.defaultRoles));
+        Set<String> permissions = new HashSet<String>(split(this.defaultPermissions));
+        // get roles and permissions from principals
+        Collection<CommonProfile> profiles = principals.byType(CommonProfile.class);
+        if (profiles != null) {
+            for (CommonProfile profile : profiles) {
+                if (profile != null) {
+                    roles.addAll(profile.getRoles());
+                    permissions.addAll(profile.getPermissions());
+                }
+            }
+        }
         // create simple authorization info
         final SimpleAuthorizationInfo simpleAuthorizationInfo = new SimpleAuthorizationInfo();
-        // add default roles
-        simpleAuthorizationInfo.addRoles(split(this.defaultRoles));
-        // add default permissions
-        simpleAuthorizationInfo.addStringPermissions(split(this.defaultPermissions));
+        simpleAuthorizationInfo.addRoles(roles);
+        simpleAuthorizationInfo.addStringPermissions(permissions);
         return simpleAuthorizationInfo;
     }
 
     /**
      * Split a string into a list of not empty and trimmed strings, delimiter is
      * a comma.
-     * 
+     *
      * @param s
      *            the input string
      * @return the list of not empty and trimmed strings
