@@ -82,7 +82,7 @@ If you want to use a specific client support, you need to add the appropriate Ma
 For example, to add OAuth support, add the following XML snippet:
 
     <dependency>
-      <groupId>org.pac4</groupId>
+      <groupId>org.pac4j</groupId>
       <artifactId>pac4j-oauth</artifactId>
       <version>1.5.1</version>
     </dependency>
