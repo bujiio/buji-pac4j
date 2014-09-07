@@ -150,7 +150,7 @@ To handle callback from providers, you need to define the appropriate filter:
     clientsFilter.clients = $clients
     clientsFilter.failureUrl = /error500.jsp
     
-    [url]
+    [urls]
     /callback = clientsFilter
 
 To finish the authentication process after being callbacked by the provider, a specific realm must be declared:
