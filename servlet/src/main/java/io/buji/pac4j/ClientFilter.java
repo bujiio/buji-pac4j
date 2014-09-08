@@ -133,7 +133,8 @@ public class ClientFilter extends AuthenticatingFilter {
     @Override
     protected boolean onLoginSuccess(final AuthenticationToken token, final Subject subject,
                                      final ServletRequest request, final ServletResponse response) throws Exception {
-        
+
+        log.info("Login success");
         if(false == redirectAfterSuccessfulAuthentication)
             return true;
         else
@@ -156,6 +157,7 @@ public class ClientFilter extends AuthenticatingFilter {
     protected boolean onLoginFailure(final AuthenticationToken token, final AuthenticationException ae,
                                      final ServletRequest request, final ServletResponse response) {
         // is user authenticated ?
+        log.warn("Login failure", ae);
         final Subject subject = getSubject(request, response);
         if (subject.isAuthenticated()) {
             try {
