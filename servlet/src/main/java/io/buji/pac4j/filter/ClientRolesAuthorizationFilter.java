@@ -34,13 +34,13 @@ import org.pac4j.core.profile.CommonProfile;
 
 /**
  * This class specializes the RolesAuthorizationFilter to have a login url which is the redirection url to the provider.
- * 
+ *
  * @author Jerome Leleu
  * @since 1.0.0
  */
 public class ClientRolesAuthorizationFilter extends RolesAuthorizationFilter {
 
-    private BaseClient<Credentials, CommonProfile> client;
+    protected BaseClient<Credentials, CommonProfile> client;
 
     @Override
     protected boolean isLoginRequest(final ServletRequest request, final ServletResponse response) {
