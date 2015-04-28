@@ -2,7 +2,7 @@
 
 The **buji-pac4j** library is a web multi-protocols client for [Apache Shiro](http://shiro.apache.org/).
 
-It supports these 6 authentication mechanisms on client side: 
+It supports these 7 authentication mechanisms on client side:
 
 1. OAuth (1.0 & 2.0)
 2. CAS (1.0, 2.0, SAML, logout & proxy)
@@ -10,9 +10,9 @@ It supports these 6 authentication mechanisms on client side:
 4. OpenID
 5. SAML (2.0)
 6. GAE UserService
-7. OpenID Connect.
+7. OpenID Connect (1.0).
 
-It's available under the Apache 2 license and based on my [pac4j](https://github.com/leleuj/pac4j) library.
+It's available under the Apache 2 license and based on my [pac4j](https://github.com/pac4j/pac4j) library.
 
 
 ## Libraries
@@ -45,9 +45,9 @@ In versions previous to 1.3.0, there was a single library buji-pac4j, which was 
 <tr><td>Foursquare</td><td>OAuth 2.0</td><td>pac4j-oauth</td><td>FoursquareClient</td><td>FoursquareProfile</td></tr>
 <tr><td>Bitbucket</td><td>OAuth 1.0</td><td>pac4j-oauth</td><td>BitbucketClient</td><td>BitbucketProfile</td></tr>
 <tr><td>ORCiD</td><td>OAuth 2.0</td><td>pac4j-oauth</td><td>OrcidClient</td><td>OrcidProfile</td></tr>
+<tr><td>Strava</td><td>OAuth 2.0</td><td>pac4j-oauth</td><td>StravaClient</td><td>StravaProfile</td></tr>
 <tr><td>Web sites with basic auth authentication</td><td>HTTP</td><td>pac4j-http</td><td>BasicAuthClient</td><td>HttpProfile</td></tr>
 <tr><td>Web sites with form authentication</td><td>HTTP</td><td>pac4j-http</td><td>FormClient</td><td>HttpProfile</td></tr>
-<tr><td>Google - Deprecated</td><td>OpenID</td><td>pac4j-openid</td><td>GoogleOpenIdClient</td><td>GoogleOpenIdProfile</td></tr>
 <tr><td>Yahoo</td><td>OpenID</td><td>pac4j-openid</td><td>YahooOpenIdClient</td><td>YahooOpenIdProfile</td></tr>
 <tr><td>SAML Identity Provider</td><td>SAML 2.0</td><td>pac4j-saml</td><td>Saml2Client</td><td>Saml2Profile</td></tr>
 <tr><td>Google App Engine User Service</td><td>Gae User Service Mechanism</td><td>pac4j-gae</td><td>GaeUserServiceClient</td><td>GaeUserServiceProfile</td></tr>
@@ -93,7 +93,7 @@ For example, to add OAuth support, add the following XML snippet:
     <dependency>
       <groupId>org.pac4j</groupId>
       <artifactId>pac4j-oauth</artifactId>
-      <version>1.6.0</version>
+      <version>1.7.0</version>
     </dependency>
 
 As these snapshot dependencies are only available in the [Sonatype snapshots repository](https://oss.sonatype.org/content/repositories/snapshots/org/pac4j/), the appropriate repository may need be added in the *pom.xml* file also:
@@ -223,19 +223,19 @@ Or for all the OAuth profiles, to get the access token:
 
 ### Demo
 
-A demo with Facebook, Twitter, CAS, form authentication and basic auth authentication providers is available with [buji-pac4j-demo](https://github.com/leleuj/buji-pac4j-demo).
+A demo with Facebook, Twitter, CAS, form authentication and basic auth authentication providers is available with [buji-pac4j-demo](https://github.com/pac4j/buji-pac4j-demo).
 
 
 ## Versions
 
-The current version **1.3.1-SNAPSHOT** is under development. It's available on the [Sonatype snapshots repository](https://oss.sonatype.org/content/repositories/snapshots/io/buji) as a Maven dependency:
+The current version **1.3.2-SNAPSHOT** is under development. It's available on the [Sonatype snapshots repository](https://oss.sonatype.org/content/repositories/snapshots/io/buji) as a Maven dependency:
 
-The last released version is the **1.3.0**:
+The last released version is the **1.3.1**:
 
     <dependency>
         <groupId>io.buji</groupId>
         <artifactId>buji-pac4j-servlet</artifactId>
-        <version>1.3.0</version>
+        <version>1.3.1</version>
     </dependency>
 
 See the [release notes](https://github.com/bujiio/buji-pac4j/wiki/Release-notes).
