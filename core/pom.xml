@@ -32,7 +32,7 @@
   <packaging>bundle</packaging>
   
   <properties>
-    <pac4jVersion>1.6.0</pac4jVersion>
+    <pac4jVersion>1.7.0-SNAPSHOT</pac4jVersion>
   </properties>
 
   <dependencies>
