@@ -1,5 +1,7 @@
 language: java
 
+sudo: false
+
 script: "mvn -Pci deploy --settings travis/settings.xml"
 
 jdk:
