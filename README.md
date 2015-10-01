@@ -201,7 +201,7 @@ You can also explicitely compute a redirection url to a provider for authenticat
 
 ### Use the appropriate profile
 
-After successful authentication, the first principal is the *typedId* (a unique id accross providers and users) and the second principal is the user profile:
+After successful authentication, the first principal is the *typedId* (a unique id across providers and users) and the second principal is the user profile:
 
     String typedId = (String) SecurityUtils.getSubject().getPrincipal();
     // common profile to all providers
