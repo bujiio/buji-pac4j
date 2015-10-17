@@ -14,6 +14,8 @@ It supports these 7 authentication mechanisms on client side:
 
 It's available under the Apache 2 license and based on my [pac4j](https://github.com/pac4j/pac4j) library.
 
+If you are looking for a **full security library for your J2E** web application (using servlets and filters), you should consider using [j2e-pac4j](https://github.com/pac4j/j2e-pac4j). If you use **Spring Web MVC / Spring Boot**, you should consider using the [spring-webmvc-pac4j](https://github.com/pac4j/spring-webmvc-pac4j) security library. See all the frameworks and tools supported by [pac4j](http://www.pac4j.org).
+
 
 ## Libraries
 
