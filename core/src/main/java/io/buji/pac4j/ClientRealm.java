@@ -89,8 +89,8 @@ public class ClientRealm extends AuthorizingRealm {
     /**
      * Authenticates a user and retrieves its user profile.
      *
-     * @param authenticationToken
-     *            the authentication token
+     * @param authenticationToken the authentication token
+     * @return authentication information
      */
     @SuppressWarnings("unchecked")
     protected AuthenticationInfo internalGetAuthenticationInfo(final AuthenticationToken authenticationToken) {
