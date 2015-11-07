@@ -30,10 +30,12 @@ import org.apache.shiro.web.filter.authc.AuthenticatingFilter;
 import org.apache.shiro.web.util.WebUtils;
 import org.pac4j.core.client.Client;
 import org.pac4j.core.client.Clients;
+import org.pac4j.core.client.IndirectClient;
 import org.pac4j.core.credentials.Credentials;
 import org.pac4j.core.exception.RequiresHttpAction;
 import org.pac4j.core.exception.TechnicalException;
 import org.pac4j.core.profile.UserProfile;
+import org.pac4j.core.util.CommonHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -71,6 +73,8 @@ public class ClientFilter extends AuthenticatingFilter {
         throws Exception {
         final ShiroWebContext context = new ShiroWebContext(WebUtils.toHttp(request), WebUtils.toHttp(response));
         final Client<Credentials, UserProfile> client = this.clients.findClient(context);
+        CommonHelper.assertNotNull("client", client);
+        CommonHelper.assertTrue(client instanceof IndirectClient, "only indirect clients are allowed on the callback url");
         log.debug("client : {}", client);
         final Credentials credentials = client.getCredentials(context);
         log.debug("credentials : {}", credentials);

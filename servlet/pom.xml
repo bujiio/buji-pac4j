@@ -23,16 +23,17 @@
   <parent>
     <groupId>io.buji</groupId>
     <artifactId>buji-pac4j-parent</artifactId>
-    <version>1.3.2-SNAPSHOT</version>
+    <version>1.4.0-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
   <artifactId>buji-pac4j-servlet</artifactId>
   <name>Apache Shiro :: Support :: pac4j servlet</name>
+  <description>Security extension for Shiro based on pac4j (web)</description>
   <packaging>bundle</packaging>
   
   <properties>
-    <servletVersion>2.5</servletVersion>
+    <servletVersion>3.0.1</servletVersion>
   </properties>
 
   <dependencies>
@@ -48,7 +49,7 @@
     </dependency>
     <dependency>
       <groupId>javax.servlet</groupId>
-      <artifactId>servlet-api</artifactId>
+      <artifactId>javax.servlet-api</artifactId>
       <version>${servletVersion}</version>
       <scope>provided</scope>
     </dependency>

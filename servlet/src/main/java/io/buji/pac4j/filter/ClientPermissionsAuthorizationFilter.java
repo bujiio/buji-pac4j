@@ -51,7 +51,7 @@ public class ClientPermissionsAuthorizationFilter extends PermissionsAuthorizati
     @Override
     protected void redirectToLogin(final ServletRequest request, final ServletResponse response) throws IOException {
         try {
-            this.client.redirect(new ShiroWebContext(WebUtils.toHttp(request), WebUtils.toHttp(response)), true, false);
+            this.client.redirect(new ShiroWebContext(WebUtils.toHttp(request), WebUtils.toHttp(response)), true);
         } catch (RequiresHttpAction e) {
         }
     }
