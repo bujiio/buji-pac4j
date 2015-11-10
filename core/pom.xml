@@ -31,9 +31,9 @@
   <description>Security extension for Shiro based on pac4j (core)</description>
   <artifactId>buji-pac4j-core</artifactId>
   <packaging>bundle</packaging>
-  
+
   <properties>
-    <pac4jVersion>1.8.0</pac4jVersion>
+    <pac4jVersion>1.8.1-SNAPSHOT</pac4jVersion>
   </properties>
 
   <dependencies>
@@ -48,5 +48,5 @@
       <version>${pac4jVersion}</version>
     </dependency>
   </dependencies>
-  
+
 </project>

@@ -28,6 +28,9 @@ import javax.servlet.ServletResponse;
 import org.apache.shiro.web.filter.authz.PermissionsAuthorizationFilter;
 import org.apache.shiro.web.util.WebUtils;
 import org.pac4j.core.client.BaseClient;
+import org.pac4j.core.client.Client;
+import org.pac4j.core.client.Clients;
+import org.pac4j.core.context.WebContext;
 import org.pac4j.core.credentials.Credentials;
 import org.pac4j.core.exception.RequiresHttpAction;
 import org.pac4j.core.profile.CommonProfile;
@@ -35,13 +38,15 @@ import org.pac4j.core.profile.CommonProfile;
 /**
  * This class specializes the PermissionsAuthorizationFilter to have a login url which is the redirection url to the
  * provider.
- * 
+ *
  * @author Jerome Leleu
  * @since 1.0.0
  */
 public class ClientPermissionsAuthorizationFilter extends PermissionsAuthorizationFilter {
 
-    private BaseClient<Credentials, CommonProfile> client;
+    protected Clients clients;
+
+    protected String clientName;
 
     @Override
     protected boolean isLoginRequest(final ServletRequest request, final ServletResponse response) {
@@ -50,13 +55,27 @@ public class ClientPermissionsAuthorizationFilter extends PermissionsAuthorizati
 
     @Override
     protected void redirectToLogin(final ServletRequest request, final ServletResponse response) throws IOException {
+        final WebContext context = new ShiroWebContext(WebUtils.toHttp(request), WebUtils.toHttp(response));
+        final Client client = clients.findClient(context, clientName);
         try {
-            this.client.redirect(new ShiroWebContext(WebUtils.toHttp(request), WebUtils.toHttp(response)), true);
+            client.redirect(context, true);
         } catch (RequiresHttpAction e) {
         }
     }
 
-    public void setClient(final BaseClient<Credentials, CommonProfile> client) {
-        this.client = client;
+    public Clients getClients() {
+        return clients;
+    }
+
+    public void setClients(Clients clients) {
+        this.clients = clients;
+    }
+
+    public void setClientName(String clientName) {
+        this.clientName = clientName;
+    }
+
+    public String getClientName() {
+        return clientName;
     }
 }

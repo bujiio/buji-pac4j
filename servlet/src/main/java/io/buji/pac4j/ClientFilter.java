@@ -42,28 +42,28 @@ import org.slf4j.LoggerFactory;
 /**
  * This filter retrieves credentials after a user authenticates at the provider to create an ClientToken to finish the authentication
  * process and retrieve the user profile.
- * 
+ *
  * @author Jerome Leleu
  * @since 1.0.0
  */
 @SuppressWarnings("unchecked")
 public class ClientFilter extends AuthenticatingFilter {
-    
+
     private static Logger log = LoggerFactory.getLogger(ClientFilter.class);
-    
+
     // the url where the application is redirected if the authentication fails
     private String failureUrl;
-    
+
     // the clients definition
     private Clients clients;
-    
+
     // This flag controls the behaviour of the filter after successful redirection
     private boolean redirectAfterSuccessfulAuthentication = true;
-    
+
     /**
      * The token created for this authentication is a ClientToken containing the credentials received after authentication at the provider.
      * These information are received on the callback url (on which the filter must be configured).
-     * 
+     *
      * @param request the incoming request
      * @param response the outgoing response
      * @throws Exception if there is an error processing the request.
@@ -78,13 +78,13 @@ public class ClientFilter extends AuthenticatingFilter {
         log.debug("client : {}", client);
         final Credentials credentials = client.getCredentials(context);
         log.debug("credentials : {}", credentials);
-        return new ClientToken(client.getName(), credentials);
+        return new ClientToken(context, client.getName(), credentials);
     }
-    
+
     /**
      * Execute login by creating {@link #createToken(javax.servlet.ServletRequest, javax.servlet.ServletResponse) token} and logging subject
      * with this token.
-     * 
+     *
      * @param request the incoming request
      * @param response the outgoing response
      * @throws Exception if there is an error processing the request.
@@ -110,10 +110,10 @@ public class ClientFilter extends AuthenticatingFilter {
             return onLoginFailure(token, e, request, response);
         }
     }
-    
+
     /**
      * Returns <code>false</code> to always force authentication (user is never considered authenticated by this filter).
-     * 
+     *
      * @param request the incoming request
      * @param response the outgoing response
      * @param mappedValue the filter-specific config value mapped to this filter in the URL rules mappings.
@@ -124,10 +124,10 @@ public class ClientFilter extends AuthenticatingFilter {
                                       final Object mappedValue) {
         return false;
     }
-    
+
     /**
      * If login has been successful, redirect user to the original protected url.
-     * 
+     *
      * @param token the token representing the current authentication
      * @param subject the current authenticated subjet
      * @param request the incoming request
@@ -147,11 +147,11 @@ public class ClientFilter extends AuthenticatingFilter {
             return false;
         }
     }
-    
+
     /**
      * If login has failed, redirect user to the error page except if the user is already authenticated, in which case redirect to the
      * default success url.
-     * 
+     *
      * @param token the token representing the current authentication
      * @param ae the current authentication exception
      * @param request the incoming request
@@ -178,31 +178,30 @@ public class ClientFilter extends AuthenticatingFilter {
         }
         return false;
     }
-    
+
     public String getFailureUrl() {
         return this.failureUrl;
     }
-    
+
     public void setFailureUrl(final String failureUrl) {
         this.failureUrl = failureUrl;
     }
-    
+
     public Clients getClients() {
         return this.clients;
     }
-    
+
     public void setClients(final Clients clients) throws TechnicalException {
         this.clients = clients;
-        this.clients.init();
     }
 
     /**
      * This redirectAfterSuccessfulAuthentication property controls the behaviour of the filter after successful login.
      * If redirection is enabled (default) the filter will redirect the request to original requested url.
-     * 
+     *
      * In case redirection is disabled the filter will allow the request to passthrough the filter chain. This is useful for cas
      * proxy (proxied application) where the credential receptor url is same as the resource url.
-     * 
+     *
      * @return current value of the property
      */
     public boolean getRedirectAfterSuccessfulAuthentication()
@@ -214,6 +213,4 @@ public class ClientFilter extends AuthenticatingFilter {
     {
         this.redirectAfterSuccessfulAuthentication = casPassThrough;
     }
-    
-    
 }

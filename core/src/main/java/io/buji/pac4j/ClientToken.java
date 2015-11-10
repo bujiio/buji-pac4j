@@ -19,18 +19,21 @@
 package io.buji.pac4j;
 
 import org.apache.shiro.authc.RememberMeAuthenticationToken;
+import org.pac4j.core.context.WebContext;
 import org.pac4j.core.credentials.Credentials;
 import org.pac4j.core.util.CommonHelper;
 
 /**
  * This class represents a token for an authentication process (client name + credentials + user identifier after authentication).
- * 
+ *
  * @author Jerome Leleu
  * @since 1.0.0
  */
 public final class ClientToken implements RememberMeAuthenticationToken {
 
     private static final long serialVersionUID = 3141878022445836151L;
+
+    private final WebContext context;
 
     private final String clientName;
 
@@ -40,7 +43,8 @@ public final class ClientToken implements RememberMeAuthenticationToken {
 
     private boolean isRememberMe;
 
-    public ClientToken(final String clientName, final Credentials credentials) {
+    public ClientToken(final WebContext context, final String clientName, final Credentials credentials) {
+        this.context = context;
         this.clientName = clientName;
         this.credentials = credentials;
     }
@@ -51,6 +55,10 @@ public final class ClientToken implements RememberMeAuthenticationToken {
 
     public void setRememberMe(boolean isRememberMe) {
         this.isRememberMe = isRememberMe;
+    }
+
+    public WebContext getContext() {
+        return context;
     }
 
     public String getClientName() {

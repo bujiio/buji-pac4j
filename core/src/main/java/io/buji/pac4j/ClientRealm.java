@@ -106,7 +106,7 @@ public class ClientRealm extends AuthorizingRealm {
         log.debug("credentials : {}", credentials);
 
         // client
-        final Client<Credentials, CommonProfile> client = this.clients.findClient(clientToken.getClientName());
+        final Client<Credentials, CommonProfile> client = this.clients.findClient(clientToken.getContext(), clientToken.getClientName());
         log.debug("client : {}", client);
 
         // finish authentication process : get the user profile
@@ -187,7 +187,6 @@ public class ClientRealm extends AuthorizingRealm {
 
     public void setClients(final Clients clients) throws TechnicalException {
         this.clients = clients;
-        this.clients.init();
     }
 
     public String getDefaultRoles() {
