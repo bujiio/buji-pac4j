@@ -2,11 +2,11 @@
   <img src="https://pac4j.github.io/pac4j/img/logo-shiro.png" width="300" />
 </p>
 
-If you already use the [Shiro](http://shiro.apache.org) security library, you need to use the `buji-pac4j` project which is an official security extension to support multi-protocols authentication.
+If you already use the [Shiro](http://shiro.apache.org) security library, you need to use the `buji-pac4j` official security extension to support multi-protocols authentication: CAS, OAuth, SAML...
 
-If you are looking for a full security, you can directly use a pac4j implementation for your environment: [`j2e-pac4j`](https://github.com/pac4j/j2e-pac4j) for J2E, [`play-pac4j`](https://github.com/pac4j/play-pac4j) for Play framework v2, [`spring-webmvc-pac4j`](https://github.com/pac4j/spring-webmvc-pac4j) for Spring MVC / Boot... See all the frameworks and tools supported by [pac4j](http://www.pac4j.org).
+If you are looking for a full security library, you can directly use a pac4j implementation for your environment: [`j2e-pac4j`](https://github.com/pac4j/j2e-pac4j) for J2E, [`play-pac4j`](https://github.com/pac4j/play-pac4j) for Play framework v2, [`spring-webmvc-pac4j`](https://github.com/pac4j/spring-webmvc-pac4j) for Spring MVC / Boot... See all the frameworks and tools supported by [pac4j](http://www.pac4j.org).
 
-`buji-pac4` supports most authentication mechanisms, called [**clients**](https://github.com/pac4j/pac4j/wiki/Clients):
+`buji-pac4` supports many authentication mechanisms, called [**clients**](https://github.com/pac4j/pac4j/wiki/Clients):
 
 - **indirect / stateful clients** are for UI when the user authenticates once at an external provider (like Facebook, a CAS server...) or via a local form (or basic auth popup).
 
@@ -93,12 +93,14 @@ Thus, you need to define the appropriate `ClientFilter` in your *shiro.ini* file
     [urls]
     /callback = clientsFilter
 
-Notice you also need to configure a specific realm: `ClientRealm` and a specific subject factory: `ClientSubjectFactory`.
+Notice you have two additional elements for Shiro:
+- a realm: `ClientRealm` with which you can define the default granted roles and permissions in addition to the ones provided by any `AuthorizationGenerator` attached to the client used for authentication
+- a subject factory: `ClientSubjectFactory`.
 
 
 ### Protect an url
 
-You can protect an url and require the user to be authenticated by a client by using one of the following filter: `ClientPermissionsAuthorizationFilter`, `ClientRolesAuthorizationFilter` or `ClientUserFilter`.  
+You can protect an url and require the user to be authenticated  by a client or have the appropriate roles or permissions by using one of the following filter: `ClientUserFilter`, `ClientPermissionsAuthorizationFilter` or `ClientRolesAuthorizationFilter`.  
 For example:
 
     [main]
@@ -153,7 +155,9 @@ For logout, like for any other Shiro webapp, use the default logout filter (in t
 
 ## Migration guide (1.3 -> 1.4)
 
-The protection filters no longer accept a specific client directly: they now require all the defined clients and a clientName to define the client to be used to secure the url.
+The protection filters no longer accept a specific client directly: they now require two parameters:
+- `clients`: the defined clients
+- `clientName`: the name of the client to use to secure the url.
 
 
 ## Demo
