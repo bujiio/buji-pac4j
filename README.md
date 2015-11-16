@@ -75,7 +75,7 @@ You have to define all the clients in the *shiro.ini* file:
 
 ### Define the callback endpoint
 
-Indirect clients rely on external identity providers (like Facebook) and thus require to define a callback endpoint where the user will be redirected after login at the identity provider.  
+Indirect clients rely on external identity providers (like Facebook) and thus require to define a callback endpoint in the application where the user will be redirected after login at the identity provider.  
 Thus, you need to define the appropriate `ClientFilter` in your *shiro.ini* file:
 
     [main]
