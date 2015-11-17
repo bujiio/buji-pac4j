@@ -155,7 +155,7 @@ For logout, like for any other Shiro webapp, use the default logout filter (in t
 
 ## Migration guide (1.3 -> 1.4)
 
-The protection filters no longer accept a specific client directly: they now require two parameters:
+The protection filters no longer accept a specific client directly, they now require two parameters:
 - `clients`: the defined clients
 - `clientName`: the name of the client to use to secure the url.
 
