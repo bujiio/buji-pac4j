@@ -23,6 +23,7 @@ import java.io.IOException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
+import io.buji.pac4j.context.session.ShiroSessionStore;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.subject.Subject;
@@ -31,6 +32,7 @@ import org.apache.shiro.web.util.WebUtils;
 import org.pac4j.core.client.Client;
 import org.pac4j.core.client.Clients;
 import org.pac4j.core.client.IndirectClient;
+import org.pac4j.core.context.J2EContext;
 import org.pac4j.core.credentials.Credentials;
 import org.pac4j.core.exception.RequiresHttpAction;
 import org.pac4j.core.exception.TechnicalException;
@@ -71,14 +73,14 @@ public class ClientFilter extends AuthenticatingFilter {
     @Override
     protected AuthenticationToken createToken(final ServletRequest request, final ServletResponse response)
         throws Exception {
-        final ShiroWebContext context = new ShiroWebContext(WebUtils.toHttp(request), WebUtils.toHttp(response));
+        final J2EContext context = new J2EContext(WebUtils.toHttp(request), WebUtils.toHttp(response), new ShiroSessionStore());
         final Client<Credentials, UserProfile> client = this.clients.findClient(context);
         CommonHelper.assertNotNull("client", client);
         CommonHelper.assertTrue(client instanceof IndirectClient, "only indirect clients are allowed on the callback url");
         log.debug("client : {}", client);
         final Credentials credentials = client.getCredentials(context);
         log.debug("credentials : {}", credentials);
-        return new ClientToken(context, client.getName(), credentials);
+        return new ClientToken(client.getName(), credentials);
     }
 
     /**

@@ -16,46 +16,41 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package io.buji.pac4j;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+package io.buji.pac4j.context.session;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.UnavailableSecurityManagerException;
-import org.pac4j.core.context.J2EContext;
+import org.pac4j.core.context.WebContext;
+import org.pac4j.core.context.session.SessionStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * This implementation leverages the J2E context with Shiro session.
- * 
+ * Specific session store.
+ *
  * @author Jerome Leleu
- * @since 1.2.0
+ * @since 1.4.0
  */
-public class ShiroWebContext extends J2EContext {
-    
-    protected static Logger log = LoggerFactory.getLogger(ShiroWebContext.class);
-    
-    public ShiroWebContext() {
-        super(null, null);
-    }
-    
-    public ShiroWebContext(final HttpServletRequest request, final HttpServletResponse response) {
-        super(request, response);
-    }
-    
+public final class ShiroSessionStore implements SessionStore {
+
+    private final static Logger log = LoggerFactory.getLogger(ShiroSessionStore.class);
+
     @Override
-    public void setSessionAttribute(final String name, final Object value) {
+    public String getOrCreateSessionId(WebContext context) {
+        return SecurityUtils.getSubject().getSession().getId().toString();
+    }
+
+    @Override
+    public Object get(WebContext context, String key) {
+        return SecurityUtils.getSubject().getSession().getAttribute(key);
+    }
+
+    @Override
+    public void set(WebContext context, String key, Object value) {
         try {
-            SecurityUtils.getSubject().getSession().setAttribute(name, value);
+            SecurityUtils.getSubject().getSession().setAttribute(key, value);
         } catch (final UnavailableSecurityManagerException e) {
             log.warn("Should happen just once at startup in some specific case of Shiro Spring configuration", e);
         }
-    }
-    
-    @Override
-    public Object getSessionAttribute(final String name) {
-        return SecurityUtils.getSubject().getSession().getAttribute(name);
     }
 }

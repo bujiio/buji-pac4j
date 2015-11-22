@@ -18,19 +18,16 @@
  */
 package io.buji.pac4j.filter;
 
-import io.buji.pac4j.ShiroWebContext;
-
 import java.io.IOException;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
+import io.buji.pac4j.context.session.ShiroSessionStore;
 import org.apache.shiro.web.filter.authz.RolesAuthorizationFilter;
 import org.apache.shiro.web.util.WebUtils;
-import org.pac4j.core.client.BaseClient;
-import org.pac4j.core.client.Client;
-import org.pac4j.core.client.Clients;
-import org.pac4j.core.context.WebContext;
+import org.pac4j.core.client.IndirectClient;
+import org.pac4j.core.context.J2EContext;
 import org.pac4j.core.credentials.Credentials;
 import org.pac4j.core.exception.RequiresHttpAction;
 import org.pac4j.core.profile.CommonProfile;
@@ -43,9 +40,7 @@ import org.pac4j.core.profile.CommonProfile;
  */
 public class ClientRolesAuthorizationFilter extends RolesAuthorizationFilter {
 
-    protected Clients clients;
-
-    protected String clientName;
+    protected IndirectClient<Credentials, CommonProfile> client;
 
     @Override
     protected boolean isLoginRequest(final ServletRequest request, final ServletResponse response) {
@@ -54,27 +49,14 @@ public class ClientRolesAuthorizationFilter extends RolesAuthorizationFilter {
 
     @Override
     protected void redirectToLogin(final ServletRequest request, final ServletResponse response) throws IOException {
-        final WebContext context = new ShiroWebContext(WebUtils.toHttp(request), WebUtils.toHttp(response));
-        final Client client = clients.findClient(context, clientName);
+        final J2EContext context = new J2EContext(WebUtils.toHttp(request), WebUtils.toHttp(response), new ShiroSessionStore());
         try {
-            client.redirect(context, true);
+            this.client.redirect(context, true);
         } catch (RequiresHttpAction e) {
         }
     }
 
-    public Clients getClients() {
-        return clients;
-    }
-
-    public void setClients(Clients clients) {
-        this.clients = clients;
-    }
-
-    public void setClientName(String clientName) {
-        this.clientName = clientName;
-    }
-
-    public String getClientName() {
-        return clientName;
+    public void setClient(final IndirectClient<Credentials, CommonProfile> client) {
+        this.client = client;
     }
 }

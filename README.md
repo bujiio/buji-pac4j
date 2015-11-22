@@ -105,15 +105,12 @@ For example:
 
     [main]
     facebookRoles = io.buji.pac4j.filter.ClientRolesAuthorizationFilter
-    facebookRoles.clients = $clients
-    facebookRoles.clientName = FacebookClient
+    facebookRoles.client = $facebookClient
     formRoles = io.buji.pac4j.filter.ClientRolesAuthorizationFilter
-    formRoles.clients = $clients
-    formRoles.clientName = FormClient
+    formRoles.client = $formClient
     casRoles = io.buji.pac4j.filter.ClientRolesAuthorizationFilter
-    casRoles.clients = $clients
-    casRoles.clientName = CasClient
-    
+    casRoles.client = $casClient
+
     [urls] 
     /facebook/** = facebookRoles[ROLE_USER]
     /form/** = formRoles[ROLE_USER]
@@ -151,13 +148,6 @@ The retrieved profile is at least a `CommonProfile`, from which you can retrieve
 For logout, like for any other Shiro webapp, use the default logout filter (in the *shiro.ini* file):
 
     /logout = logout
-
-
-## Migration guide (1.3 -> 1.4)
-
-The protection filters no longer accept a specific client directly, they now require two parameters:
-- `clients`: the defined clients
-- `clientName`: the name of the client to use to secure the url.
 
 
 ## Demo
