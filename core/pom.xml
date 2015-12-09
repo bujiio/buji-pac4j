@@ -33,7 +33,7 @@
   <packaging>bundle</packaging>
 
   <properties>
-    <pac4jVersion>1.8.1-SNAPSHOT</pac4jVersion>
+    <pac4jVersion>1.8.1</pac4jVersion>
   </properties>
 
   <dependencies>
