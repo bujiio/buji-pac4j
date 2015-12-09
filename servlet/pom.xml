@@ -23,7 +23,7 @@
   <parent>
     <groupId>io.buji</groupId>
     <artifactId>buji-pac4j-parent</artifactId>
-    <version>1.4.0-SNAPSHOT</version>
+    <version>1.4.0</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
