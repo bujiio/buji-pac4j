@@ -174,7 +174,7 @@ Or the [Shiro user mailing list](http://shiro-user.582556.n2.nabble.com/) and [S
 
 ## Development
 
-The next version 1.4.1-SNAPSHOT is under development.
+The version 1.4.1-SNAPSHOT is under development.
 
 Maven artifacts are built via Travis: [![Build Status](https://travis-ci.org/bujiio/buji-pac4j.png?branch=master)](https://travis-ci.org/bujiio/buji-pac4j) and available in the [Sonatype snapshots repository](https://oss.sonatype.org/content/repositories/snapshots/org/pac4j). This repository must be added in the Maven *pom.xml* file for example:
 
