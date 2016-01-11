@@ -187,6 +187,7 @@ public class ClientRealm extends AuthorizingRealm {
 
     public void setClients(final Clients clients) throws TechnicalException {
         this.clients = clients;
+        clients.init();
     }
 
     public String getDefaultRoles() {

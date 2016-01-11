@@ -195,6 +195,7 @@ public class ClientFilter extends AuthenticatingFilter {
 
     public void setClients(final Clients clients) throws TechnicalException {
         this.clients = clients;
+        clients.init();
     }
 
     /**
