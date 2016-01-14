@@ -42,6 +42,10 @@ import org.pac4j.core.credentials.Credentials;
 import org.pac4j.core.profile.CommonProfile;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import com.openpojo.reflection.impl.PojoClassFactory;
+import com.openpojo.validation.Validator;
+import com.openpojo.validation.ValidatorBuilder;
+import com.openpojo.validation.test.impl.GetterTester;
 
 /**
  * ClientRealm.java test coverage class
@@ -130,5 +134,11 @@ public class ClientRealmTest {
 		// then
 		assertTrue("List must have READ, WRITE values.", list.contains("READ") && list.contains("WRITE"));
 	}
+	
+	@Test
+	public final void testGetterSetter() throws Exception {
+		Validator validator = ValidatorBuilder.create().with(new GetterTester()).build();
+		validator.validate(PojoClassFactory.getPojoClass(ClientRealm.class));
+    }
 
 }

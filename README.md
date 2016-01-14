@@ -36,7 +36,7 @@ Just follow these easy steps:
 
 ### Add the required dependencies (`buji-pac4j-*` + `pac4j-*` libraries)
 
-You need to add a dependency on either `buji-pac4j-core` or `buji-pac4j-servlet` (<em>groupId</em>: **org.pac4j**, *version*: **1.4.1**). Both are intended to be used in web-based environments.
+You need to add a dependency on either `buji-pac4j-core` or `buji-pac4j-servlet` (<em>groupId</em>: **org.pac4j**, *version*: **1.4.1-SNAPSHOT**). Both are intended to be used in web-based environments.
 `buji-pac4j-servlet` is to be used in servlet environments and depends on `buji-pac4j-core`. It is the library to be used for most Java
 web projects (e.g. anything running on Tomcat, Glassfish, Jetty, etc.) `buji-pac4j-core` is a library without any servlet dependencies
 and thus is meant to be used with some newer Java web frameworks which do not support servlets such as Play Framework or Vert.x.
@@ -164,7 +164,7 @@ Or the [Shiro user mailing list](http://shiro-user.582556.n2.nabble.com/) and [S
 
 ## Development
 
-The version 1.4.2-SNAPSHOT is under development.
+The version 1.4.1-SNAPSHOT is under development.
 
 Maven artifacts are built via Travis: [![Build Status](https://travis-ci.org/bujiio/buji-pac4j.png?branch=master)](https://travis-ci.org/bujiio/buji-pac4j) and available in the [Sonatype snapshots repository](https://oss.sonatype.org/content/repositories/snapshots/org/pac4j). This repository must be added in the Maven *pom.xml* file for example:
 
