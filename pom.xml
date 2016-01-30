@@ -47,6 +47,7 @@
     <slf4jVersion>1.7.12</slf4jVersion>
     <junitVersion>4.12</junitVersion>
     <javaVersion>1.7</javaVersion>
+    <powermockVersion>1.6.4</powermockVersion>
   </properties>
 
   <dependencies>
@@ -66,6 +67,17 @@
       <artifactId>slf4j-simple</artifactId>
       <version>${slf4jVersion}</version>
       <scope>test</scope>
+    </dependency>
+    <dependency>
+    	<groupId>org.powermock</groupId>
+    	<artifactId>powermock-api-mockito</artifactId>
+    	<version>${powermockVersion}</version>
+    	<scope>test</scope>
+    </dependency>
+    <dependency>
+    	<groupId>org.powermock</groupId>
+    	<artifactId>powermock-module-junit4</artifactId>
+    	<version>${powermockVersion}</version>
     </dependency>
   </dependencies>
 
@@ -128,6 +140,24 @@
               <goal>jar</goal>
             </goals>
           </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>cobertura-maven-plugin</artifactId>
+        <configuration>
+            <formats>
+                <format>html</format>
+                <format>xml</format>
+            </formats>
+        </configuration>
+        <executions>
+            <execution>
+                <phase>package</phase>
+                <goals>
+                    <goal>cobertura</goal>
+                </goals>
+            </execution>
         </executions>
       </plugin>
     </plugins>
