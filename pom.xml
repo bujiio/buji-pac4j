@@ -48,6 +48,8 @@
     <junitVersion>4.12</junitVersion>
     <javaVersion>1.7</javaVersion>
     <powermockVersion>1.6.4</powermockVersion>
+    <openpojoVersion>0.8.3</openpojoVersion>
+    <asmVersion>5.0.3</asmVersion>
   </properties>
 
   <dependencies>
@@ -78,6 +80,28 @@
     	<groupId>org.powermock</groupId>
     	<artifactId>powermock-module-junit4</artifactId>
     	<version>${powermockVersion}</version>
+    </dependency>
+    <dependency>
+        <groupId>com.openpojo</groupId>
+        <artifactId>openpojo</artifactId>
+        <version>${openpojoVersion}</version>
+        <scope>test</scope>
+        <exclusions>
+            <exclusion>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+            </exclusion>
+            <exclusion>
+                <groupId>org.hamcrest</groupId>
+                <artifactId>hamcrest-all</artifactId>
+            </exclusion>
+        </exclusions>
+    </dependency>
+    <dependency>
+        <groupId>org.ow2.asm</groupId>
+        <artifactId>asm</artifactId>
+        <version>${asmVersion}</version>
+        <scope>test</scope>
     </dependency>
   </dependencies>
 
