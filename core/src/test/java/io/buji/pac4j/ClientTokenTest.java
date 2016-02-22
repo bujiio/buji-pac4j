@@ -22,6 +22,7 @@ import static org.junit.Assert.assertEquals;
 import static org.powermock.api.mockito.PowerMockito.mock;
 
 import org.junit.Test;
+import org.pac4j.core.context.WebContext;
 import org.pac4j.core.credentials.Credentials;
 
 import com.openpojo.reflection.impl.PojoClassFactory;
@@ -37,18 +38,20 @@ import com.openpojo.validation.test.impl.SetterTester;
  * @since 1.4.2
  */
 public class ClientTokenTest {
-	
+
 	private final String CLIENT_NAME = "CLIENT_NAME";
 
 	@Test
 	public final void testConstructor() {
 		Credentials credentialsMock = mock(Credentials.class);
-		
-		ClientToken clientToken = new ClientToken(CLIENT_NAME, credentialsMock);
-		
+		WebContext contextMock = mock(WebContext.class);
+
+		ClientToken clientToken = new ClientToken(CLIENT_NAME, credentialsMock, contextMock);
+
 		assertEquals("Constructor must set clientName field to " + CLIENT_NAME, CLIENT_NAME, clientToken.getClientName());
 		assertEquals("Constructor must set credentials field to " + credentialsMock, credentialsMock, clientToken.getCredentials());
-			
+		assertEquals("Constructor must set context field to " + contextMock, contextMock, clientToken.getContext());
+
 	}
 
 	@Test

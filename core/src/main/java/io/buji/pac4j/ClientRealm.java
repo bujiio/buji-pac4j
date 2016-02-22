@@ -110,7 +110,7 @@ public class ClientRealm extends AuthorizingRealm {
         log.debug("client : {}", client);
 
         // finish authentication process : get the user profile
-        final CommonProfile profile = client.getUserProfile(credentials, null);
+        final CommonProfile profile = client.getUserProfile(credentials, clientToken.getContext());
         log.debug("profile : {}", profile);
         // no profile
         if (profile == null) {
@@ -141,8 +141,8 @@ public class ClientRealm extends AuthorizingRealm {
      */
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(final PrincipalCollection principals) {
-        Set<String> roles = new HashSet<String>(split(this.defaultRoles));
-        Set<String> permissions = new HashSet<String>(split(this.defaultPermissions));
+        Set<String> roles = new HashSet<>(split(this.defaultRoles));
+        Set<String> permissions = new HashSet<>(split(this.defaultPermissions));
         // get roles and permissions from principals
         Collection<CommonProfile> profiles = principals.byType(CommonProfile.class);
         if (profiles != null) {
@@ -169,7 +169,7 @@ public class ClientRealm extends AuthorizingRealm {
      * @return the list of not empty and trimmed strings
      */
     protected List<String> split(final String s) {
-        final List<String> list = new ArrayList<String>();
+        final List<String> list = new ArrayList<>();
         final String[] elements = StringUtils.split(s, ',');
         if (elements != null && elements.length > 0) {
             for (final String element : elements) {

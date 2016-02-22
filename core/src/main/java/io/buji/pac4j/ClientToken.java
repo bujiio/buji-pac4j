@@ -19,6 +19,7 @@
 package io.buji.pac4j;
 
 import org.apache.shiro.authc.RememberMeAuthenticationToken;
+import org.pac4j.core.context.WebContext;
 import org.pac4j.core.credentials.Credentials;
 import org.pac4j.core.util.CommonHelper;
 
@@ -36,21 +37,32 @@ public final class ClientToken implements RememberMeAuthenticationToken {
 
     private final Credentials credentials;
 
+    private final WebContext context;
+
     private String userId;
 
     private boolean isRememberMe;
 
-    public ClientToken(final String clientName, final Credentials credentials) {
+    public ClientToken(final String clientName, final Credentials credentials, final WebContext context) {
         this.clientName = clientName;
         this.credentials = credentials;
+        this.context = context;
     }
 
     public void setUserId(final String userId) {
         this.userId = userId;
     }
 
+    public String getUserId() {
+        return userId;
+    }
+
     public void setRememberMe(boolean isRememberMe) {
         this.isRememberMe = isRememberMe;
+    }
+
+    public boolean isRememberMe() {
+        return isRememberMe;
     }
 
     public String getClientName() {
@@ -65,13 +77,13 @@ public final class ClientToken implements RememberMeAuthenticationToken {
         return this.userId;
     }
 
+    public WebContext getContext() {
+        return context;
+    }
+
     @Override
     public String toString() {
         return CommonHelper.toString(ClientToken.class, "clientName", this.clientName, "credentials", this.credentials,
                 "userId", this.userId);
-    }
-
-    public boolean isRememberMe() {
-        return isRememberMe;
     }
 }

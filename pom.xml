@@ -58,7 +58,7 @@
       <artifactId>junit</artifactId>
       <version>${junitVersion}</version>
       <scope>test</scope>
-    </dependency>    
+    </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
@@ -164,24 +164,6 @@
               <goal>jar</goal>
             </goals>
           </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>cobertura-maven-plugin</artifactId>
-        <configuration>
-            <formats>
-                <format>html</format>
-                <format>xml</format>
-            </formats>
-        </configuration>
-        <executions>
-            <execution>
-                <phase>package</phase>
-                <goals>
-                    <goal>cobertura</goal>
-                </goals>
-            </execution>
         </executions>
       </plugin>
     </plugins>
