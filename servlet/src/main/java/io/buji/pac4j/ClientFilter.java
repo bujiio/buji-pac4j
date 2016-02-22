@@ -80,7 +80,7 @@ public class ClientFilter extends AuthenticatingFilter {
         log.debug("client : {}", client);
         final Credentials credentials = client.getCredentials(context);
         log.debug("credentials : {}", credentials);
-        return new ClientToken(client.getName(), credentials);
+        return new ClientToken(client.getName(), credentials, context);
     }
 
     /**
