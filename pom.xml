@@ -80,6 +80,7 @@
     	<groupId>org.powermock</groupId>
     	<artifactId>powermock-module-junit4</artifactId>
     	<version>${powermockVersion}</version>
+        <scope>test</scope>
     </dependency>
     <dependency>
         <groupId>com.openpojo</groupId>
