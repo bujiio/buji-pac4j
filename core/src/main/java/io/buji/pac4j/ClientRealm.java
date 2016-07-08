@@ -38,6 +38,7 @@ import org.apache.shiro.util.StringUtils;
 import org.pac4j.core.client.Client;
 import org.pac4j.core.client.Clients;
 import org.pac4j.core.credentials.Credentials;
+import org.pac4j.core.exception.HttpAction;
 import org.pac4j.core.exception.TechnicalException;
 import org.pac4j.core.profile.CommonProfile;
 import org.slf4j.Logger;
@@ -110,7 +111,12 @@ public class ClientRealm extends AuthorizingRealm {
         log.debug("client : {}", client);
 
         // finish authentication process : get the user profile
-        final CommonProfile profile = client.getUserProfile(credentials, clientToken.getContext());
+        CommonProfile profile = null;
+        try {
+        	profile = client.getUserProfile(credentials, clientToken.getContext());
+        } catch (HttpAction e) {
+        }
+
         log.debug("profile : {}", profile);
         // no profile
         if (profile == null) {

@@ -71,7 +71,7 @@ public class ClientUserFilterTest {
 		clientUserFilter.redirectToLogin(null, null);
 		
 		// then
-		verify(indirectClientMock).redirect(j2EContextMock, true);
+		verify(indirectClientMock).redirect(j2EContextMock);
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
