@@ -23,14 +23,15 @@ import java.io.IOException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
-import io.buji.pac4j.context.session.ShiroSessionStore;
 import org.apache.shiro.web.filter.authz.PermissionsAuthorizationFilter;
 import org.apache.shiro.web.util.WebUtils;
 import org.pac4j.core.client.IndirectClient;
 import org.pac4j.core.context.J2EContext;
 import org.pac4j.core.credentials.Credentials;
-import org.pac4j.core.exception.RequiresHttpAction;
+import org.pac4j.core.exception.HttpAction;
 import org.pac4j.core.profile.CommonProfile;
+
+import io.buji.pac4j.context.session.ShiroSessionStore;
 
 /**
  * This class specializes the PermissionsAuthorizationFilter to have a login url which is the redirection url to the
@@ -50,10 +51,10 @@ public class ClientPermissionsAuthorizationFilter extends PermissionsAuthorizati
 
     @Override
     protected void redirectToLogin(final ServletRequest request, final ServletResponse response) throws IOException {
-        final J2EContext context = new J2EContext(WebUtils.toHttp(request), WebUtils.toHttp(response), new ShiroSessionStore());
+        final J2EContext context = new J2EContext(WebUtils.toHttp(request), WebUtils.toHttp(response), new ShiroSessionStore<J2EContext>());
         try {
-            this.client.redirect(context, true);
-        } catch (RequiresHttpAction e) {
+            this.client.redirect(context);
+        } catch (HttpAction e) {
         }
     }
 

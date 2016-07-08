@@ -23,7 +23,6 @@ import java.io.IOException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
-import io.buji.pac4j.context.session.ShiroSessionStore;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.subject.Subject;
@@ -34,12 +33,14 @@ import org.pac4j.core.client.Clients;
 import org.pac4j.core.client.IndirectClient;
 import org.pac4j.core.context.J2EContext;
 import org.pac4j.core.credentials.Credentials;
-import org.pac4j.core.exception.RequiresHttpAction;
+import org.pac4j.core.exception.HttpAction;
 import org.pac4j.core.exception.TechnicalException;
-import org.pac4j.core.profile.UserProfile;
+import org.pac4j.core.profile.CommonProfile;
 import org.pac4j.core.util.CommonHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import io.buji.pac4j.context.session.ShiroSessionStore;
 
 /**
  * This filter retrieves credentials after a user authenticates at the provider to create an ClientToken to finish the authentication
@@ -73,8 +74,8 @@ public class ClientFilter extends AuthenticatingFilter {
     @Override
     protected AuthenticationToken createToken(final ServletRequest request, final ServletResponse response)
         throws Exception {
-        final J2EContext context = new J2EContext(WebUtils.toHttp(request), WebUtils.toHttp(response), new ShiroSessionStore());
-        final Client<Credentials, UserProfile> client = this.clients.findClient(context);
+        final J2EContext context = new J2EContext(WebUtils.toHttp(request), WebUtils.toHttp(response), new ShiroSessionStore<J2EContext>());
+        final Client<Credentials, CommonProfile> client = this.clients.findClient(context);
         CommonHelper.assertNotNull("client", client);
         CommonHelper.assertTrue(client instanceof IndirectClient, "only indirect clients are allowed on the callback url");
         log.debug("client : {}", client);
@@ -96,7 +97,7 @@ public class ClientFilter extends AuthenticatingFilter {
         final AuthenticationToken token;
         try {
             token = createToken(request, response);
-        } catch (final RequiresHttpAction e) {
+        } catch (final HttpAction e) {
             log.debug("requires HTTP action : {}", e);
             return false;
         }

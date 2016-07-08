@@ -43,7 +43,7 @@
   </scm>
 
   <properties>
-    <shiroVersion>1.2.4</shiroVersion>
+    <shiroVersion>1.2.6</shiroVersion>
     <slf4jVersion>1.7.12</slf4jVersion>
     <junitVersion>4.12</junitVersion>
     <javaVersion>1.7</javaVersion>

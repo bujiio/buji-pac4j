@@ -31,22 +31,22 @@ import org.slf4j.LoggerFactory;
  * @author Jerome Leleu
  * @since 1.4.0
  */
-public final class ShiroSessionStore implements SessionStore {
+public final class ShiroSessionStore<C extends WebContext> implements SessionStore<C> {
 
     private final static Logger log = LoggerFactory.getLogger(ShiroSessionStore.class);
 
     @Override
-    public String getOrCreateSessionId(WebContext context) {
+    public String getOrCreateSessionId(C context) {
         return SecurityUtils.getSubject().getSession().getId().toString();
     }
 
     @Override
-    public Object get(WebContext context, String key) {
+    public Object get(C context, String key) {
         return SecurityUtils.getSubject().getSession().getAttribute(key);
     }
 
     @Override
-    public void set(WebContext context, String key, Object value) {
+    public void set(C context, String key, Object value) {
         try {
             SecurityUtils.getSubject().getSession().setAttribute(key, value);
         } catch (final UnavailableSecurityManagerException e) {

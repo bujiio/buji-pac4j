@@ -72,7 +72,7 @@ public class ClientPermissionsAuthorizationFilterTest {
 		clientPermissionsAuthorizationFilter.redirectToLogin(null, null);
 		
 		// then
-		verify(indirectClientMock).redirect(j2EContextMock, true);
+		verify(indirectClientMock).redirect(j2EContextMock);
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
