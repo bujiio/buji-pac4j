@@ -19,23 +19,17 @@
 package io.buji.pac4j.filter;
 
 import io.buji.pac4j.session.ShiroSessionStore;
-import org.apache.shiro.subject.PrincipalCollection;
-import org.apache.shiro.subject.SimplePrincipalCollection;
-import org.apache.shiro.subject.Subject;
 import org.pac4j.core.config.Config;
 import org.pac4j.core.context.J2EContext;
 import org.pac4j.core.engine.DefaultSecurityLogic;
-import org.pac4j.core.engine.SecurityLogic;
 import org.pac4j.core.http.J2ENopHttpActionAdapter;
-import org.pac4j.core.profile.CommonProfile;
-import org.pac4j.core.profile.ProfileManager;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+
+import static org.pac4j.core.util.CommonHelper.*;
 
 /**
  * <p>This filter protects an url, based on the {@link #securityLogic}.</p>
@@ -48,7 +42,7 @@ import java.util.List;
  */
 public class SecurityFilter implements Filter {
 
-    private SecurityLogic<Object, J2EContext> securityLogic = new DefaultSecurityLogic<>();
+    private DefaultSecurityLogic<Object, J2EContext> securityLogic;
 
     private Config config;
 
@@ -60,53 +54,42 @@ public class SecurityFilter implements Filter {
 
     private Boolean multiProfile;
 
+    private ShiroSessionStore internalSessionStore = new ShiroSessionStore();
+
+    public SecurityFilter() {
+        securityLogic = new DefaultSecurityLogic<>();
+        securityLogic.setSaveProfileInSession(true);
+    }
+
     @Override
     public void init(final FilterConfig filterConfig) throws ServletException {}
 
     @Override
     public void doFilter(final ServletRequest servletRequest, final ServletResponse servletResponse, final FilterChain filterChain) throws IOException, ServletException {
 
+        assertNotNull("securityLogic", securityLogic);
+        assertNotNull("internalSessionStore", internalSessionStore);
+
         final HttpServletRequest request = (HttpServletRequest) servletRequest;
         final HttpServletResponse response = (HttpServletResponse) servletResponse;
-        final J2EContext context = new J2EContext(request, response, ShiroSessionStore.INSTANCE);
+        final J2EContext context = new J2EContext(request, response, internalSessionStore);
 
         securityLogic.perform(context, config, (ctx, parameters) -> {
 
-            final Subject subject = buildSubject(context);
-            subject.execute(() -> {
-                filterChain.doFilter(request, response);
-                return null;
-            });
+            filterChain.doFilter(request, response);
             return null;
 
-        }, J2ENopHttpActionAdapter.INSTANCE, clients, authorizers, matchers, multiProfile, filterChain);
-    }
-
-    protected Subject buildSubject(final J2EContext context) {
-        final ProfileManager<CommonProfile> manager = new ProfileManager<>(context);
-        if (manager.isAuthenticated()) {
-            final CommonProfile profile = manager.get(true).get();
-            final List<CommonProfile> profiles = manager.getAll(true);
-            final List<Object> principalList = new ArrayList<>();
-            principalList.add(profile.getId());
-            principalList.add(profile);
-            principalList.add(profiles);
-            final PrincipalCollection principals = new SimplePrincipalCollection(principalList, "pac4j");
-            // TODO: authenticated in case of remember-me?
-            return new Subject.Builder().principals(principals).authenticated(true).buildSubject();
-        } else {
-            return new Subject.Builder().buildSubject();
-        }
+        }, J2ENopHttpActionAdapter.INSTANCE, clients, authorizers, matchers, multiProfile);
     }
 
     @Override
     public void destroy() {}
 
-    public SecurityLogic<Object, J2EContext> getSecurityLogic() {
+    public DefaultSecurityLogic<Object, J2EContext> getSecurityLogic() {
         return securityLogic;
     }
 
-    public void setSecurityLogic(final SecurityLogic<Object, J2EContext> securityLogic) {
+    public void setSecurityLogic(final DefaultSecurityLogic<Object, J2EContext> securityLogic) {
         this.securityLogic = securityLogic;
     }
 
@@ -148,5 +131,13 @@ public class SecurityFilter implements Filter {
 
     public void setMultiProfile(final Boolean multiProfile) {
         this.multiProfile = multiProfile;
+    }
+
+    public ShiroSessionStore getInternalSessionStore() {
+        return internalSessionStore;
+    }
+
+    public void setInternalSessionStore(final ShiroSessionStore internalSessionStore) {
+        this.internalSessionStore = internalSessionStore;
     }
 }

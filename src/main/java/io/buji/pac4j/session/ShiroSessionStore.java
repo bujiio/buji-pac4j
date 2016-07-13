@@ -18,12 +18,24 @@
  */
 package io.buji.pac4j.session;
 
+import io.buji.pac4j.token.Pac4jToken;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.UnavailableSecurityManagerException;
+import org.pac4j.core.authorization.authorizer.Authorizer;
+import org.pac4j.core.authorization.authorizer.IsFullyAuthenticatedAuthorizer;
+import org.pac4j.core.authorization.authorizer.IsRememberedAuthorizer;
 import org.pac4j.core.context.J2EContext;
+import org.pac4j.core.context.Pac4jConstants;
 import org.pac4j.core.context.session.SessionStore;
+import org.pac4j.core.exception.HttpAction;
+import org.pac4j.core.exception.TechnicalException;
+import org.pac4j.core.profile.CommonProfile;
+import org.pac4j.core.profile.ProfileHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.LinkedHashMap;
+import java.util.List;
 
 /**
  * Specific session store.
@@ -31,13 +43,13 @@ import org.slf4j.LoggerFactory;
  * @author Jerome Leleu
  * @since 1.4.0
  */
-public final class ShiroSessionStore implements SessionStore<J2EContext> {
+public class ShiroSessionStore implements SessionStore<J2EContext> {
 
-    private final static Logger log = LoggerFactory.getLogger(ShiroSessionStore.class);
+    private final static Authorizer<CommonProfile> IS_REMEMBERED_AUTHORIZER = new IsRememberedAuthorizer<>();
 
-    public final static ShiroSessionStore INSTANCE = new ShiroSessionStore();
+    private final static Authorizer<CommonProfile> IS_FULLY_AUTHENTICATED_AUTHORIZER = new IsFullyAuthenticatedAuthorizer<>();
 
-    private ShiroSessionStore() {}
+    private final static Logger logger = LoggerFactory.getLogger(ShiroSessionStore.class);
 
     @Override
     public String getOrCreateSessionId(final J2EContext context) {
@@ -51,10 +63,28 @@ public final class ShiroSessionStore implements SessionStore<J2EContext> {
 
     @Override
     public void set(final J2EContext context, final String key, final Object value) {
+        if (Pac4jConstants.USER_PROFILES.equals(key)) {
+            final LinkedHashMap<String, CommonProfile> profiles = (LinkedHashMap<String, CommonProfile>) value;
+            final List<CommonProfile> listProfiles = ProfileHelper.flatIntoAProfileList(profiles);
+
+            try {
+
+                if (IS_FULLY_AUTHENTICATED_AUTHORIZER.isAuthorized(null, listProfiles)) {
+                    SecurityUtils.getSubject().login(new Pac4jToken(profiles, false));
+                } else if (IS_REMEMBERED_AUTHORIZER.isAuthorized(null, listProfiles)) {
+                    SecurityUtils.getSubject().login(new Pac4jToken(profiles, true));
+                }
+
+            } catch (final HttpAction e) {
+                throw new TechnicalException(e);
+            }
+
+        }
+
         try {
             SecurityUtils.getSubject().getSession().setAttribute(key, value);
         } catch (final UnavailableSecurityManagerException e) {
-            log.warn("Should happen just once at startup in some specific case of Shiro Spring configuration", e);
+            logger.warn("Should happen just once at startup in some specific case of Shiro Spring configuration", e);
         }
     }
 }

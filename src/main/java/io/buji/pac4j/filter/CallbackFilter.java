@@ -22,7 +22,7 @@ import io.buji.pac4j.session.ShiroSessionStore;
 import org.pac4j.core.config.Config;
 import org.pac4j.core.context.J2EContext;
 import org.pac4j.core.engine.CallbackLogic;
-import org.pac4j.core.engine.J2ERenewSessionCallbackLogic;
+import org.pac4j.core.engine.DefaultCallbackLogic;
 import org.pac4j.core.http.J2ENopHttpActionAdapter;
 
 import javax.servlet.*;
@@ -30,18 +30,20 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+import static org.pac4j.core.util.CommonHelper.assertNotNull;
+
 /**
  * <p>This filter finishes the login process for an indirect client, based on the {@link #callbackLogic}.</p>
  *
- * <p>The configuration can be provided via setter methods: {@link #setDefaultUrl(String)} (default url after login if none was requested),
- * {@link #setMultiProfile(Boolean)} (whether multiple profiles should be kept) and ({@link #setRenewSession(Boolean)} (whether the session must be renewed after login).</p>
+ * <p>The configuration can be provided via setter methods: {@link #setDefaultUrl(String)} (default url after login if none was requested)
+ * and {@link #setMultiProfile(Boolean)} (whether multiple profiles should be kept).</p>
  *
  * @author Jerome Leleu
  * @since 2.0.0
  */
 public class CallbackFilter implements Filter {
 
-    private CallbackLogic<Object, J2EContext> callbackLogic = new J2ERenewSessionCallbackLogic();
+    private CallbackLogic<Object, J2EContext> callbackLogic = new DefaultCallbackLogic<>();
 
     private Config config;
 
@@ -49,7 +51,7 @@ public class CallbackFilter implements Filter {
 
     private Boolean multiProfile;
 
-    private Boolean renewSession;
+    private ShiroSessionStore internalSessionStore = new ShiroSessionStore();
 
     @Override
     public void init(final FilterConfig filterConfig) throws ServletException {}
@@ -57,11 +59,14 @@ public class CallbackFilter implements Filter {
     @Override
     public void doFilter(final ServletRequest servletRequest, final ServletResponse servletResponse, final FilterChain filterChain) throws IOException, ServletException {
 
+        assertNotNull("callbackLogic", callbackLogic);
+        assertNotNull("internalSessionStore", internalSessionStore);
+
         final HttpServletRequest request = (HttpServletRequest) servletRequest;
         final HttpServletResponse response = (HttpServletResponse) servletResponse;
-        final J2EContext context = new J2EContext(request, response, ShiroSessionStore.INSTANCE);
+        final J2EContext context = new J2EContext(request, response, internalSessionStore);
 
-        callbackLogic.perform(context, config, J2ENopHttpActionAdapter.INSTANCE, this.defaultUrl, this.multiProfile, this.renewSession);
+        callbackLogic.perform(context, config, J2ENopHttpActionAdapter.INSTANCE, this.defaultUrl, this.multiProfile, false);
     }
 
     @Override
@@ -99,11 +104,11 @@ public class CallbackFilter implements Filter {
         this.multiProfile = multiProfile;
     }
 
-    public Boolean getRenewSession() {
-        return renewSession;
+    public ShiroSessionStore getInternalSessionStore() {
+        return internalSessionStore;
     }
 
-    public void setRenewSession(Boolean renewSession) {
-        this.renewSession = renewSession;
+    public void setInternalSessionStore(final ShiroSessionStore internalSessionStore) {
+        this.internalSessionStore = internalSessionStore;
     }
 }
