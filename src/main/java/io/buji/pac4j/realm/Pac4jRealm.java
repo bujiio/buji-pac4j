@@ -31,8 +31,6 @@ import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.apache.shiro.util.CollectionUtils;
 import org.pac4j.core.profile.CommonProfile;
 import org.pac4j.core.profile.ProfileHelper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
@@ -43,8 +41,6 @@ import java.util.*;
  * @since 2.0.0
  */
 public class Pac4jRealm extends AuthorizingRealm {
-
-    private static Logger log = LoggerFactory.getLogger(Pac4jRealm.class);
 
     public Pac4jRealm() {
         setAuthenticationTokenClass(Pac4jToken.class);
@@ -70,7 +66,7 @@ public class Pac4jRealm extends AuthorizingRealm {
     protected AuthorizationInfo doGetAuthorizationInfo(final PrincipalCollection principals) {
         final Set<String> roles = new HashSet<>();
         final Set<String> permissions = new HashSet<>();
-        final List<CommonProfile> profiles = (List<CommonProfile>) principals.asList().get(2);;
+        final List<CommonProfile> profiles = (List<CommonProfile>) principals.asList().get(2);
         if (profiles != null) {
             for (CommonProfile profile : profiles) {
                 if (profile != null) {

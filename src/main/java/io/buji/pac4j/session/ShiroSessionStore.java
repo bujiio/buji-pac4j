@@ -21,6 +21,7 @@ package io.buji.pac4j.session;
 import io.buji.pac4j.token.Pac4jToken;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.UnavailableSecurityManagerException;
+import org.apache.shiro.session.Session;
 import org.pac4j.core.authorization.authorizer.Authorizer;
 import org.pac4j.core.authorization.authorizer.IsFullyAuthenticatedAuthorizer;
 import org.pac4j.core.authorization.authorizer.IsRememberedAuthorizer;
@@ -51,14 +52,26 @@ public class ShiroSessionStore implements SessionStore<J2EContext> {
 
     private final static Logger logger = LoggerFactory.getLogger(ShiroSessionStore.class);
 
+    protected Session getSession() {
+        return SecurityUtils.getSubject().getSession(false);
+    }
+
     @Override
     public String getOrCreateSessionId(final J2EContext context) {
-        return SecurityUtils.getSubject().getSession().getId().toString();
+        final Session session = getSession();
+        if (session != null) {
+            return session.getId().toString();
+        }
+        return null;
     }
 
     @Override
     public Object get(final J2EContext context, final String key) {
-        return SecurityUtils.getSubject().getSession().getAttribute(key);
+        final Session session = getSession();
+        if (session != null) {
+            return session.getAttribute(key);
+        }
+        return null;
     }
 
     @Override
@@ -78,13 +91,15 @@ public class ShiroSessionStore implements SessionStore<J2EContext> {
             } catch (final HttpAction e) {
                 throw new TechnicalException(e);
             }
-
         }
 
-        try {
-            SecurityUtils.getSubject().getSession().setAttribute(key, value);
-        } catch (final UnavailableSecurityManagerException e) {
-            logger.warn("Should happen just once at startup in some specific case of Shiro Spring configuration", e);
+        final Session session = getSession();
+        if (session != null) {
+            try {
+                session.setAttribute(key, value);
+            } catch (final UnavailableSecurityManagerException e) {
+                logger.warn("Should happen just once at startup in some specific case of Shiro Spring configuration", e);
+            }
         }
     }
 }

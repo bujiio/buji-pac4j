@@ -147,6 +147,43 @@
           </execution>
         </executions>
       </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>findbugs-maven-plugin</artifactId>
+        <version>3.0.4</version>
+        <configuration>
+          <effort>Low</effort>
+          <threshold>Max</threshold>
+          <failOnError>true</failOnError>
+          <includeTests>true</includeTests>
+        </configuration>
+        <executions>
+          <execution>
+            <id>run-findbugs</id>
+            <phase>compile</phase>
+            <goals>
+              <goal>check</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-pmd-plugin</artifactId>
+        <version>3.6</version>
+        <configuration>
+          <includeTests>true</includeTests>
+        </configuration>
+        <executions>
+          <execution>
+            <id>run-pmd</id>
+            <phase>compile</phase>
+            <goals>
+              <goal>check</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
   </build>
 
