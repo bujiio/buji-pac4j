@@ -18,8 +18,6 @@
  */
 package io.buji.pac4j.filter;
 
-import io.buji.pac4j.session.ShiroSessionStore;
-import org.pac4j.core.config.Config;
 import org.pac4j.core.context.J2EContext;
 import org.pac4j.core.engine.DefaultSecurityLogic;
 import org.pac4j.core.http.J2ENopHttpActionAdapter;
@@ -40,11 +38,9 @@ import static org.pac4j.core.util.CommonHelper.*;
  * @author Jerome Leleu
  * @since 2.0.0
  */
-public class SecurityFilter implements Filter {
+public class SecurityFilter extends AbstractConfigFilter {
 
     private DefaultSecurityLogic<Object, J2EContext> securityLogic;
-
-    private Config config;
 
     private String clients;
 
@@ -53,8 +49,6 @@ public class SecurityFilter implements Filter {
     private String matchers;
 
     private Boolean multiProfile;
-
-    private ShiroSessionStore internalSessionStore = new ShiroSessionStore();
 
     public SecurityFilter() {
         securityLogic = new DefaultSecurityLogic<>();
@@ -68,13 +62,12 @@ public class SecurityFilter implements Filter {
     public void doFilter(final ServletRequest servletRequest, final ServletResponse servletResponse, final FilterChain filterChain) throws IOException, ServletException {
 
         assertNotNull("securityLogic", securityLogic);
-        assertNotNull("internalSessionStore", internalSessionStore);
 
         final HttpServletRequest request = (HttpServletRequest) servletRequest;
         final HttpServletResponse response = (HttpServletResponse) servletResponse;
-        final J2EContext context = new J2EContext(request, response, internalSessionStore);
+        final J2EContext context = new J2EContext(request, response, retrieveSessionStore());
 
-        securityLogic.perform(context, config, (ctx, parameters) -> {
+        securityLogic.perform(context, getConfig(), (ctx, parameters) -> {
 
             filterChain.doFilter(request, response);
             return null;
@@ -91,14 +84,6 @@ public class SecurityFilter implements Filter {
 
     public void setSecurityLogic(final DefaultSecurityLogic<Object, J2EContext> securityLogic) {
         this.securityLogic = securityLogic;
-    }
-
-    public Config getConfig() {
-        return config;
-    }
-
-    public void setConfig(final Config config) {
-        this.config = config;
     }
 
     public String getClients() {
@@ -131,13 +116,5 @@ public class SecurityFilter implements Filter {
 
     public void setMultiProfile(final Boolean multiProfile) {
         this.multiProfile = multiProfile;
-    }
-
-    public ShiroSessionStore getInternalSessionStore() {
-        return internalSessionStore;
-    }
-
-    public void setInternalSessionStore(final ShiroSessionStore internalSessionStore) {
-        this.internalSessionStore = internalSessionStore;
     }
 }

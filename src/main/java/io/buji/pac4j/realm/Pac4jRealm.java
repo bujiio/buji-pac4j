@@ -18,6 +18,7 @@
  */
 package io.buji.pac4j.realm;
 
+import io.buji.pac4j.subject.Pac4jPrincipal;
 import io.buji.pac4j.token.Pac4jToken;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
@@ -28,9 +29,7 @@ import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.SimplePrincipalCollection;
-import org.apache.shiro.util.CollectionUtils;
 import org.pac4j.core.profile.CommonProfile;
-import org.pac4j.core.profile.ProfileHelper;
 
 import java.util.*;
 
@@ -53,12 +52,8 @@ public class Pac4jRealm extends AuthorizingRealm {
         final Pac4jToken token = (Pac4jToken) authenticationToken;
         final LinkedHashMap<String, CommonProfile> profiles = token.getProfiles();
 
-        final CommonProfile mainProfile = ProfileHelper.flatIntoOneProfile(profiles).get();
-        final String id = mainProfile.getTypedId();
-        final List<CommonProfile> listProfiles = ProfileHelper.flatIntoAProfileList(profiles);
-
-        final List<Object> principals = CollectionUtils.asList(id, mainProfile, listProfiles);
-        final PrincipalCollection principalCollection = new SimplePrincipalCollection(principals, getName());
+        final Pac4jPrincipal principal = new Pac4jPrincipal(profiles);
+        final PrincipalCollection principalCollection = new SimplePrincipalCollection(principal, getName());
         return new SimpleAuthenticationInfo(principalCollection, profiles.hashCode());
     }
 
@@ -66,8 +61,9 @@ public class Pac4jRealm extends AuthorizingRealm {
     protected AuthorizationInfo doGetAuthorizationInfo(final PrincipalCollection principals) {
         final Set<String> roles = new HashSet<>();
         final Set<String> permissions = new HashSet<>();
-        final List<CommonProfile> profiles = (List<CommonProfile>) principals.asList().get(2);
-        if (profiles != null) {
+        final Pac4jPrincipal principal = principals.oneByType(Pac4jPrincipal.class);
+        if (principal != null) {
+            final List<CommonProfile> profiles = principal.getProfiles();
             for (CommonProfile profile : profiles) {
                 if (profile != null) {
                     roles.addAll(profile.getRoles());

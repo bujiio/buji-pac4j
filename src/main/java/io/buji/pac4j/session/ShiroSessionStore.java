@@ -52,6 +52,13 @@ public class ShiroSessionStore implements SessionStore<J2EContext> {
 
     private final static Logger logger = LoggerFactory.getLogger(ShiroSessionStore.class);
 
+    public final static ShiroSessionStore INSTANCE = new ShiroSessionStore();
+
+    /**
+     * Get the Shiro session (do not create it if it does not exist).
+     *
+     * @return the Shiro session
+     */
     protected Session getSession() {
         return SecurityUtils.getSubject().getSession(false);
     }
