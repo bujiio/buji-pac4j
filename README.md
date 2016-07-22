@@ -3,7 +3,7 @@
 </p>
 
 The `buji-pac4j` project is an **easy and powerful security library for Shiro** web applications which supports authentication and authorization, but also advanced features like CSRF protection.
-It's based on Java 8, Shiro 1.2 and on the **[pac4j security engine](https://github.com/pac4j/pac4j)**. It's available under the Apache 2 license.
+It's based on Java 8, Shiro 1.3 and on the **[pac4j security engine](https://github.com/pac4j/pac4j)**. It's available under the Apache 2 license.
 
 **Main concepts and components:**
 
@@ -280,4 +280,3 @@ Maven artifacts are built via Travis: [![Build Status](https://travis-ci.org/buj
   </repository>
 </repositories>
 ```
-
