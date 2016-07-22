@@ -40,7 +40,7 @@ import org.pac4j.core.profile.CommonProfile;
  */
 public class ClientRolesAuthorizationFilter extends RolesAuthorizationFilter {
 
-    protected IndirectClient<Credentials, CommonProfile> client;
+    protected IndirectClient<? extends Credentials, ? extends CommonProfile> client;
 
     @Override
     protected boolean isLoginRequest(final ServletRequest request, final ServletResponse response) {
@@ -56,7 +56,7 @@ public class ClientRolesAuthorizationFilter extends RolesAuthorizationFilter {
         }
     }
 
-    public void setClient(final IndirectClient<Credentials, CommonProfile> client) {
+    public void setClient(final IndirectClient<? extends Credentials, ? extends CommonProfile> client) {
         this.client = client;
     }
 }
