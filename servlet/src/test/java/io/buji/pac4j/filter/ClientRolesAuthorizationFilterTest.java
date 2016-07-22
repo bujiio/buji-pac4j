@@ -29,6 +29,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.pac4j.core.client.IndirectClient;
 import org.pac4j.core.context.J2EContext;
+import org.pac4j.core.credentials.Credentials;
+import org.pac4j.core.profile.CommonProfile;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -83,6 +85,21 @@ public class ClientRolesAuthorizationFilterTest {
 		// when
 		clientRolesAuthorizationFilter.setClient(indirectClientMock);
 		
+		// then
+		assertEquals("Client must be set to " + indirectClientMock, indirectClientMock, getInternalState(clientRolesAuthorizationFilter, "client"));
+	}
+
+	/**
+	 * Test for setClient with subclasses of {@link IndirectClient}, e.g. CasClient.
+	 */
+	@Test
+	public final void testSetClientWithExtends() {
+		// given
+		IndirectClient<? extends Credentials, ? extends CommonProfile> indirectClientMock = mock(IndirectClient.class);
+
+		// when
+		clientRolesAuthorizationFilter.setClient(indirectClientMock);
+
 		// then
 		assertEquals("Client must be set to " + indirectClientMock, indirectClientMock, getInternalState(clientRolesAuthorizationFilter, "client"));
 	}
