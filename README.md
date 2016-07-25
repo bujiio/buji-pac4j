@@ -113,7 +113,7 @@ config.matchers = excludedPath:$excludedPathMatcher
 
 Notice that you can define:
 
-1) a specific [`SessionStore`](https://github.com/pac4j/pac4j/wiki/SessionStore) using the `sessionStore` property (by default, the `ShiroSessionStore` relies on the Shiro session management mechanism)
+1) a specific [`SessionStore`](https://github.com/pac4j/pac4j/wiki/SessionStore) using the `sessionStore` property (by default, it uses the `ShiroSessionStore` which relies on the Shiro session management mechanism)
 
 2) specific [matchers](https://github.com/pac4j/pac4j/wiki/Matchers) via the `matchers` map.
 
@@ -234,6 +234,17 @@ Like for any Shiro webapp, use the default logout filter (in your `shiro.ini` fi
 
 
 ## Migration guide
+
+### From the deprecated shiro-cas module (CAS support)
+
+Instead of using the `shiro-cas` module, you need to use the `buji-pac4j` library and the `pac4j-cas` module. Though, the way both implementation work is close.
+
+The `CasFilter` is replaced by the `CallbackFilter` which has the same role (receiving callbacks from identity providers), but not only for CAS.
+
+The  `CasRealm` is replaced by the `Pac4jRealm` and the `CasSubjectFactory` by the `Pac4jsubjectFactory`.
+
+Finally, you must use the `SecurityFilter` to secure an url, instead of the default Shiro filters (like `roles`).
+
 
 ### 1.4 - > 2.0
 
