@@ -18,10 +18,10 @@
  */
 package io.buji.pac4j.filter;
 
-import org.pac4j.core.context.J2EContext;
+import io.buji.pac4j.context.ShiroContext;
+import org.pac4j.core.config.Config;
 import org.pac4j.core.engine.CallbackLogic;
 import org.pac4j.core.engine.DefaultCallbackLogic;
-import org.pac4j.core.http.J2ENopHttpActionAdapter;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
@@ -39,9 +39,11 @@ import static org.pac4j.core.util.CommonHelper.assertNotNull;
  * @author Jerome Leleu
  * @since 2.0.0
  */
-public class CallbackFilter extends AbstractConfigFilter {
+public class CallbackFilter implements Filter {
 
-    private CallbackLogic<Object, J2EContext> callbackLogic = new DefaultCallbackLogic<>();
+    private CallbackLogic<Object, ShiroContext> callbackLogic = new DefaultCallbackLogic<>();
+
+    private Config config;
 
     private String defaultUrl;
 
@@ -54,23 +56,32 @@ public class CallbackFilter extends AbstractConfigFilter {
     public void doFilter(final ServletRequest servletRequest, final ServletResponse servletResponse, final FilterChain filterChain) throws IOException, ServletException {
 
         assertNotNull("callbackLogic", callbackLogic);
+        assertNotNull("config", config);
 
         final HttpServletRequest request = (HttpServletRequest) servletRequest;
         final HttpServletResponse response = (HttpServletResponse) servletResponse;
-        final J2EContext context = new J2EContext(request, response, retrieveSessionStore());
+        final ShiroContext context = new ShiroContext(request, response, config.getSessionStore());
 
-        callbackLogic.perform(context, getConfig(), J2ENopHttpActionAdapter.INSTANCE, this.defaultUrl, this.multiProfile, false);
+        callbackLogic.perform(context, config, (code, ctx) -> null, this.defaultUrl, this.multiProfile, false);
     }
 
     @Override
     public void destroy() {}
 
-    public CallbackLogic<Object, J2EContext> getCallbackLogic() {
+    public CallbackLogic<Object, ShiroContext> getCallbackLogic() {
         return callbackLogic;
     }
 
-    public void setCallbackLogic(CallbackLogic<Object, J2EContext> callbackLogic) {
+    public void setCallbackLogic(CallbackLogic<Object, ShiroContext> callbackLogic) {
         this.callbackLogic = callbackLogic;
+    }
+
+    public Config getConfig() {
+        return config;
+    }
+
+    public void setConfig(Config config) {
+        this.config = config;
     }
 
     public String getDefaultUrl() {

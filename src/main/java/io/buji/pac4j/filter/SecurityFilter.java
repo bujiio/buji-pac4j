@@ -18,9 +18,9 @@
  */
 package io.buji.pac4j.filter;
 
-import org.pac4j.core.context.J2EContext;
+import io.buji.pac4j.context.ShiroContext;
+import org.pac4j.core.config.Config;
 import org.pac4j.core.engine.DefaultSecurityLogic;
-import org.pac4j.core.http.J2ENopHttpActionAdapter;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
@@ -38,9 +38,11 @@ import static org.pac4j.core.util.CommonHelper.*;
  * @author Jerome Leleu
  * @since 2.0.0
  */
-public class SecurityFilter extends AbstractConfigFilter {
+public class SecurityFilter implements Filter {
 
-    private DefaultSecurityLogic<Object, J2EContext> securityLogic;
+    private DefaultSecurityLogic<Object, ShiroContext> securityLogic = new DefaultSecurityLogic<>();
+
+    private Config config;
 
     private String clients;
 
@@ -50,11 +52,6 @@ public class SecurityFilter extends AbstractConfigFilter {
 
     private Boolean multiProfile;
 
-    public SecurityFilter() {
-        securityLogic = new DefaultSecurityLogic<>();
-        securityLogic.setSaveProfileInSession(true);
-    }
-
     @Override
     public void init(final FilterConfig filterConfig) throws ServletException {}
 
@@ -62,28 +59,37 @@ public class SecurityFilter extends AbstractConfigFilter {
     public void doFilter(final ServletRequest servletRequest, final ServletResponse servletResponse, final FilterChain filterChain) throws IOException, ServletException {
 
         assertNotNull("securityLogic", securityLogic);
+        assertNotNull("config", config);
 
         final HttpServletRequest request = (HttpServletRequest) servletRequest;
         final HttpServletResponse response = (HttpServletResponse) servletResponse;
-        final J2EContext context = new J2EContext(request, response, retrieveSessionStore());
+        final ShiroContext context = new ShiroContext(request, response, config.getSessionStore());
 
-        securityLogic.perform(context, getConfig(), (ctx, parameters) -> {
+        securityLogic.perform(context, config, (ctx, parameters) -> {
 
             filterChain.doFilter(request, response);
             return null;
 
-        }, J2ENopHttpActionAdapter.INSTANCE, clients, authorizers, matchers, multiProfile);
+        }, (code, ctx) -> null, clients, authorizers, matchers, multiProfile);
     }
 
     @Override
     public void destroy() {}
 
-    public DefaultSecurityLogic<Object, J2EContext> getSecurityLogic() {
+    public DefaultSecurityLogic<Object, ShiroContext> getSecurityLogic() {
         return securityLogic;
     }
 
-    public void setSecurityLogic(final DefaultSecurityLogic<Object, J2EContext> securityLogic) {
+    public void setSecurityLogic(final DefaultSecurityLogic<Object, ShiroContext> securityLogic) {
         this.securityLogic = securityLogic;
+    }
+
+    public Config getConfig() {
+        return config;
+    }
+
+    public void setConfig(Config config) {
+        this.config = config;
     }
 
     public String getClients() {

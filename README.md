@@ -111,7 +111,11 @@ config.matchers = excludedPath:$excludedPathMatcher
 
 `http://localhost:8080/callback` is the url of the callback endpoint, which is only necessary for indirect clients.
 
-Notice that you can define specific [matchers](https://github.com/pac4j/pac4j/wiki/Matchers) via the `matchers` map.
+Notice that you can define:
+
+1) a specific [`SessionStore`](https://github.com/pac4j/pac4j/wiki/SessionStore) using the `sessionStore` property (by default, the `ShiroSessionStore` relies on the Shiro session management mechanism)
+
+2) specific [matchers](https://github.com/pac4j/pac4j/wiki/Matchers) via the `matchers` map.
 
 
 ### 3) Protect urls (`SecurityFilter`)
