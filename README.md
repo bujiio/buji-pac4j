@@ -26,7 +26,7 @@ Just follow these easy steps to secure your Shiro web application:
 
 You need to add a dependency on:
  
-- the `buji-pac4j` library (<em>groupId</em>: **io.buji**, *version*: **2.0.0-SNAPSHOT**)
+- the `buji-pac4j` library (<em>groupId</em>: **io.buji**, *version*: **2.0.0**)
 - the appropriate `pac4j` [submodules](https://github.com/pac4j/pac4j/wiki/Clients) (<em>groupId</em>: **org.pac4j**, *version*: **1.9.1**): `pac4j-oauth` for OAuth support (Facebook, Twitter...), `pac4j-cas` for CAS support, `pac4j-ldap` for LDAP authentication, etc.
 
 All released artifacts are available in the [Maven central repository](http://search.maven.org/#search%7Cga%7C1%7Cpac4j).
@@ -276,7 +276,7 @@ If you have any question, please use the following mailing lists:
 
 ## Development
 
-The version 2.0.0-SNAPSHOT is under development.
+The version 2.0.1-SNAPSHOT is under development.
 
 Maven artifacts are built via Travis: [![Build Status](https://travis-ci.org/bujiio/buji-pac4j.png?branch=master)](https://travis-ci.org/bujiio/buji-pac4j) and available in the [Sonatype snapshots repository](https://oss.sonatype.org/content/repositories/snapshots/org/pac4j). This repository must be added in the Maven *pom.xml* file for example:
 
