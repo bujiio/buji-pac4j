@@ -21,6 +21,7 @@ package io.buji.pac4j.subject;
 import org.pac4j.core.profile.CommonProfile;
 import org.pac4j.core.profile.ProfileHelper;
 
+import java.io.Serializable;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -30,7 +31,7 @@ import java.util.List;
  * @author Jerome Leleu
  * @since 2.0.0
  */
-public class Pac4jPrincipal {
+public class Pac4jPrincipal implements Serializable {
 
     private final LinkedHashMap<String, CommonProfile> profiles;
 
@@ -54,5 +55,19 @@ public class Pac4jPrincipal {
      */
     public List<CommonProfile> getProfiles() {
         return ProfileHelper.flatIntoAProfileList(this.profiles);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        final Pac4jPrincipal that = (Pac4jPrincipal) o;
+        return profiles != null ? profiles.equals(that.profiles) : that.profiles == null;
+    }
+
+    @Override
+    public int hashCode() {
+        return profiles != null ? profiles.hashCode() : 0;
     }
 }
