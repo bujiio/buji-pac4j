@@ -5,32 +5,34 @@
 The `buji-pac4j` project is an **easy and powerful security library for Shiro** web applications which supports authentication and authorization, but also advanced features like CSRF protection.
 It's based on Java 8, Shiro 1.3 and on the **[pac4j security engine](https://github.com/pac4j/pac4j)**. It's available under the Apache 2 license.
 
-**Main concepts and components:**
+[**Main concepts and components:**](http://www.pac4j.org/docs/main-concepts-and-components.html)
 
-1) A [**client**](https://github.com/pac4j/pac4j/wiki/Clients) represents an authentication mechanism (CAS, OAuth, SAML, OpenID Connect, LDAP, JWT...) It performs the login process and returns a user profile. An indirect client is for UI authentication while a direct client is for web services authentication
+1) A [**client**](http://www.pac4j.org/docs/clients.html) represents an authentication mechanism. It performs the login process and returns a user profile. An indirect client is for UI authentication while a direct client is for web services authentication:
 
-2) An [**authorizer**](https://github.com/pac4j/pac4j/wiki/Authorizers) is meant to check authorizations on the authenticated user profile(s) (role / permission, ...) or on the current web context (IP check, CSRF...)
+&#9656; OAuth - SAML - CAS - OpenID Connect - HTTP - OpenID - Google App Engine - LDAP - SQL - JWT - MongoDB - Stormpath - IP address
 
-3) A [**matcher**](https://github.com/pac4j/pac4j/wiki/Matchers) defines whether the security must apply on a specific url
+2) An [**authorizer**](http://www.pac4j.org/docs/authorizers.html) is meant to check authorizations on the authenticated user profile(s) or on the current web context:
 
-4) A [**config**](https://github.com/pac4j/pac4j/blob/master/pac4j-core/src/main/java/org/pac4j/core/config/Config.java) defines the security configuration via clients, authorizers and matchers
+&#9656; Roles / permissions - Anonymous / remember-me / (fully) authenticated - Profile type, attribute -  CORS - CSRF - Security headers - IP address, HTTP method
 
-5) The `SecurityFilter` protects an url by checking that the user is authenticated and that the authorizations are valid, according to the clients and authorizers configuration. If the user is not authenticated, it performs authentication for direct clients or starts the login process for indirect clients
+3) The `SecurityFilter` protects an url by checking that the user is authenticated and that the authorizations are valid, according to the clients and authorizers configuration. If the user is not authenticated, it performs authentication for direct clients or starts the login process for indirect clients
 
-6) The `CallbackFilter` finishes the login process for an indirect client
+4) The `CallbackFilter` finishes the login process for an indirect client.
+
+==
 
 Just follow these easy steps to secure your Shiro web application:
-
 
 ### 1) Add the required dependencies (`buji-pac4j` + `pac4j-*` libraries)
 
 You need to add a dependency on:
  
 - the `buji-pac4j` library (<em>groupId</em>: **io.buji**, *version*: **2.0.0**)
-- the appropriate `pac4j` [submodules](https://github.com/pac4j/pac4j/wiki/Clients) (<em>groupId</em>: **org.pac4j**, *version*: **1.9.1**): `pac4j-oauth` for OAuth support (Facebook, Twitter...), `pac4j-cas` for CAS support, `pac4j-ldap` for LDAP authentication, etc.
+- the appropriate `pac4j` [submodules](http://www.pac4j.org/docs/clients.html) (<em>groupId</em>: **org.pac4j**, *version*: **1.9.1**): `pac4j-oauth` for OAuth support (Facebook, Twitter...), `pac4j-cas` for CAS support, `pac4j-ldap` for LDAP authentication, etc.
 
 All released artifacts are available in the [Maven central repository](http://search.maven.org/#search%7Cga%7C1%7Cpac4j).
 
+---
 
 ### 2) Define the configuration (`Config` + `Client` + `Authorizer`)
 
@@ -113,10 +115,11 @@ config.matchers = excludedPath:$excludedPathMatcher
 
 Notice that you can define:
 
-1) a specific [`SessionStore`](https://github.com/pac4j/pac4j/wiki/SessionStore) using the `sessionStore` property (by default, it uses the `ShiroSessionStore` which relies on the Shiro session management mechanism)
+1) a specific [`SessionStore`](http://www.pac4j.org/docs/session-store.html) using the `sessionStore` property (by default, it uses the `ShiroSessionStore` which relies on the Shiro session management mechanism)
 
-2) specific [matchers](https://github.com/pac4j/pac4j/wiki/Matchers) via the `matchers` map.
+2) specific [matchers](http://www.pac4j.org/docs/matchers.html) via the `matchers` map.
 
+---
 
 ### 3) Protect urls (`SecurityFilter`)
 
@@ -169,6 +172,7 @@ facebookSecurityFilter.clients = FacebookClient
 
 Notice that you need a specific `Pac4jRealm` and a specific `Pac4jSubjectFactory` required by pac4j.
 
+---
 
 ### 4) Define the callback endpoint only for indirect clients (`CallbackFilter`)
 
@@ -199,6 +203,7 @@ callbackFilter.config = $config
 /callback = callbackFilter
 ```
 
+---
 
 ### 5) Get the user profile
 
@@ -222,6 +227,7 @@ The retrieved profile is at least a `CommonProfile`, from which you can retrieve
 FacebookProfile facebookProfile = (FacebookProfile) commonProfile;
 ```
 
+---
 
 ### 6) Logout
 
@@ -232,6 +238,7 @@ Like for any Shiro webapp, use the default logout filter (in your `shiro.ini` fi
 /logout = logout
 ```
 
+---
 
 ## Migration guide
 
