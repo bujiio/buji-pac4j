@@ -18,8 +18,11 @@
  */
 package io.buji.pac4j.filter;
 
-import io.buji.pac4j.context.ShiroContext;
+import io.buji.pac4j.context.ShiroSessionStore;
+import io.buji.pac4j.profile.ShiroProfileManager;
 import org.pac4j.core.config.Config;
+import org.pac4j.core.context.J2EContext;
+import org.pac4j.core.context.session.SessionStore;
 import org.pac4j.core.engine.CallbackLogic;
 import org.pac4j.core.engine.DefaultCallbackLogic;
 
@@ -41,13 +44,18 @@ import static org.pac4j.core.util.CommonHelper.assertNotNull;
  */
 public class CallbackFilter implements Filter {
 
-    private CallbackLogic<Object, ShiroContext> callbackLogic = new DefaultCallbackLogic<>();
+    private CallbackLogic<Object, J2EContext> callbackLogic;
 
     private Config config;
 
     private String defaultUrl;
 
     private Boolean multiProfile;
+
+    public CallbackFilter() {
+        callbackLogic = new DefaultCallbackLogic<>();
+        ((DefaultCallbackLogic<Object, J2EContext>) callbackLogic).setProfileManagerFactory(ShiroProfileManager::new);
+    }
 
     @Override
     public void init(final FilterConfig filterConfig) throws ServletException {}
@@ -60,7 +68,8 @@ public class CallbackFilter implements Filter {
 
         final HttpServletRequest request = (HttpServletRequest) servletRequest;
         final HttpServletResponse response = (HttpServletResponse) servletResponse;
-        final ShiroContext context = new ShiroContext(request, response, config.getSessionStore());
+        final SessionStore<J2EContext> sessionStore = config.getSessionStore();
+        final J2EContext context = new J2EContext(request, response, sessionStore != null ? sessionStore : ShiroSessionStore.INSTANCE);
 
         callbackLogic.perform(context, config, (code, ctx) -> null, this.defaultUrl, this.multiProfile, false);
     }
@@ -68,11 +77,11 @@ public class CallbackFilter implements Filter {
     @Override
     public void destroy() {}
 
-    public CallbackLogic<Object, ShiroContext> getCallbackLogic() {
+    public CallbackLogic<Object, J2EContext> getCallbackLogic() {
         return callbackLogic;
     }
 
-    public void setCallbackLogic(CallbackLogic<Object, ShiroContext> callbackLogic) {
+    public void setCallbackLogic(final CallbackLogic<Object, J2EContext> callbackLogic) {
         this.callbackLogic = callbackLogic;
     }
 
@@ -80,7 +89,7 @@ public class CallbackFilter implements Filter {
         return config;
     }
 
-    public void setConfig(Config config) {
+    public void setConfig(final Config config) {
         this.config = config;
     }
 
@@ -88,7 +97,7 @@ public class CallbackFilter implements Filter {
         return defaultUrl;
     }
 
-    public void setDefaultUrl(String defaultUrl) {
+    public void setDefaultUrl(final String defaultUrl) {
         this.defaultUrl = defaultUrl;
     }
 
@@ -96,7 +105,7 @@ public class CallbackFilter implements Filter {
         return multiProfile;
     }
 
-    public void setMultiProfile(Boolean multiProfile) {
+    public void setMultiProfile(final Boolean multiProfile) {
         this.multiProfile = multiProfile;
     }
 }

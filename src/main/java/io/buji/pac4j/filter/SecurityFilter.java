@@ -18,9 +18,13 @@
  */
 package io.buji.pac4j.filter;
 
-import io.buji.pac4j.context.ShiroContext;
+import io.buji.pac4j.context.ShiroSessionStore;
+import io.buji.pac4j.profile.ShiroProfileManager;
 import org.pac4j.core.config.Config;
+import org.pac4j.core.context.J2EContext;
+import org.pac4j.core.context.session.SessionStore;
 import org.pac4j.core.engine.DefaultSecurityLogic;
+import org.pac4j.core.engine.SecurityLogic;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
@@ -40,7 +44,7 @@ import static org.pac4j.core.util.CommonHelper.*;
  */
 public class SecurityFilter implements Filter {
 
-    private DefaultSecurityLogic<Object, ShiroContext> securityLogic = new DefaultSecurityLogic<>();
+    private SecurityLogic<Object, J2EContext> securityLogic;
 
     private Config config;
 
@@ -51,6 +55,11 @@ public class SecurityFilter implements Filter {
     private String matchers;
 
     private Boolean multiProfile;
+
+    public SecurityFilter() {
+        securityLogic = new DefaultSecurityLogic<>();
+        ((DefaultSecurityLogic<Object, J2EContext>) securityLogic).setProfileManagerFactory(ShiroProfileManager::new);
+    }
 
     @Override
     public void init(final FilterConfig filterConfig) throws ServletException {}
@@ -63,7 +72,8 @@ public class SecurityFilter implements Filter {
 
         final HttpServletRequest request = (HttpServletRequest) servletRequest;
         final HttpServletResponse response = (HttpServletResponse) servletResponse;
-        final ShiroContext context = new ShiroContext(request, response, config.getSessionStore());
+        final SessionStore<J2EContext> sessionStore = config.getSessionStore();
+        final J2EContext context = new J2EContext(request, response, sessionStore != null ? sessionStore : ShiroSessionStore.INSTANCE);
 
         securityLogic.perform(context, config, (ctx, parameters) -> {
 
@@ -76,11 +86,11 @@ public class SecurityFilter implements Filter {
     @Override
     public void destroy() {}
 
-    public DefaultSecurityLogic<Object, ShiroContext> getSecurityLogic() {
+    public SecurityLogic<Object, J2EContext> getSecurityLogic() {
         return securityLogic;
     }
 
-    public void setSecurityLogic(final DefaultSecurityLogic<Object, ShiroContext> securityLogic) {
+    public void setSecurityLogic(final SecurityLogic<Object, J2EContext> securityLogic) {
         this.securityLogic = securityLogic;
     }
 
@@ -88,7 +98,7 @@ public class SecurityFilter implements Filter {
         return config;
     }
 
-    public void setConfig(Config config) {
+    public void setConfig(final Config config) {
         this.config = config;
     }
 
