@@ -41,15 +41,16 @@ public class ShiroSessionStore implements SessionStore<J2EContext> {
     /**
      * Get the Shiro session (do not create it if it does not exist).
      *
+     * @param createSession create a session if requested
      * @return the Shiro session
      */
-    protected Session getSession() {
-        return SecurityUtils.getSubject().getSession(false);
+    protected Session getSession(final boolean createSession) {
+        return SecurityUtils.getSubject().getSession(createSession);
     }
 
     @Override
     public String getOrCreateSessionId(final J2EContext context) {
-        final Session session = getSession();
+        final Session session = getSession(false);
         if (session != null) {
             return session.getId().toString();
         }
@@ -58,7 +59,7 @@ public class ShiroSessionStore implements SessionStore<J2EContext> {
 
     @Override
     public Object get(final J2EContext context, final String key) {
-        final Session session = getSession();
+        final Session session = getSession(false);
         if (session != null) {
             return session.getAttribute(key);
         }
@@ -67,7 +68,7 @@ public class ShiroSessionStore implements SessionStore<J2EContext> {
 
     @Override
     public void set(final J2EContext context, final String key, final Object value) {
-        final Session session = getSession();
+        final Session session = getSession(true);
         if (session != null) {
             try {
                 session.setAttribute(key, value);
