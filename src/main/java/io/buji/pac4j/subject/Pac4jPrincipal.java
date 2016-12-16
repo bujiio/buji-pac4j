@@ -22,6 +22,7 @@ import org.pac4j.core.profile.CommonProfile;
 import org.pac4j.core.profile.ProfileHelper;
 
 import java.io.Serializable;
+import java.security.Principal;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -31,7 +32,7 @@ import java.util.List;
  * @author Jerome Leleu
  * @since 2.0.0
  */
-public class Pac4jPrincipal implements Serializable {
+public class Pac4jPrincipal implements Principal, Serializable {
 
     private final LinkedHashMap<String, CommonProfile> profiles;
 
@@ -70,4 +71,16 @@ public class Pac4jPrincipal implements Serializable {
     public int hashCode() {
         return profiles != null ? profiles.hashCode() : 0;
     }
+
+	@Override
+	public String getName() {
+		CommonProfile profile = this.getProfile();
+		return profile.getId();
+		
+	}
+	
+	@Override
+	public String toString() {
+		return getName();
+	}
 }
