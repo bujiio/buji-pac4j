@@ -20,6 +20,7 @@ package io.buji.pac4j.subject;
 
 import org.pac4j.core.profile.CommonProfile;
 import org.pac4j.core.profile.ProfileHelper;
+import org.pac4j.core.util.CommonHelper;
 
 import java.io.Serializable;
 import java.security.Principal;
@@ -72,15 +73,15 @@ public class Pac4jPrincipal implements Principal, Serializable {
         return profiles != null ? profiles.hashCode() : 0;
     }
 
-	@Override
-	public String getName() {
-		CommonProfile profile = this.getProfile();
-		return profile.getId();
-		
-	}
-	
-	@Override
-	public String toString() {
-		return getName();
-	}
+    @Override
+    public String getName() {
+        CommonProfile profile = this.getProfile();
+        return profile.getId();
+
+    }
+
+    @Override
+    public String toString() {
+        return CommonHelper.toString(this.getClass(), "profiles", getProfiles());
+    }
 }
