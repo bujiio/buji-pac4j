@@ -108,7 +108,7 @@ config.authorizers = admin:$requireRoleAdmin,custom:$customAuthorizer
 config.matchers = excludedPath:$excludedPathMatcher
 ```
 
-The `clients` and `config` components are available by default (if using the `shiro-servlet-plugin` dependency which automatically loads the `Pac4jIniEnvironment`).
+The `clients` and `config` components are available by default (they are automatically loaded thanks to the `Pac4jIniEnvironment` component).
 
 `http://localhost:8080/callback` is the url of the callback endpoint, which is only necessary for indirect clients.
 
@@ -187,7 +187,7 @@ In your `shiro.ini` file:
 /callback = callbackFilter
 ```
 
-The `callbackFilter` component is available by default (if using the `shiro-servlet-plugin` dependency which automatically loads the `Pac4jIniEnvironment`).
+The `callbackFilter` component is available by default (it is automatically loaded thanks to the `Pac4jIniEnvironment` component).
 
 ---
 
@@ -241,7 +241,7 @@ Finally, you must use the `SecurityFilter` to secure an url, in addition of the 
 
 ### 2.0 -> 2.2
 
-The `config`, `clients`, `pac4jRealm`, `pac4jSubjectFactory` and `callbackFilter` components are available by default (if using the `shiro-servlet-plugin` dependency which automatically loads the `Pac4jIniEnvironment`).
+The `config`, `clients`, `pac4jRealm`, `pac4jSubjectFactory` and `callbackFilter` components are available by default (they are automatically loaded thanks to the `Pac4jIniEnvironment` component).
 
 
 ### 1.4 - > 2.0
