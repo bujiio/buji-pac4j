@@ -3,7 +3,7 @@
 </p>
 
 The `buji-pac4j` project is an **easy and powerful security library for Shiro** web applications which supports authentication and authorization, but also advanced features like CSRF protection.
-It's based on Java 8, Shiro 1.3 and on the **[pac4j security engine](https://github.com/pac4j/pac4j)**. It's available under the Apache 2 license.
+It's based on Java 8, Shiro 1.4 and on the **[pac4j security engine](https://github.com/pac4j/pac4j)**. It's available under the Apache 2 license.
 
 [**Main concepts and components:**](http://www.pac4j.org/docs/main-concepts-and-components.html)
 
@@ -27,8 +27,8 @@ Just follow these easy steps to secure your Shiro web application:
 
 You need to add a dependency on:
  
-- the `buji-pac4j` library (<em>groupId</em>: **io.buji**, *version*: **2.1.0-RC1**)
-- the appropriate `pac4j` [submodules](http://www.pac4j.org/docs/clients.html) (<em>groupId</em>: **org.pac4j**, *version*: **1.9.5**): `pac4j-oauth` for OAuth support (Facebook, Twitter...), `pac4j-cas` for CAS support, `pac4j-ldap` for LDAP authentication, etc.
+- the `buji-pac4j` library (<em>groupId</em>: **io.buji**, *version*: **2.2.0-SNAPSHOT**)
+- the appropriate `pac4j` [submodules](http://www.pac4j.org/docs/clients.html) (<em>groupId</em>: **org.pac4j**, *version*: **1.9.6**): `pac4j-oauth` for OAuth support (Facebook, Twitter...), `pac4j-cas` for CAS support, `pac4j-ldap` for LDAP authentication, etc.
 
 All released artifacts are available in the [Maven central repository](http://search.maven.org/#search%7Cga%7C1%7Cpac4j).
 
@@ -93,7 +93,6 @@ parameterClient.authenticator = $jwtAuthenticator
 directBasicAuthClient = org.pac4j.http.client.direct.DirectBasicAuthClient
 directBasicAuthClient.authenticator = $simpleAuthenticator
 
-clients = org.pac4j.core.client.Clients
 clients.callbackUrl = http://localhost:8080/callback
 clients.clients = $googleOidClient,$facebookClient,$twitterClient,$formClient,$indirectBasicAuthClient,$casClient,$saml2Client,$parameterClient,$directBasicAuthClient
 
@@ -105,19 +104,15 @@ customAuthorizer = org.pac4j.demo.shiro.CustomAuthorizer
 excludedPathMatcher = org.pac4j.core.matching.ExcludedPathMatcher
 excludedPathMatcher.excludePath = ^/facebook/notprotected\.jsp$
 
-config = org.pac4j.core.config.Config
-config.clients = $clients
 config.authorizers = admin:$requireRoleAdmin,custom:$customAuthorizer
 config.matchers = excludedPath:$excludedPathMatcher
 ```
 
+The `clients` and `config` components are available by default (they are automatically loaded thanks to the `Pac4jIniEnvironment` component).
+
 `http://localhost:8080/callback` is the url of the callback endpoint, which is only necessary for indirect clients.
 
-Notice that you can define:
-
-1) a specific [`SessionStore`](http://www.pac4j.org/docs/session-store.html) using the `sessionStore` property (by default, it uses the `ShiroSessionStore` which relies on the Shiro session management mechanism)
-
-2) specific [matchers](http://www.pac4j.org/docs/matchers.html) via the `matchers` map.
+Notice that you can define specific [matchers](http://www.pac4j.org/docs/matchers.html) via the `matchers` map.
 
 ---
 
@@ -157,11 +152,6 @@ In your `shiro.ini` file:
 
 ```properties
 [main]
-pac4jRealm = io.buji.pac4j.realm.Pac4jRealm
-
-pac4jSubjectFactory = io.buji.pac4j.subject.Pac4jSubjectFactory
-securityManager.subjectFactory = $pac4jSubjectFactory
-
 facebookSecurityFilter = io.buji.pac4j.filter.SecurityFilter
 facebookSecurityFilter.config = $config
 facebookSecurityFilter.clients = FacebookClient
@@ -169,8 +159,6 @@ facebookSecurityFilter.clients = FacebookClient
 [url]
 /facebook/** = facebookSecurityFilter
 ```
-
-Notice that you need a specific `Pac4jRealm` and a specific `Pac4jSubjectFactory` required by pac4j.
 
 ---
 
@@ -195,13 +183,11 @@ The following parameters are available:
 In your `shiro.ini` file:
 
 ```properties
-[main]
-callbackFilter = io.buji.pac4j.filter.CallbackFilter
-callbackFilter.config = $config
-
 [url]
 /callback = callbackFilter
 ```
+
+The `callbackFilter` component is available by default (it is automatically loaded thanks to the `Pac4jIniEnvironment` component).
 
 ---
 
@@ -244,13 +230,18 @@ Like for any Shiro webapp, use the default logout filter (in your `shiro.ini` fi
 
 ### From the deprecated shiro-cas module (CAS support)
 
-Instead of using the `shiro-cas` module, you need to use the `buji-pac4j` library and the `pac4j-cas` module. Though, the way both implementation work is close.
+Instead of using the `shiro-cas` module, you need to use the `buji-pac4j` library and the `pac4j-cas` module. Though, the way both implementations work is close.
 
 The `CasFilter` is replaced by the `CallbackFilter` which has the same role (receiving callbacks from identity providers), but not only for CAS.
 
 The  `CasRealm` is replaced by the `Pac4jRealm` and the `CasSubjectFactory` by the `Pac4jsubjectFactory`.
 
-Finally, you must use the `SecurityFilter` to secure an url, instead of the default Shiro filters (like `roles`).
+Finally, you must use the `SecurityFilter` to secure an url, in addition of the default Shiro filters (like `roles`).
+
+
+### 2.0 -> 2.2
+
+The `config`, `clients`, `pac4jRealm`, `pac4jSubjectFactory` and `callbackFilter` components are available by default (they are automatically loaded thanks to the `Pac4jIniEnvironment` component).
 
 
 ### 1.4 - > 2.0
@@ -270,7 +261,7 @@ The demo webapp: [buji-pac4j-demo](https://github.com/pac4j/buji-pac4j-demo) is 
 
 ## Release notes
 
-See the [release notes](https://github.com/bujiio/buji-pac4j/wiki/Release-Notes). Learn more by browsing the [buji-pac4j Javadoc](http://www.javadoc.io/doc/io.buji/buji-pac4j/2.1.0-RC1) and the [pac4j Javadoc](http://www.pac4j.org/apidocs/pac4j/1.9.5/index.html).
+See the [release notes](https://github.com/bujiio/buji-pac4j/wiki/Release-Notes). Learn more by browsing the [buji-pac4j Javadoc](http://www.javadoc.io/doc/io.buji/buji-pac4j/2.2.0) and the [pac4j Javadoc](http://www.pac4j.org/apidocs/pac4j/1.9.6/index.html).
 
 
 ## Need help?
@@ -283,7 +274,7 @@ If you have any question, please use the following mailing lists:
 
 ## Development
 
-The version 2.1.0-RC2-SNAPSHOT is under development.
+The version 2.2.0-SNAPSHOT is under development.
 
 Maven artifacts are built via Travis: [![Build Status](https://travis-ci.org/bujiio/buji-pac4j.png?branch=master)](https://travis-ci.org/bujiio/buji-pac4j) and available in the [Sonatype snapshots repository](https://oss.sonatype.org/content/repositories/snapshots/org/pac4j). This repository must be added in the Maven *pom.xml* file for example:
 

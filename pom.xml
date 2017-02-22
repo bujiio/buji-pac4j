@@ -20,7 +20,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <artifactId>buji-pac4j</artifactId>
-  <version>2.1.0-RC2-SNAPSHOT</version>
+  <version>2.2.0-SNAPSHOT</version>
   <packaging>jar</packaging>
   <name>pac4j implementation for Shiro</name>
   <description>Security library for Shiro based on pac4j</description>
@@ -37,6 +37,17 @@
       <id>sonatype-nexus-snapshots</id>
       <name>Sonatype Nexus Snapshots</name>
       <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </repository>
+    <repository>
+      <id>apache-snapshots</id>
+      <name>Apache Snapshots</name>
+      <url>https://repository.apache.org/snapshots/</url>
       <releases>
         <enabled>false</enabled>
       </releases>
@@ -72,9 +83,9 @@
   </scm>
 
   <properties>
-    <pac4j.version>1.9.5</pac4j.version>
+    <pac4j.version>1.9.6</pac4j.version>
     <java.version>1.8</java.version>
-    <shiro.version>1.4.0-RC2</shiro.version>
+    <shiro.version>1.4.0-SNAPSHOT</shiro.version>
     <servlet.version>3.1.0</servlet.version>
   </properties>
 
