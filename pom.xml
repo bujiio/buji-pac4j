@@ -55,7 +55,7 @@
         <enabled>true</enabled>
       </snapshots>
     </repository>
-    <repository>
+    <!--repository>
       <id>apache-staging-repo</id>
       <name>Apache Staging Repository</name>
       <url>https://repository.apache.org/content/repositories/orgapacheshiro-1018/</url>
@@ -65,7 +65,7 @@
       <snapshots>
         <enabled>false</enabled>
       </snapshots>
-    </repository>
+    </repository-->
   </repositories>
 
   <licenses>
