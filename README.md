@@ -19,7 +19,6 @@ It's based on Java 8, Shiro 1.4 and on the **[pac4j security engine](https://git
 
 4) The `CallbackFilter` finishes the login process for an indirect client.
 
-==
 
 Just follow these easy steps to secure your Shiro web application:
 
@@ -165,29 +164,8 @@ facebookSecurityFilter.clients = FacebookClient
 ### 4) Define the callback endpoint only for indirect clients (`CallbackFilter`)
 
 For indirect clients (like Facebook), the user is redirected to an external identity provider for login and then back to the application.
-Thus, a callback endpoint is required in the application. It is managed by the `CallbackFilter` which has the following behaviour:
 
-1) the credentials are extracted from the current request to fetch the user profile (from the identity provider) which is then saved in the web session
-
-2) finally, the user is redirected back to the originally requested url (or to the `defaultUrl`).
-
-
-The following parameters are available:
-
-1) `config`: the security configuration previously defined
-
-2) `defaultUrl` (optional): it's the default url after login if no url was originally requested (`/` by default)
-
-3) `multiProfile` (optional): it indicates whether multiple authentications (and thus multiple profiles) must be kept at the same time (`false` by default).
-
-In your `shiro.ini` file:
-
-```properties
-[url]
-/callback = callbackFilter
-```
-
-The `callbackFilter` component is available by default (it is automatically loaded thanks to the `Pac4jIniEnvironment` component).
+Thus, a callback endpoint is required in the application. It is managed by the `CallbackFilter` which is automatically defined by default (thanks to the `Pac4jIniEnvironment` component).
 
 ---
 
