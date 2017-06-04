@@ -80,7 +80,8 @@ public class ShiroSessionStore implements SessionStore<J2EContext> {
 
     @Override
     public boolean destroySession(final J2EContext context) {
-        return false;
+        getSession(true).stop();
+        return true;
     }
 
     @Override
