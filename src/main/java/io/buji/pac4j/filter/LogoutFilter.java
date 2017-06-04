@@ -21,8 +21,8 @@ import static org.pac4j.core.util.CommonHelper.assertNotNull;
  * <p>This filter handles the (application + identity provider) logout process, based on the {@link #logoutLogic}.</p>
  *
  * <p>The configuration can be provided via setter methods: {@link #setConfig(Config)} (security configuration), {@link #setDefaultUrl(String)} (default logourl url),
- * {@link #setLogoutUrlPattern(String)} (pattern that logout urls must match), {@link #setLocalLogout(Boolean)} (whether the application logout must be performed),
- * {@link #setDestroySession(Boolean)} (whether we must destroy the web session during the local logout) and {@link #setCentralLogout(Boolean)} (whether the centralLogout must be performed).</p>
+ * {@link #setLogoutUrlPattern(String)} (pattern that logout urls must match), {@link #setLocalLogout(Boolean)} (whether the application logout must be performed)
+ * and {@link #setCentralLogout(Boolean)} (whether the centralLogout must be performed).</p>
  *
  * @author Jerome Leleu
  * @since 3.0.0
@@ -38,8 +38,6 @@ public class LogoutFilter implements Filter {
     private String logoutUrlPattern;
 
     private Boolean localLogout;
-
-    private Boolean destroySession;
 
     private Boolean centralLogout;
 
@@ -62,7 +60,7 @@ public class LogoutFilter implements Filter {
         final SessionStore<J2EContext> sessionStore = config.getSessionStore();
         final J2EContext context = new J2EContext(request, response, sessionStore != null ? sessionStore : ShiroSessionStore.INSTANCE);
 
-        logoutLogic.perform(context, config, J2ENopHttpActionAdapter.INSTANCE, this.defaultUrl, this.logoutUrlPattern, this.localLogout, this.destroySession, this.centralLogout);
+        logoutLogic.perform(context, config, J2ENopHttpActionAdapter.INSTANCE, this.defaultUrl, this.logoutUrlPattern, this.localLogout, false, this.centralLogout);
     }
 
     @Override
@@ -106,14 +104,6 @@ public class LogoutFilter implements Filter {
 
     public void setLocalLogout(final Boolean localLogout) {
         this.localLogout = localLogout;
-    }
-
-    public Boolean getDestroySession() {
-        return destroySession;
-    }
-
-    public void setDestroySession(final Boolean destroySession) {
-        this.destroySession = destroySession;
     }
 
     public Boolean getCentralLogout() {
