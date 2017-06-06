@@ -9,7 +9,7 @@ It's based on Java 8, Shiro 1.4 and on the **[pac4j security engine](https://git
 
 1) A [**client**](http://www.pac4j.org/docs/clients.html) represents an authentication mechanism. It performs the login process and returns a user profile. An indirect client is for UI authentication while a direct client is for web services authentication:
 
-&#9656; OAuth - SAML - CAS - OpenID Connect - HTTP - OpenID - Google App Engine - LDAP - SQL - JWT - MongoDB - Stormpath - IP address
+&#9656; OAuth - SAML - CAS - OpenID Connect - HTTP - OpenID - Google App Engine - Kerberos - LDAP - SQL - JWT - MongoDB - CouchDB - IP address
 
 2) An [**authorizer**](http://www.pac4j.org/docs/authorizers.html) is meant to check authorizations on the authenticated user profile(s) or on the current web context:
 
@@ -17,9 +17,7 @@ It's based on Java 8, Shiro 1.4 and on the **[pac4j security engine](https://git
 
 3) The `SecurityFilter` protects an url by checking that the user is authenticated and that the authorizations are valid, according to the clients and authorizers configuration. If the user is not authenticated, it performs authentication for direct clients or starts the login process for indirect clients
 
-4) The `CallbackFilter` finishes the login process for an indirect client
-
-5) The `LogoutFilter` handles the logout process.
+4) The `CallbackFilter` finishes the login process for an indirect client.
 
 
 Just follow these easy steps to secure your Shiro web application:
@@ -29,7 +27,7 @@ Just follow these easy steps to secure your Shiro web application:
 You need to add a dependency on:
  
 - the `buji-pac4j` library (<em>groupId</em>: **io.buji**, *version*: **3.0.0-SNAPSHOT**)
-- the appropriate `pac4j` [submodules](http://www.pac4j.org/docs/clients.html) (<em>groupId</em>: **org.pac4j**, *version*: **2.0.0**): `pac4j-oauth` for OAuth support (Facebook, Twitter...), `pac4j-cas` for CAS support, `pac4j-ldap` for LDAP authentication, etc.
+- the appropriate `pac4j` [submodules](http://www.pac4j.org/docs/clients.html) (<em>groupId</em>: **org.pac4j**, *version*: **2.1.0-SNAPSHOT**): `pac4j-oauth` for OAuth support (Facebook, Twitter...), `pac4j-cas` for CAS support, `pac4j-ldap` for LDAP authentication, etc.
 
 All released artifacts are available in the [Maven central repository](http://search.maven.org/#search%7Cga%7C1%7Cpac4j).
 
@@ -45,10 +43,13 @@ It must be defined in your `shiro.ini` file:
 [main]
 roleAdminAuthGenerator = org.pac4j.demo.shiro.RoleAdminAuthGenerator
 
+oidcConfig = org.pac4j.oidc.config.OidcConfiguration
+oidcConfig.clientId = 167480702619-8e1lo80dnu8bpk3k0lvvj27noin97vu9.apps.googleusercontent.com
+oidcConfig.secret =MhMme_Ik6IH2JMnAT6MFIfee
+oidcConfig.useNonce = true
+
 googleOidClient = org.pac4j.oidc.client.GoogleOidcClient
-googleOidClient.clientID = googleClientID
-googleOidClient.secret = googleSecret
-googleOidClient.useNonce = true
+googleOidClient.configuration = $oidcConfig
 googleOidClient.authorizationGenerator = $roleAdminAuthGenerator
 
 saml2Config = org.pac4j.saml.client.SAML2ClientConfiguration
@@ -64,12 +65,12 @@ saml2Client = org.pac4j.saml.client.SAML2Client
 saml2Client.configuration = $saml2Config
 
 facebookClient = org.pac4j.oauth.client.FacebookClient
-facebookClient.key = fbkey
-facebookClient.secret = fbSecret
+facebookClient.key = 145278422258960
+facebookClient.secret = be21409ba8f39b5dae2a7de525484da8
 
 twitterClient = org.pac4j.oauth.client.TwitterClient
-twitterClient.key = twKey
-twitterClient.secret = twSecret
+twitterClient.key = CoxUiYwQOSFDReZYdjigBA
+twitterClient.secret = 2kAzunH5Btc4gRSaMr7D7MkyoJ5u1VzbOOzE8rBofs
 
 simpleAuthenticator = org.pac4j.http.credentials.authenticator.test.SimpleTestUsernamePasswordAuthenticator
 
@@ -80,22 +81,35 @@ formClient.authenticator = $simpleAuthenticator
 indirectBasicAuthClient = org.pac4j.http.client.indirect.IndirectBasicAuthClient
 indirectBasicAuthClient.authenticator = $simpleAuthenticator
 
+casConfig = org.pac4j.cas.config.CasConfiguration
+casConfig.loginUrl = https://casserverpac4j.herokuapp.com/login
 casClient = org.pac4j.cas.client.CasClient
-casClient.casLoginUrl = https://casserverpac4j.herokuapp.com
+casClient.configuration = $casConfig
+
+vkClient = org.pac4j.oauth.client.VkClient
+vkClient.key = 4224582
+vkClient.secret = nDc4IHTqu8ioFMkHKifq
+
+signingConfig = org.pac4j.jwt.config.signature.SecretSignatureConfiguration
+signingConfig.secret = 12345678901234567890123456789012
+encryptionConfig = org.pac4j.jwt.config.encryption.SecretEncryptionConfiguration
+encryptionConfig.secret = 12345678901234567890123456789012
 
 jwtAuthenticator = org.pac4j.jwt.credentials.authenticator.JwtAuthenticator
-jwtAuthenticator.signingSecret = signingSecret
-jwtAuthenticator.encryptionSecret = encryptionSecret
+jwtAuthenticator.signatureConfiguration = $signingConfig
+jwtAuthenticator.encryptionConfiguration = $encryptionConfig
 
 parameterClient = org.pac4j.http.client.direct.ParameterClient
 parameterClient.parameterName = token
 parameterClient.authenticator = $jwtAuthenticator
+parameterClient.supportGetRequest = true
+parameterClient.supportPostRequest = false
 
 directBasicAuthClient = org.pac4j.http.client.direct.DirectBasicAuthClient
 directBasicAuthClient.authenticator = $simpleAuthenticator
 
 clients.callbackUrl = http://localhost:8080/callback
-clients.clients = $googleOidClient,$facebookClient,$twitterClient,$formClient,$indirectBasicAuthClient,$casClient,$saml2Client,$parameterClient,$directBasicAuthClient
+clients.clients = $googleOidClient,$facebookClient,$twitterClient,$formClient,$indirectBasicAuthClient,$casClient,$vkClient,$saml2Client,$parameterClient,$directBasicAuthClient
 
 requireRoleAdmin = org.pac4j.core.authorization.authorizer.RequireAnyRoleAuthorizer
 requireRoleAdmin.elements = ROLE_ADMIN
@@ -197,16 +211,12 @@ FacebookProfile facebookProfile = (FacebookProfile) commonProfile;
 
 ### 6) Logout
 
-Like for any Shiro webapp, you can use the default logout filter (in your `shiro.ini` file):
+Like for any Shiro webapp, use the default logout filter (in your `shiro.ini` file):
 
 ```properties
 [url]
 /logout = logout
 ```
-
-Or you can use the specific pac4j `LogoutFilter`:
-
-TODO
 
 ---
 
@@ -221,11 +231,6 @@ The `CasFilter` is replaced by the `CallbackFilter` which has the same role (rec
 The  `CasRealm` is replaced by the `Pac4jRealm` and the `CasSubjectFactory` by the `Pac4jsubjectFactory`.
 
 Finally, you must use the `SecurityFilter` to secure an url, in addition of the default Shiro filters (like `roles`).
-
-
-### 2.2 -> 3.0
-
-TODO
 
 
 ### 2.0 -> 2.2

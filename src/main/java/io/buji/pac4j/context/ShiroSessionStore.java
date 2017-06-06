@@ -86,16 +86,12 @@ public class ShiroSessionStore implements SessionStore<J2EContext> {
 
     @Override
     public Object getTrackableSession(final J2EContext context) {
-        return getSession(true);
+        return null;
     }
 
     @Override
     public SessionStore<J2EContext> buildFromTrackableSession(final J2EContext context, final Object trackableSession) {
-        if (trackableSession != null) {
-            return new ShiroProvidedSessionStore((Session) trackableSession);
-        } else {
-            return null;
-        }
+        return null;
     }
 
     @Override
