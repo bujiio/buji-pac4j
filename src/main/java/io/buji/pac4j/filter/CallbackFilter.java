@@ -25,6 +25,7 @@ import org.pac4j.core.context.J2EContext;
 import org.pac4j.core.context.session.SessionStore;
 import org.pac4j.core.engine.CallbackLogic;
 import org.pac4j.core.engine.DefaultCallbackLogic;
+import org.pac4j.core.http.J2ENopHttpActionAdapter;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
@@ -71,7 +72,7 @@ public class CallbackFilter implements Filter {
         final SessionStore<J2EContext> sessionStore = config.getSessionStore();
         final J2EContext context = new J2EContext(request, response, sessionStore != null ? sessionStore : ShiroSessionStore.INSTANCE);
 
-        callbackLogic.perform(context, config, (code, ctx) -> null, this.defaultUrl, this.multiProfile, false);
+        callbackLogic.perform(context, config, J2ENopHttpActionAdapter.INSTANCE, this.defaultUrl, this.multiProfile, false);
     }
 
     @Override

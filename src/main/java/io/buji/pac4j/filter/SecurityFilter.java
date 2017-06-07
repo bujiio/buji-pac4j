@@ -25,6 +25,7 @@ import org.pac4j.core.context.J2EContext;
 import org.pac4j.core.context.session.SessionStore;
 import org.pac4j.core.engine.DefaultSecurityLogic;
 import org.pac4j.core.engine.SecurityLogic;
+import org.pac4j.core.http.J2ENopHttpActionAdapter;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
@@ -80,7 +81,7 @@ public class SecurityFilter implements Filter {
             filterChain.doFilter(request, response);
             return null;
 
-        }, (code, ctx) -> null, clients, authorizers, matchers, multiProfile);
+        }, J2ENopHttpActionAdapter.INSTANCE, clients, authorizers, matchers, multiProfile);
     }
 
     @Override
