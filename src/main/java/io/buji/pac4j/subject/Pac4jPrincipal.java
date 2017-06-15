@@ -62,18 +62,8 @@ public class Pac4jPrincipal implements Principal, Serializable {
      */
     public Pac4jPrincipal(final LinkedHashMap<String, CommonProfile> profiles, String principalNameAttribute) {
         this.profiles = profiles;
-        this.principalNameAttribute = trimToNull(principalNameAttribute);
-    }
-    
-    /** 
-     * Private utility method to trim empty strings to null.
-     */
-    private static String trimToNull(String orig) {
-        if(null == orig) {
-            return null;
-        } 
-        String trimmed = orig.trim();
-        return "".equals(trimmed) ? null : trimmed;
+        this.principalNameAttribute = CommonHelper.isBlank(principalNameAttribute) ?
+                                        null : principalNameAttribute.trim();
     }
 
     /**
