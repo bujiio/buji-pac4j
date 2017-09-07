@@ -286,6 +286,8 @@ See the [release notes](https://github.com/bujiio/buji-pac4j/wiki/Release-Notes)
 
 ## Need help?
 
+If you need commercial support (premium support or new/specific features), contact us at [info@pac4j.org](mailto:info@pac4j.org).
+
 If you have any question, please use the following mailing lists:
 
 - [pac4j users](https://groups.google.com/forum/?hl=en#!forum/pac4j-users)
