@@ -315,3 +315,7 @@ Maven artifacts are built via Travis: [![Build Status](https://travis-ci.org/buj
   </repository>
 </repositories>
 ```
+
+## Supporters
+
+This project is supported by ![](http://www.pac4j.org/img/auth0_logo.svg) [Auth0](https://auth0.com) 
