@@ -19,6 +19,7 @@
 package io.buji.pac4j.profile;
 
 import io.buji.pac4j.util.ShiroHelper;
+import org.apache.shiro.SecurityUtils;
 import org.pac4j.core.context.WebContext;
 import org.pac4j.core.profile.CommonProfile;
 import org.pac4j.core.profile.ProfileManager;
@@ -40,5 +41,12 @@ public class ShiroProfileManager extends ProfileManager<CommonProfile> {
         super.save(saveInSession, profile, multiProfile);
 
         ShiroHelper.populateSubject(retrieveAll(saveInSession));
+    }
+
+    @Override
+    public void remove(final boolean removeFromSession) {
+        super.remove(removeFromSession);
+
+        SecurityUtils.getSubject().logout();
     }
 }
