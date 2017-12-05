@@ -3,7 +3,7 @@
 </p>
 
 The `buji-pac4j` project is an **easy and powerful security library for Shiro** web applications which supports authentication and authorization, but also advanced features like CSRF protection.
-It's based on Java 8, Shiro 1.4 and on the **[pac4j security engine](https://github.com/pac4j/pac4j) v2.0**. It's available under the Apache 2 license.
+It's based on Java 8, Shiro 1.4 and on the **[pac4j security engine](https://github.com/pac4j/pac4j) v2**. It's available under the Apache 2 license.
 
 [**Main concepts and components:**](http://www.pac4j.org/docs/main-concepts-and-components.html)
 
@@ -26,8 +26,8 @@ Just follow these easy steps to secure your Shiro web application:
 
 You need to add a dependency on:
 
-- the `buji-pac4j` library (<em>groupId</em>: **io.buji**, *version*: **3.0.0**)
-- the appropriate `pac4j` [submodules](http://www.pac4j.org/docs/clients.html) (<em>groupId</em>: **org.pac4j**, *version*: **2.1.0**): `pac4j-oauth` for OAuth support (Facebook, Twitter...), `pac4j-cas` for CAS support, `pac4j-ldap` for LDAP authentication, etc.
+- the `buji-pac4j` library (<em>groupId</em>: **io.buji**, *version*: **3.1.0**)
+- the appropriate `pac4j` [submodules](http://www.pac4j.org/docs/clients.html) (<em>groupId</em>: **org.pac4j**, *version*: **2.2.0**): `pac4j-oauth` for OAuth support (Facebook, Twitter...), `pac4j-cas` for CAS support, `pac4j-ldap` for LDAP authentication, etc.
 
 All released artifacts are available in the [Maven central repository](http://search.maven.org/#search%7Cga%7C1%7Cpac4j).
 
@@ -281,7 +281,7 @@ The demo webapp: [buji-pac4j-demo](https://github.com/pac4j/buji-pac4j-demo) is 
 
 ## Release notes
 
-See the [release notes](https://github.com/bujiio/buji-pac4j/wiki/Release-Notes). Learn more by browsing the [buji-pac4j Javadoc](http://www.javadoc.io/doc/io.buji/buji-pac4j/3.1.0) and the [pac4j Javadoc](http://www.pac4j.org/apidocs/pac4j/2.1.0/index.html).
+See the [release notes](https://github.com/bujiio/buji-pac4j/wiki/Release-Notes). Learn more by browsing the [buji-pac4j Javadoc](http://www.javadoc.io/doc/io.buji/buji-pac4j/3.1.0) and the [pac4j Javadoc](http://www.pac4j.org/apidocs/pac4j/2.2.0/index.html).
 
 
 ## Need help?
