@@ -25,7 +25,7 @@ Just follow these easy steps to secure your Shiro web application:
 ### 1) Add the required dependencies (`buji-pac4j` + `pac4j-*` libraries)
 
 You need to add a dependency on:
- 
+
 - the `buji-pac4j` library (<em>groupId</em>: **io.buji**, *version*: **3.0.0**)
 - the appropriate `pac4j` [submodules](http://www.pac4j.org/docs/clients.html) (<em>groupId</em>: **org.pac4j**, *version*: **2.1.0**): `pac4j-oauth` for OAuth support (Facebook, Twitter...), `pac4j-cas` for CAS support, `pac4j-ldap` for LDAP authentication, etc.
 
@@ -184,7 +184,7 @@ Thus, a callback endpoint is required in the application. It is managed by the `
 
 1) the credentials are extracted from the current request to fetch the user profile (from the identity provider) which is then saved in the web session
 
-2) finally, the user is redirected back to the originally requested url (or to the `defaultUrl`).
+2) finally, the user is redirected back to the originally requested url (or to the `defaultUrl`). If some filters are defined in the app descriptor and associated with the current request they will be normally executed.
 
 
 The following parameters are available:
@@ -215,7 +215,7 @@ The `callbackFilter` component and its `config` are automatically defined by def
 
 Like for any Shiro web application, you can get the authenticated user via the `SecurityUtils.getSubject().getPrincipals()`.
 If the user is authenticated or remembered, the appropriate principal: `Pac4jPrincipal` will be stored in the principals,
-on which you can get the main profile (`getProfile` method) or all profiles (`getProfiles` method) of the authenticated user: 
+on which you can get the main profile (`getProfile` method) or all profiles (`getProfiles` method) of the authenticated user:
 
 ```java
 final PrincipalCollection principals = SecurityUtils.getSubject().getPrincipals();
@@ -281,7 +281,7 @@ The demo webapp: [buji-pac4j-demo](https://github.com/pac4j/buji-pac4j-demo) is 
 
 ## Release notes
 
-See the [release notes](https://github.com/bujiio/buji-pac4j/wiki/Release-Notes). Learn more by browsing the [buji-pac4j Javadoc](http://www.javadoc.io/doc/io.buji/buji-pac4j/3.0.0) and the [pac4j Javadoc](http://www.pac4j.org/apidocs/pac4j/2.1.0/index.html).
+See the [release notes](https://github.com/bujiio/buji-pac4j/wiki/Release-Notes). Learn more by browsing the [buji-pac4j Javadoc](http://www.javadoc.io/doc/io.buji/buji-pac4j/3.1.0) and the [pac4j Javadoc](http://www.pac4j.org/apidocs/pac4j/2.1.0/index.html).
 
 
 ## Need help?
@@ -296,7 +296,7 @@ If you have any question, please use the following mailing lists:
 
 ## Development
 
-The version 3.0.1-SNAPSHOT is under development.
+The version 3.1.0-SNAPSHOT is under development.
 
 Maven artifacts are built via Travis: [![Build Status](https://travis-ci.org/bujiio/buji-pac4j.png?branch=master)](https://travis-ci.org/bujiio/buji-pac4j) and available in the [Sonatype snapshots repository](https://oss.sonatype.org/content/repositories/snapshots/org/pac4j). This repository must be added in the Maven *pom.xml* file for example:
 

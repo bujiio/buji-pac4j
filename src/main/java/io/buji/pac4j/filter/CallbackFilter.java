@@ -73,6 +73,8 @@ public class CallbackFilter implements Filter {
         final J2EContext context = new J2EContext(request, response, sessionStore != null ? sessionStore : ShiroSessionStore.INSTANCE);
 
         callbackLogic.perform(context, config, J2ENopHttpActionAdapter.INSTANCE, this.defaultUrl, this.multiProfile, false);
+
+        filterChain.doFilter(servletRequest, servletResponse);
     }
 
     @Override
