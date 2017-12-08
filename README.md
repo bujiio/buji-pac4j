@@ -184,8 +184,9 @@ Thus, a callback endpoint is required in the application. It is managed by the `
 
 1) the credentials are extracted from the current request to fetch the user profile (from the identity provider) which is then saved in the web session
 
-2) finally, the user is redirected back to the originally requested url (or to the `defaultUrl`). If some filters are defined in the app descriptor and associated with the current request they will be normally executed.
+2) The HttpActionAdapter is executed. In version 3.1.0 and above a custom HttpActionAdapter may be configured.
 
+3) finally, the user is redirected back to the originally requested url (or to the `defaultUrl`).
 
 The following parameters are available:
 
