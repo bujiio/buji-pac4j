@@ -25,6 +25,7 @@ import org.pac4j.core.context.J2EContext;
 import org.pac4j.core.context.session.SessionStore;
 import org.pac4j.core.engine.CallbackLogic;
 import org.pac4j.core.engine.DefaultCallbackLogic;
+import org.pac4j.core.http.HttpActionAdapter;
 import org.pac4j.core.http.J2ENopHttpActionAdapter;
 
 import javax.servlet.*;
@@ -53,6 +54,8 @@ public class CallbackFilter implements Filter {
 
     private Boolean multiProfile;
 
+    private HttpActionAdapter<Object, J2EContext> httpActionAdapter;
+
     public CallbackFilter() {
         callbackLogic = new DefaultCallbackLogic<>();
         ((DefaultCallbackLogic<Object, J2EContext>) callbackLogic).setProfileManagerFactory(ShiroProfileManager::new);
@@ -71,10 +74,9 @@ public class CallbackFilter implements Filter {
         final HttpServletResponse response = (HttpServletResponse) servletResponse;
         final SessionStore<J2EContext> sessionStore = config.getSessionStore();
         final J2EContext context = new J2EContext(request, response, sessionStore != null ? sessionStore : ShiroSessionStore.INSTANCE);
+        final HttpActionAdapter<Object, J2EContext> adapter = httpActionAdapter != null ? httpActionAdapter : J2ENopHttpActionAdapter.INSTANCE;
 
-        callbackLogic.perform(context, config, J2ENopHttpActionAdapter.INSTANCE, this.defaultUrl, this.multiProfile, false);
-
-        filterChain.doFilter(servletRequest, servletResponse);
+        callbackLogic.perform(context, config, adapter, this.defaultUrl, this.multiProfile, false);
     }
 
     @Override
@@ -110,5 +112,13 @@ public class CallbackFilter implements Filter {
 
     public void setMultiProfile(final Boolean multiProfile) {
         this.multiProfile = multiProfile;
+    }
+
+    public HttpActionAdapter<Object, J2EContext> getHttpActionAdapter() {
+        return httpActionAdapter;
+    }
+
+    public void setHttpActionAdapter(final HttpActionAdapter<Object, J2EContext> httpActionAdapter) {
+        this.httpActionAdapter = httpActionAdapter;
     }
 }

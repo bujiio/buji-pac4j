@@ -184,7 +184,7 @@ Thus, a callback endpoint is required in the application. It is managed by the `
 
 1) the credentials are extracted from the current request to fetch the user profile (from the identity provider) which is then saved in the web session
 
-2) finally, the user is redirected back to the originally requested url (or to the `defaultUrl`). If some filters are defined in the app descriptor and associated with the current request they will be normally executed.
+2) finally, the user is redirected back to the originally requested url (or to the `defaultUrl`).
 
 
 The following parameters are available:
@@ -193,7 +193,9 @@ The following parameters are available:
 
 2) `defaultUrl` (optional): it's the default url after login if no url was originally requested (`/` by default)
 
-3) `multiProfile` (optional): it indicates whether multiple authentications (and thus multiple profiles) must be kept at the same time (`false` by default).
+3) `multiProfile` (optional): it indicates whether multiple authentications (and thus multiple profiles) must be kept at the same time (`false` by default)
+
+4) `httpActionAdapter` (optional): a specific `HttpActionAdapter` for custom treatments/actions.
 
 
 In your `shiro.ini` file:
