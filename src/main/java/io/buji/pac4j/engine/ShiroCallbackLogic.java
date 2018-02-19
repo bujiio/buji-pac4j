@@ -5,6 +5,14 @@ import org.pac4j.core.engine.DefaultCallbackLogic;
 
 import io.buji.pac4j.profile.ShiroProfileManager;
 
+/**
+ * Specialized CallbackLogic aimed for buji : makes a clean use of the ShiroProfileManager.
+ *
+ * @see DefaultCallbackLogic
+ *
+ * @author Andre Doherty
+ * @Since 3.2.0
+ */
 public class ShiroCallbackLogic<R, C extends WebContext> extends DefaultCallbackLogic<R, C> {
 
     public ShiroCallbackLogic() {
