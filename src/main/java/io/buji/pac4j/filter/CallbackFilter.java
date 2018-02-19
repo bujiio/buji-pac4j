@@ -18,22 +18,28 @@
  */
 package io.buji.pac4j.filter;
 
-import io.buji.pac4j.context.ShiroSessionStore;
-import io.buji.pac4j.profile.ShiroProfileManager;
+import static org.pac4j.core.util.CommonHelper.assertNotNull;
+
+import java.io.IOException;
+
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.pac4j.core.config.Config;
 import org.pac4j.core.context.J2EContext;
 import org.pac4j.core.context.session.SessionStore;
 import org.pac4j.core.engine.CallbackLogic;
-import org.pac4j.core.engine.DefaultCallbackLogic;
 import org.pac4j.core.http.HttpActionAdapter;
 import org.pac4j.core.http.J2ENopHttpActionAdapter;
 
-import javax.servlet.*;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-
-import static org.pac4j.core.util.CommonHelper.assertNotNull;
+import io.buji.pac4j.context.ShiroSessionStore;
+import io.buji.pac4j.engine.ShiroCallbackLogic;
 
 /**
  * <p>This filter finishes the login process for an indirect client, based on the {@link #callbackLogic}.</p>
@@ -57,8 +63,7 @@ public class CallbackFilter implements Filter {
     private HttpActionAdapter<Object, J2EContext> httpActionAdapter;
 
     public CallbackFilter() {
-        callbackLogic = new DefaultCallbackLogic<>();
-        ((DefaultCallbackLogic<Object, J2EContext>) callbackLogic).setProfileManagerFactory(ShiroProfileManager::new);
+        callbackLogic = new ShiroCallbackLogic<>();
     }
 
     @Override
