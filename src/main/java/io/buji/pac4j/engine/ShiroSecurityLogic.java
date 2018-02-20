@@ -11,7 +11,7 @@ import io.buji.pac4j.profile.ShiroProfileManager;
  * @see DefaultSecurityLogic
  *
  * @author Andre Doherty
- * @Since 3.2.0
+ * @since 3.2.0
  */
 public class ShiroSecurityLogic<R, C extends WebContext> extends DefaultSecurityLogic<R, C> {
 
