@@ -18,21 +18,27 @@
  */
 package io.buji.pac4j.filter;
 
-import io.buji.pac4j.context.ShiroSessionStore;
-import io.buji.pac4j.profile.ShiroProfileManager;
+import static org.pac4j.core.util.CommonHelper.assertNotNull;
+
+import java.io.IOException;
+
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.pac4j.core.config.Config;
 import org.pac4j.core.context.J2EContext;
 import org.pac4j.core.context.session.SessionStore;
-import org.pac4j.core.engine.DefaultSecurityLogic;
 import org.pac4j.core.engine.SecurityLogic;
 import org.pac4j.core.http.J2ENopHttpActionAdapter;
 
-import javax.servlet.*;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-
-import static org.pac4j.core.util.CommonHelper.*;
+import io.buji.pac4j.context.ShiroSessionStore;
+import io.buji.pac4j.engine.ShiroSecurityLogic;
 
 /**
  * <p>This filter protects an url, based on the {@link #securityLogic}.</p>
@@ -58,8 +64,7 @@ public class SecurityFilter implements Filter {
     private Boolean multiProfile;
 
     public SecurityFilter() {
-        securityLogic = new DefaultSecurityLogic<>();
-        ((DefaultSecurityLogic<Object, J2EContext>) securityLogic).setProfileManagerFactory(ShiroProfileManager::new);
+        securityLogic = new ShiroSecurityLogic<>();
     }
 
     @Override
