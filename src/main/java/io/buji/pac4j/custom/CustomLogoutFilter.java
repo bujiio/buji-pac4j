@@ -1,6 +1,7 @@
-package io.buji.pac4j.filter;
+package io.buji.pac4j.custom;
 
 import io.buji.pac4j.context.ShiroSessionStore;
+import io.buji.pac4j.filter.LogoutFilter;
 import org.apache.shiro.util.StringUtils;
 import org.pac4j.core.context.J2EContext;
 import org.pac4j.core.context.session.SessionStore;
