@@ -2,6 +2,17 @@
   <img src="https://pac4j.github.io/pac4j/img/logo-shiro.png" width="300" />
 </p>
 
+```diff
++ this will be highlighted in green
+- this will be highlighted in red
+```
+
+
++ this will be highlighted in green
+- this will be highlighted in red
+
+
+
 The `buji-pac4j` project is an **easy and powerful security library for Shiro** web applications which supports authentication and authorization, but also advanced features like CSRF protection.
 It's based on Java 8, Shiro 1.4 and on the **[pac4j security engine](https://github.com/pac4j/pac4j) v2**. It's available under the Apache 2 license.
 
