@@ -40,6 +40,8 @@ import org.pac4j.core.http.J2ENopHttpActionAdapter;
 
 import io.buji.pac4j.context.ShiroSessionStore;
 import io.buji.pac4j.engine.ShiroCallbackLogic;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * <p>This filter finishes the login process for an indirect client, based on the {@link #callbackLogic}.</p>
@@ -52,6 +54,8 @@ import io.buji.pac4j.engine.ShiroCallbackLogic;
  */
 public class CallbackFilter implements Filter {
 
+    private static final Logger log = LoggerFactory.getLogger(CallbackFilter.class);
+
     private CallbackLogic<Object, J2EContext> callbackLogic;
 
     private Config config;
@@ -63,6 +67,8 @@ public class CallbackFilter implements Filter {
     private HttpActionAdapter<Object, J2EContext> httpActionAdapter;
 
     public CallbackFilter() {
+        log.debug("Instantiating a new ShiroCallbackLogic");
+        System.out.println("Really instantiating a new ShiroCallbackLogic");
         callbackLogic = new ShiroCallbackLogic<>();
     }
 
