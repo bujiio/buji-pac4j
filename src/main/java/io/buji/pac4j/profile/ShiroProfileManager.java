@@ -38,9 +38,9 @@ public class ShiroProfileManager extends ProfileManager<CommonProfile> {
 
     @Override
     public void save(final boolean saveInSession, final CommonProfile profile, final boolean multiProfile) {
-        super.save(saveInSession, profile, multiProfile);
-
         ShiroHelper.populateSubject(retrieveAll(saveInSession));
+
+        super.save(saveInSession, profile, multiProfile);
     }
 
     @Override
