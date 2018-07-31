@@ -35,8 +35,8 @@ import org.pac4j.core.config.Config;
 import org.pac4j.core.context.J2EContext;
 import org.pac4j.core.context.session.SessionStore;
 import org.pac4j.core.engine.CallbackLogic;
-import org.pac4j.core.http.HttpActionAdapter;
-import org.pac4j.core.http.J2ENopHttpActionAdapter;
+import org.pac4j.core.http.adapter.HttpActionAdapter;
+import org.pac4j.core.http.adapter.J2ENopHttpActionAdapter;
 
 import io.buji.pac4j.context.ShiroSessionStore;
 import io.buji.pac4j.engine.ShiroCallbackLogic;
@@ -58,7 +58,11 @@ public class CallbackFilter implements Filter {
 
     private String defaultUrl;
 
+    private Boolean saveInSession;
+
     private Boolean multiProfile;
+
+    private String defaultClient;
 
     private HttpActionAdapter<Object, J2EContext> httpActionAdapter;
 
@@ -81,7 +85,7 @@ public class CallbackFilter implements Filter {
         final J2EContext context = new J2EContext(request, response, sessionStore != null ? sessionStore : ShiroSessionStore.INSTANCE);
         final HttpActionAdapter<Object, J2EContext> adapter = httpActionAdapter != null ? httpActionAdapter : J2ENopHttpActionAdapter.INSTANCE;
 
-        callbackLogic.perform(context, config, adapter, this.defaultUrl, this.multiProfile, false);
+        callbackLogic.perform(context, config, adapter, this.defaultUrl, this.saveInSession, this.multiProfile, false, this.defaultClient);
     }
 
     @Override
@@ -117,6 +121,22 @@ public class CallbackFilter implements Filter {
 
     public void setMultiProfile(final Boolean multiProfile) {
         this.multiProfile = multiProfile;
+    }
+
+    public Boolean getSaveInSession() {
+        return saveInSession;
+    }
+
+    public void setSaveInSession(final Boolean saveInSession) {
+        this.saveInSession = saveInSession;
+    }
+
+    public String getDefaultClient() {
+        return defaultClient;
+    }
+
+    public void setDefaultClient(final String defaultClient) {
+        this.defaultClient = defaultClient;
     }
 
     public HttpActionAdapter<Object, J2EContext> getHttpActionAdapter() {
