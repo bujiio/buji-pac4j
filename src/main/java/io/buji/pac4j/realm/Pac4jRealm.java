@@ -40,11 +40,39 @@ import java.util.*;
  * @since 2.0.0
  */
 public class Pac4jRealm extends AuthorizingRealm {
+    
+    private String principalNameAttribute;
 
     public Pac4jRealm() {
         setAuthenticationTokenClass(Pac4jToken.class);
     }
 
+    /**
+     * Returns the name of the attribute from CommonProfile that will be used as
+     * the value for the principal name.
+     * 
+     * @return an attribute name or null
+     */
+    public String getPrincipalNameAttribute() {
+        return principalNameAttribute;
+    }
+
+    /**
+     * Sets the name of the attribute from the CommonProfile that should be returned
+     * as the principal name. Common attribute names include "email", "username" or "display_name"
+     * but valid values are ultimately determined by the Pac4j client and the profile 
+     * that it returns. A null or blank string provided for the attribute name will
+     * cause the principal to return CommonProfile.getId() as the name.
+     * 
+     * @param principalNameAttribute The attribute name to return. Null or blank will
+     *          result in CommonProfile.getId() being used for the principal name.
+     * @see Pac4jPrincipal#getName()
+     * @see CommonProfile
+     */
+    public void setPrincipalNameAttribute(String principalNameAttribute) {
+        this.principalNameAttribute = principalNameAttribute;
+    }
+    
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(final AuthenticationToken authenticationToken)
             throws AuthenticationException {
@@ -52,7 +80,7 @@ public class Pac4jRealm extends AuthorizingRealm {
         final Pac4jToken token = (Pac4jToken) authenticationToken;
         final LinkedHashMap<String, CommonProfile> profiles = token.getProfiles();
 
-        final Pac4jPrincipal principal = new Pac4jPrincipal(profiles);
+        final Pac4jPrincipal principal = new Pac4jPrincipal(profiles, principalNameAttribute);
         final PrincipalCollection principalCollection = new SimplePrincipalCollection(principal, getName());
         return new SimpleAuthenticationInfo(principalCollection, profiles.hashCode());
     }

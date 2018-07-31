@@ -27,7 +27,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Specific session store.
+ * Specific session store for Shiro.
  *
  * @author Jerome Leleu
  * @since 1.4.0
@@ -76,5 +76,26 @@ public class ShiroSessionStore implements SessionStore<J2EContext> {
                 logger.warn("Should happen just once at startup in some specific case of Shiro Spring configuration", e);
             }
         }
+    }
+
+    @Override
+    public boolean destroySession(final J2EContext context) {
+        getSession(true).stop();
+        return true;
+    }
+
+    @Override
+    public Object getTrackableSession(final J2EContext context) {
+        return null;
+    }
+
+    @Override
+    public SessionStore<J2EContext> buildFromTrackableSession(final J2EContext context, final Object trackableSession) {
+        return null;
+    }
+
+    @Override
+    public boolean renewSession(final J2EContext context) {
+        return false;
     }
 }
