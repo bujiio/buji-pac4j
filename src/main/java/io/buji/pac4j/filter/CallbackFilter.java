@@ -44,8 +44,14 @@ import io.buji.pac4j.engine.ShiroCallbackLogic;
 /**
  * <p>This filter finishes the login process for an indirect client, based on the {@link #callbackLogic}.</p>
  *
- * <p>The configuration can be provided via setter methods: {@link #setConfig(Config)} (security configuration),
- * {@link #setDefaultUrl(String)} (default url after login if none was requested) and {@link #setMultiProfile(Boolean)} (whether multiple profiles should be kept).</p>
+ * <p>The configuration can be provided via setter methods:</p>
+ * <ul>
+ *     <li><code>{@link #setConfig(Config)}</code> (security configuration)</li>
+ *     <li><code>{@link #setDefaultUrl(String)}</code> (default url after login if none was requested)</li>
+ *     <li><code>{@link #setSaveInSession(Boolean)}</code> (whether the profile should be saved into the session)</li>
+ *     <li><code>{@link #setMultiProfile(Boolean)}</code> (whether multiple profiles should be kept)</li>
+ *     <li><code>{@link #setDefaultClient(String)}</code> (the default client if none is provided on the URL)</li>
+ * </ul>
  *
  * @author Jerome Leleu
  * @since 2.0.0
