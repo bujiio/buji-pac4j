@@ -20,6 +20,7 @@ package io.buji.pac4j.profile;
 
 import io.buji.pac4j.util.ShiroHelper;
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.AuthenticationException;
 import org.pac4j.core.context.WebContext;
 import org.pac4j.core.profile.CommonProfile;
 import org.pac4j.core.profile.ProfileManager;
@@ -38,9 +39,14 @@ public class ShiroProfileManager extends ProfileManager<CommonProfile> {
 
     @Override
     public void save(final boolean saveInSession, final CommonProfile profile, final boolean multiProfile) {
-        ShiroHelper.populateSubject(retrieveAll(saveInSession));
-
         super.save(saveInSession, profile, multiProfile);
+
+        try {
+            ShiroHelper.populateSubject(retrieveAll(saveInSession));
+        } catch (final AuthenticationException e) {
+            super.remove(saveInSession);
+            throw e;
+        }
     }
 
     @Override

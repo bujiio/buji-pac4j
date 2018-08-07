@@ -24,7 +24,6 @@ import org.pac4j.core.util.CommonHelper;
 
 import java.io.Serializable;
 import java.security.Principal;
-import java.util.LinkedHashMap;
 import java.util.List;
 
 /**
@@ -36,16 +35,16 @@ import java.util.List;
 public class Pac4jPrincipal implements Principal, Serializable {
 
     private final String principalNameAttribute;
-    private final LinkedHashMap<String, CommonProfile> profiles;
+    private final List<CommonProfile> profiles;
 
     /**
      * Construct a Pac4jPrincipal.  The principal name returned will be 
      * CommonProfile.getId().
      * 
-     * @param profiles A map containing all of the CommonProfiles created by Pac4j
+     * @param profiles A list containing all of the CommonProfiles created by Pac4j
      *          authorization.
      */
-    public Pac4jPrincipal(final LinkedHashMap<String, CommonProfile> profiles) {
+    public Pac4jPrincipal(final List<CommonProfile> profiles) {
         this.profiles = profiles;
         this.principalNameAttribute = null;
     }
@@ -54,13 +53,13 @@ public class Pac4jPrincipal implements Principal, Serializable {
      * Construct a Pac4jPrincipal and specify which attribute in the CommonProfile
      * should be used for the principal name.
      * 
-     * @param profiles A map containing all of the CommonProfiles created by Pac4j
+     * @param profiles A list containing all of the CommonProfiles created by Pac4j
      *          authorization.
      * @param principalNameAttribute The attribute name in the CommonProfile that 
      *          holds the principal name. A null or blank value means
      *          that CommonProfile.getId() should be used as the principal name.
      */
-    public Pac4jPrincipal(final LinkedHashMap<String, CommonProfile> profiles, String principalNameAttribute) {
+    public Pac4jPrincipal(final List<CommonProfile> profiles, String principalNameAttribute) {
         this.profiles = profiles;
         this.principalNameAttribute = CommonHelper.isBlank(principalNameAttribute) ?
                                         null : principalNameAttribute.trim();
@@ -81,7 +80,7 @@ public class Pac4jPrincipal implements Principal, Serializable {
      * @return the list of profiles
      */
     public List<CommonProfile> getProfiles() {
-        return ProfileHelper.flatIntoAProfileList(this.profiles);
+        return this.profiles;
     }
 
     @Override
@@ -117,6 +116,6 @@ public class Pac4jPrincipal implements Principal, Serializable {
 
     @Override
     public String toString() {
-        return CommonHelper.toString(this.getClass(), "profiles", getProfiles());
+        return CommonHelper.toNiceString(this.getClass(), "profiles", getProfiles());
     }
 }

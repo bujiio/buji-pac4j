@@ -7,7 +7,7 @@ import org.pac4j.core.context.J2EContext;
 import org.pac4j.core.context.session.SessionStore;
 import org.pac4j.core.engine.DefaultLogoutLogic;
 import org.pac4j.core.engine.LogoutLogic;
-import org.pac4j.core.http.J2ENopHttpActionAdapter;
+import org.pac4j.core.http.adapter.J2ENopHttpActionAdapter;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;

@@ -22,7 +22,7 @@ import org.apache.shiro.authc.RememberMeAuthenticationToken;
 import org.pac4j.core.profile.CommonProfile;
 import org.pac4j.core.profile.ProfileHelper;
 
-import java.util.LinkedHashMap;
+import java.util.List;
 
 /**
  * Token to store the pac4j profiles.
@@ -32,11 +32,11 @@ import java.util.LinkedHashMap;
  */
 public class Pac4jToken implements RememberMeAuthenticationToken {
 
-    private final LinkedHashMap<String, CommonProfile> profiles;
+    private final List<CommonProfile> profiles;
 
     private final boolean isRemembered;
 
-    public Pac4jToken(final LinkedHashMap<String, CommonProfile> profiles, final boolean isRemembered) {
+    public Pac4jToken(final List<CommonProfile> profiles, final boolean isRemembered) {
         this.profiles = profiles;
         this.isRemembered = isRemembered;
     }
@@ -56,7 +56,7 @@ public class Pac4jToken implements RememberMeAuthenticationToken {
         return this.isRemembered;
     }
 
-    public LinkedHashMap<String, CommonProfile> getProfiles() {
+    public List<CommonProfile> getProfiles() {
         return profiles;
     }
 }

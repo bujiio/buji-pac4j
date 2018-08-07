@@ -78,7 +78,7 @@ public class Pac4jRealm extends AuthorizingRealm {
             throws AuthenticationException {
 
         final Pac4jToken token = (Pac4jToken) authenticationToken;
-        final LinkedHashMap<String, CommonProfile> profiles = token.getProfiles();
+        final List<CommonProfile> profiles = token.getProfiles();
 
         final Pac4jPrincipal principal = new Pac4jPrincipal(profiles, principalNameAttribute);
         final PrincipalCollection principalCollection = new SimplePrincipalCollection(principal, getName());

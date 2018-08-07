@@ -53,9 +53,9 @@ public class ShiroHelper {
             final List<CommonProfile> listProfiles = ProfileHelper.flatIntoAProfileList(profiles);
             try {
                 if (IS_FULLY_AUTHENTICATED_AUTHORIZER.isAuthorized(null, listProfiles)) {
-                    SecurityUtils.getSubject().login(new Pac4jToken(profiles, false));
+                    SecurityUtils.getSubject().login(new Pac4jToken(listProfiles, false));
                 } else if (IS_REMEMBERED_AUTHORIZER.isAuthorized(null, listProfiles)) {
-                    SecurityUtils.getSubject().login(new Pac4jToken(profiles, true));
+                    SecurityUtils.getSubject().login(new Pac4jToken(listProfiles, true));
                 }
             } catch (final HttpAction e) {
                 throw new TechnicalException(e);
