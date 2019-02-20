@@ -23,7 +23,7 @@ import org.apache.shiro.SecurityUtils;
 import org.pac4j.core.authorization.authorizer.Authorizer;
 import org.pac4j.core.authorization.authorizer.IsFullyAuthenticatedAuthorizer;
 import org.pac4j.core.authorization.authorizer.IsRememberedAuthorizer;
-import org.pac4j.core.exception.HttpAction;
+import org.pac4j.core.exception.http.HttpAction;
 import org.pac4j.core.exception.TechnicalException;
 import org.pac4j.core.profile.CommonProfile;
 import org.pac4j.core.profile.ProfileHelper;

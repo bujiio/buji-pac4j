@@ -32,11 +32,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.pac4j.core.config.Config;
-import org.pac4j.core.context.J2EContext;
+import org.pac4j.core.context.JEEContext;
 import org.pac4j.core.context.session.SessionStore;
 import org.pac4j.core.engine.CallbackLogic;
 import org.pac4j.core.http.adapter.HttpActionAdapter;
-import org.pac4j.core.http.adapter.J2ENopHttpActionAdapter;
+import org.pac4j.core.http.adapter.JEEHttpActionAdapter;
 
 import io.buji.pac4j.context.ShiroSessionStore;
 import io.buji.pac4j.engine.ShiroCallbackLogic;
@@ -58,7 +58,7 @@ import io.buji.pac4j.engine.ShiroCallbackLogic;
  */
 public class CallbackFilter implements Filter {
 
-    private CallbackLogic<Object, J2EContext> callbackLogic;
+    private CallbackLogic<Object, JEEContext> callbackLogic;
 
     private Config config;
 
@@ -70,7 +70,7 @@ public class CallbackFilter implements Filter {
 
     private String defaultClient;
 
-    private HttpActionAdapter<Object, J2EContext> httpActionAdapter;
+    private HttpActionAdapter<Object, JEEContext> httpActionAdapter;
 
     public CallbackFilter() {
         callbackLogic = new ShiroCallbackLogic<>();
@@ -87,9 +87,9 @@ public class CallbackFilter implements Filter {
 
         final HttpServletRequest request = (HttpServletRequest) servletRequest;
         final HttpServletResponse response = (HttpServletResponse) servletResponse;
-        final SessionStore<J2EContext> sessionStore = config.getSessionStore();
-        final J2EContext context = new J2EContext(request, response, sessionStore != null ? sessionStore : ShiroSessionStore.INSTANCE);
-        final HttpActionAdapter<Object, J2EContext> adapter = httpActionAdapter != null ? httpActionAdapter : J2ENopHttpActionAdapter.INSTANCE;
+        final SessionStore<JEEContext> sessionStore = config.getSessionStore();
+        final JEEContext context = new JEEContext(request, response, sessionStore != null ? sessionStore : ShiroSessionStore.INSTANCE);
+        final HttpActionAdapter<Object, JEEContext> adapter = httpActionAdapter != null ? httpActionAdapter : JEEHttpActionAdapter.INSTANCE;
 
         callbackLogic.perform(context, config, adapter, this.defaultUrl, this.saveInSession, this.multiProfile, false, this.defaultClient);
     }
@@ -97,11 +97,11 @@ public class CallbackFilter implements Filter {
     @Override
     public void destroy() {}
 
-    public CallbackLogic<Object, J2EContext> getCallbackLogic() {
+    public CallbackLogic<Object, JEEContext> getCallbackLogic() {
         return callbackLogic;
     }
 
-    public void setCallbackLogic(final CallbackLogic<Object, J2EContext> callbackLogic) {
+    public void setCallbackLogic(final CallbackLogic<Object, JEEContext> callbackLogic) {
         this.callbackLogic = callbackLogic;
     }
 
@@ -145,11 +145,11 @@ public class CallbackFilter implements Filter {
         this.defaultClient = defaultClient;
     }
 
-    public HttpActionAdapter<Object, J2EContext> getHttpActionAdapter() {
+    public HttpActionAdapter<Object, JEEContext> getHttpActionAdapter() {
         return httpActionAdapter;
     }
 
-    public void setHttpActionAdapter(final HttpActionAdapter<Object, J2EContext> httpActionAdapter) {
+    public void setHttpActionAdapter(final HttpActionAdapter<Object, JEEContext> httpActionAdapter) {
         this.httpActionAdapter = httpActionAdapter;
     }
 }

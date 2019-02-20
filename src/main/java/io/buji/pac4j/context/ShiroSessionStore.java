@@ -21,7 +21,7 @@ package io.buji.pac4j.context;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.UnavailableSecurityManagerException;
 import org.apache.shiro.session.Session;
-import org.pac4j.core.context.J2EContext;
+import org.pac4j.core.context.JEEContext;
 import org.pac4j.core.context.session.SessionStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +32,7 @@ import org.slf4j.LoggerFactory;
  * @author Jerome Leleu
  * @since 1.4.0
  */
-public class ShiroSessionStore implements SessionStore<J2EContext> {
+public class ShiroSessionStore implements SessionStore<JEEContext> {
 
     private final static Logger logger = LoggerFactory.getLogger(ShiroSessionStore.class);
 
@@ -49,7 +49,7 @@ public class ShiroSessionStore implements SessionStore<J2EContext> {
     }
 
     @Override
-    public String getOrCreateSessionId(final J2EContext context) {
+    public String getOrCreateSessionId(final JEEContext context) {
         final Session session = getSession(true);
         if (session != null) {
             return session.getId().toString();
@@ -58,7 +58,7 @@ public class ShiroSessionStore implements SessionStore<J2EContext> {
     }
 
     @Override
-    public Object get(final J2EContext context, final String key) {
+    public Object get(final JEEContext context, final String key) {
         final Session session = getSession(false);
         if (session != null) {
             return session.getAttribute(key);
@@ -67,7 +67,7 @@ public class ShiroSessionStore implements SessionStore<J2EContext> {
     }
 
     @Override
-    public void set(final J2EContext context, final String key, final Object value) {
+    public void set(final JEEContext context, final String key, final Object value) {
         final Session session = getSession(true);
         if (session != null) {
             try {
@@ -79,23 +79,23 @@ public class ShiroSessionStore implements SessionStore<J2EContext> {
     }
 
     @Override
-    public boolean destroySession(final J2EContext context) {
+    public boolean destroySession(final JEEContext context) {
         getSession(true).stop();
         return true;
     }
 
     @Override
-    public Object getTrackableSession(final J2EContext context) {
+    public Object getTrackableSession(final JEEContext context) {
         return null;
     }
 
     @Override
-    public SessionStore<J2EContext> buildFromTrackableSession(final J2EContext context, final Object trackableSession) {
+    public SessionStore<JEEContext> buildFromTrackableSession(final JEEContext context, final Object trackableSession) {
         return null;
     }
 
     @Override
-    public boolean renewSession(final J2EContext context) {
+    public boolean renewSession(final JEEContext context) {
         return false;
     }
 }
