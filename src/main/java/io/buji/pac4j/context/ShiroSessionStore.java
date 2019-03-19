@@ -26,6 +26,8 @@ import org.pac4j.core.context.session.SessionStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Optional;
+
 /**
  * Specific session store for Shiro.
  *
@@ -58,12 +60,12 @@ public class ShiroSessionStore implements SessionStore<JEEContext> {
     }
 
     @Override
-    public Object get(final JEEContext context, final String key) {
+    public Optional<Object> get(final JEEContext context, final String key) {
         final Session session = getSession(false);
         if (session != null) {
-            return session.getAttribute(key);
+            return Optional.ofNullable(session.getAttribute(key));
         }
-        return null;
+        return Optional.empty();
     }
 
     @Override
@@ -85,13 +87,13 @@ public class ShiroSessionStore implements SessionStore<JEEContext> {
     }
 
     @Override
-    public Object getTrackableSession(final JEEContext context) {
-        return null;
+    public Optional getTrackableSession(final JEEContext context) {
+        return Optional.empty();
     }
 
     @Override
-    public SessionStore<JEEContext> buildFromTrackableSession(final JEEContext context, final Object trackableSession) {
-        return null;
+    public Optional<SessionStore<JEEContext>> buildFromTrackableSession(final JEEContext context, final Object trackableSession) {
+        return Optional.empty();
     }
 
     @Override
