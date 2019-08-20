@@ -4,6 +4,8 @@ sudo: false
 
 script: "mvn package --settings travis/settings.xml"
 
+dist: trusty
+
 jdk:
   - oraclejdk8
 
