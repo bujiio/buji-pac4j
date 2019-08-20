@@ -50,7 +50,7 @@ public class ShiroSessionStore implements SessionStore<J2EContext> {
 
     @Override
     public String getOrCreateSessionId(final J2EContext context) {
-        final Session session = getSession(false);
+        final Session session = getSession(true);
         if (session != null) {
             return session.getId().toString();
         }
