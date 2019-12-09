@@ -32,10 +32,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.pac4j.core.config.Config;
-import org.pac4j.core.context.J2EContext;
+import org.pac4j.core.context.JEEContext;
 import org.pac4j.core.context.session.SessionStore;
 import org.pac4j.core.engine.SecurityLogic;
-import org.pac4j.core.http.adapter.J2ENopHttpActionAdapter;
+import org.pac4j.core.http.adapter.JEEHttpActionAdapter;
 
 import io.buji.pac4j.context.ShiroSessionStore;
 import io.buji.pac4j.engine.ShiroSecurityLogic;
@@ -51,7 +51,7 @@ import io.buji.pac4j.engine.ShiroSecurityLogic;
  */
 public class SecurityFilter implements Filter {
 
-    private SecurityLogic<Object, J2EContext> securityLogic;
+    private SecurityLogic<Object, JEEContext> securityLogic;
 
     private Config config;
 
@@ -78,25 +78,25 @@ public class SecurityFilter implements Filter {
 
         final HttpServletRequest request = (HttpServletRequest) servletRequest;
         final HttpServletResponse response = (HttpServletResponse) servletResponse;
-        final SessionStore<J2EContext> sessionStore = config.getSessionStore();
-        final J2EContext context = new J2EContext(request, response, sessionStore != null ? sessionStore : ShiroSessionStore.INSTANCE);
+        final SessionStore<JEEContext> sessionStore = config.getSessionStore();
+        final JEEContext context = new JEEContext(request, response, sessionStore != null ? sessionStore : ShiroSessionStore.INSTANCE);
 
         securityLogic.perform(context, config, (ctx, profiles, parameters) -> {
 
             filterChain.doFilter(request, response);
             return null;
 
-        }, J2ENopHttpActionAdapter.INSTANCE, clients, authorizers, matchers, multiProfile);
+        }, JEEHttpActionAdapter.INSTANCE, clients, authorizers, matchers, multiProfile);
     }
 
     @Override
     public void destroy() {}
 
-    public SecurityLogic<Object, J2EContext> getSecurityLogic() {
+    public SecurityLogic<Object, JEEContext> getSecurityLogic() {
         return securityLogic;
     }
 
-    public void setSecurityLogic(final SecurityLogic<Object, J2EContext> securityLogic) {
+    public void setSecurityLogic(final SecurityLogic<Object, JEEContext> securityLogic) {
         this.securityLogic = securityLogic;
     }
 

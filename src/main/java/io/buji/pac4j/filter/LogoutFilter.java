@@ -3,11 +3,11 @@ package io.buji.pac4j.filter;
 import io.buji.pac4j.context.ShiroSessionStore;
 import io.buji.pac4j.profile.ShiroProfileManager;
 import org.pac4j.core.config.Config;
-import org.pac4j.core.context.J2EContext;
+import org.pac4j.core.context.JEEContext;
 import org.pac4j.core.context.session.SessionStore;
 import org.pac4j.core.engine.DefaultLogoutLogic;
 import org.pac4j.core.engine.LogoutLogic;
-import org.pac4j.core.http.adapter.J2ENopHttpActionAdapter;
+import org.pac4j.core.http.adapter.JEEHttpActionAdapter;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
@@ -29,7 +29,7 @@ import static org.pac4j.core.util.CommonHelper.assertNotNull;
  */
 public class LogoutFilter implements Filter {
 
-    private LogoutLogic<Object, J2EContext> logoutLogic;
+    private LogoutLogic<Object, JEEContext> logoutLogic;
 
     private Config config;
 
@@ -43,7 +43,7 @@ public class LogoutFilter implements Filter {
 
     public LogoutFilter() {
         logoutLogic = new DefaultLogoutLogic<>();
-        ((DefaultLogoutLogic<Object, J2EContext>) logoutLogic).setProfileManagerFactory(ShiroProfileManager::new);
+        ((DefaultLogoutLogic<Object, JEEContext>) logoutLogic).setProfileManagerFactory(ShiroProfileManager::new);
     }
 
     @Override
@@ -57,10 +57,10 @@ public class LogoutFilter implements Filter {
 
         final HttpServletRequest request = (HttpServletRequest) servletRequest;
         final HttpServletResponse response = (HttpServletResponse) servletResponse;
-        final SessionStore<J2EContext> sessionStore = config.getSessionStore();
-        final J2EContext context = new J2EContext(request, response, sessionStore != null ? sessionStore : ShiroSessionStore.INSTANCE);
+        final SessionStore<JEEContext> sessionStore = config.getSessionStore();
+        final JEEContext context = new JEEContext(request, response, sessionStore != null ? sessionStore : ShiroSessionStore.INSTANCE);
 
-        logoutLogic.perform(context, config, J2ENopHttpActionAdapter.INSTANCE, this.defaultUrl, this.logoutUrlPattern, this.localLogout, false, this.centralLogout);
+        logoutLogic.perform(context, config, JEEHttpActionAdapter.INSTANCE, this.defaultUrl, this.logoutUrlPattern, this.localLogout, false, this.centralLogout);
     }
 
     @Override
@@ -90,11 +90,11 @@ public class LogoutFilter implements Filter {
         this.logoutUrlPattern = logoutUrlPattern;
     }
 
-    public LogoutLogic<Object, J2EContext> getLogoutLogic() {
+    public LogoutLogic<Object, JEEContext> getLogoutLogic() {
         return logoutLogic;
     }
 
-    public void setLogoutLogic(final LogoutLogic<Object, J2EContext> logoutLogic) {
+    public void setLogoutLogic(final LogoutLogic<Object, JEEContext> logoutLogic) {
         this.logoutLogic = logoutLogic;
     }
 
