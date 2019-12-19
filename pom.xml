@@ -137,8 +137,8 @@
             <Export-Package>io.buji.pac4j*;version=${project.version}</Export-Package>
             <Import-Package>
               org.apache.shiro*;version="[1.2, 2)",
-              org.pac4j*;version="[3.0, 4.0)",
-              org.scribe*;version="[5.0, 6.0)",
+              org.pac4j*;version="[4.0, 5.0)",
+              org.scribe*;version="[6.0, 8.0)",
               *
             </Import-Package>
           </instructions>
