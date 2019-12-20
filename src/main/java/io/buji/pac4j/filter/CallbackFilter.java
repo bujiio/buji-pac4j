@@ -89,9 +89,9 @@ public class CallbackFilter implements Filter {
         final HttpServletResponse response = (HttpServletResponse) servletResponse;
         final SessionStore<JEEContext> sessionStore = config.getSessionStore();
         final JEEContext context = new JEEContext(request, response, sessionStore != null ? sessionStore : ShiroSessionStore.INSTANCE);
-        final HttpActionAdapter<Object, JEEContext> adapter = httpActionAdapter != null ? httpActionAdapter : JEEHttpActionAdapter.INSTANCE;
 
-        callbackLogic.perform(context, config, adapter, this.defaultUrl, this.saveInSession, this.multiProfile, false, this.defaultClient);
+        callbackLogic.perform(context, config, JEEHttpActionAdapter.findBestAdapter(httpActionAdapter, config),
+                this.defaultUrl, this.saveInSession, this.multiProfile, false, this.defaultClient);
     }
 
     @Override

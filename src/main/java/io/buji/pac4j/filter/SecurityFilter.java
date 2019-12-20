@@ -86,7 +86,7 @@ public class SecurityFilter implements Filter {
             filterChain.doFilter(request, response);
             return null;
 
-        }, JEEHttpActionAdapter.INSTANCE, clients, authorizers, matchers, multiProfile);
+        }, JEEHttpActionAdapter.findBestAdapter(null, config), clients, authorizers, matchers, multiProfile);
     }
 
     @Override

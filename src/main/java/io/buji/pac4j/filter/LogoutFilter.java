@@ -60,7 +60,8 @@ public class LogoutFilter implements Filter {
         final SessionStore<JEEContext> sessionStore = config.getSessionStore();
         final JEEContext context = new JEEContext(request, response, sessionStore != null ? sessionStore : ShiroSessionStore.INSTANCE);
 
-        logoutLogic.perform(context, config, JEEHttpActionAdapter.INSTANCE, this.defaultUrl, this.logoutUrlPattern, this.localLogout, false, this.centralLogout);
+        logoutLogic.perform(context, config, JEEHttpActionAdapter.findBestAdapter(null, config),
+                this.defaultUrl, this.logoutUrlPattern, this.localLogout, false, this.centralLogout);
     }
 
     @Override
