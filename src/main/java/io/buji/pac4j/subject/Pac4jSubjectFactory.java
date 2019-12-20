@@ -27,6 +27,7 @@ import org.apache.shiro.web.mgt.DefaultWebSubjectFactory;
 /**
  * Factory for building a Shiro subject authenticated by pac4j.
  * This factory sets the Shiro context as not authenticated if the user was RememberMe authenticated.
+ * It also enables the session creation.
  *
  * @author Michael Remond
  * @since 1.2.3
@@ -34,7 +35,7 @@ import org.apache.shiro.web.mgt.DefaultWebSubjectFactory;
 public class Pac4jSubjectFactory extends DefaultWebSubjectFactory {
 
     @Override
-    public Subject createSubject(SubjectContext context) {
+    public Subject createSubject(final SubjectContext context) {
 
         boolean authenticated = context.isAuthenticated();
 
@@ -50,6 +51,7 @@ public class Pac4jSubjectFactory extends DefaultWebSubjectFactory {
             }
         }
 
+        context.setSessionCreationEnabled(true);
         return super.createSubject(context);
     }
 }

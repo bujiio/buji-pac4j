@@ -21,6 +21,7 @@ package io.buji.pac4j.context;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.UnavailableSecurityManagerException;
 import org.apache.shiro.session.Session;
+import org.apache.shiro.subject.support.DisabledSessionException;
 import org.pac4j.core.context.JEEContext;
 import org.pac4j.core.context.session.SessionStore;
 import org.slf4j.Logger;
@@ -47,7 +48,11 @@ public class ShiroSessionStore implements SessionStore<JEEContext> {
      * @return the Shiro session
      */
     protected Session getSession(final boolean createSession) {
-        return SecurityUtils.getSubject().getSession(createSession);
+        try {
+            return SecurityUtils.getSubject().getSession(createSession);
+        } catch (final DisabledSessionException e) {
+            return null;
+        }
     }
 
     @Override
