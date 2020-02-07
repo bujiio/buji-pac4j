@@ -1,21 +1,20 @@
 package io.buji.pac4j.filter;
 
 import io.buji.pac4j.context.ShiroSessionStore;
-import io.buji.pac4j.profile.ShiroProfileManager;
+import io.buji.pac4j.engine.ShiroLogoutLogic;
 import org.pac4j.core.config.Config;
 import org.pac4j.core.context.JEEContext;
 import org.pac4j.core.context.session.SessionStore;
-import org.pac4j.core.engine.DefaultLogoutLogic;
 import org.pac4j.core.engine.LogoutLogic;
+import org.pac4j.core.http.adapter.HttpActionAdapter;
 import org.pac4j.core.http.adapter.JEEHttpActionAdapter;
+import org.pac4j.core.util.FindBest;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
-
-import static org.pac4j.core.util.CommonHelper.assertNotNull;
 
 /**
  * <p>This filter handles the (application + identity provider) logout process, based on the {@link #logoutLogic}.</p>
@@ -41,27 +40,18 @@ public class LogoutFilter implements Filter {
 
     private Boolean centralLogout;
 
-    public LogoutFilter() {
-        logoutLogic = new DefaultLogoutLogic<>();
-        ((DefaultLogoutLogic<Object, JEEContext>) logoutLogic).setProfileManagerFactory(ShiroProfileManager::new);
-    }
-
     @Override
     public void init(final FilterConfig filterConfig) throws ServletException {}
 
     @Override
     public void doFilter(final ServletRequest servletRequest, final ServletResponse servletResponse, final FilterChain filterChain) throws IOException, ServletException {
 
-        assertNotNull("logoutLogic", logoutLogic);
-        assertNotNull("config", config);
+        final SessionStore<JEEContext> bestSessionStore = FindBest.sessionStore(null, config, ShiroSessionStore.INSTANCE);
+        final HttpActionAdapter<Object, JEEContext> bestAdapter = FindBest.httpActionAdapter(null, config, JEEHttpActionAdapter.INSTANCE);
+        final LogoutLogic<Object, JEEContext> bestLogic = FindBest.logoutLogic(logoutLogic, config, ShiroLogoutLogic.INSTANCE);
 
-        final HttpServletRequest request = (HttpServletRequest) servletRequest;
-        final HttpServletResponse response = (HttpServletResponse) servletResponse;
-        final SessionStore<JEEContext> sessionStore = config.getSessionStore();
-        final JEEContext context = new JEEContext(request, response, sessionStore != null ? sessionStore : ShiroSessionStore.INSTANCE);
-
-        logoutLogic.perform(context, config, JEEHttpActionAdapter.findBestAdapter(null, config),
-                this.defaultUrl, this.logoutUrlPattern, this.localLogout, false, this.centralLogout);
+        final JEEContext context = new JEEContext((HttpServletRequest) servletRequest, (HttpServletResponse) servletResponse, bestSessionStore);
+        bestLogic.perform(context, config, bestAdapter, defaultUrl, logoutUrlPattern, localLogout, false, centralLogout);
     }
 
     @Override

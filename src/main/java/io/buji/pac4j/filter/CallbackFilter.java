@@ -18,8 +18,6 @@
  */
 package io.buji.pac4j.filter;
 
-import static org.pac4j.core.util.CommonHelper.assertNotNull;
-
 import java.io.IOException;
 
 import javax.servlet.Filter;
@@ -31,6 +29,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import io.buji.pac4j.engine.ShiroCallbackLogic;
 import org.pac4j.core.config.Config;
 import org.pac4j.core.context.JEEContext;
 import org.pac4j.core.context.session.SessionStore;
@@ -39,7 +38,7 @@ import org.pac4j.core.http.adapter.HttpActionAdapter;
 import org.pac4j.core.http.adapter.JEEHttpActionAdapter;
 
 import io.buji.pac4j.context.ShiroSessionStore;
-import io.buji.pac4j.engine.ShiroCallbackLogic;
+import org.pac4j.core.util.FindBest;
 
 /**
  * <p>This filter finishes the login process for an indirect client, based on the {@link #callbackLogic}.</p>
@@ -72,26 +71,18 @@ public class CallbackFilter implements Filter {
 
     private HttpActionAdapter<Object, JEEContext> httpActionAdapter;
 
-    public CallbackFilter() {
-        callbackLogic = new ShiroCallbackLogic<>();
-    }
-
     @Override
     public void init(final FilterConfig filterConfig) throws ServletException {}
 
     @Override
     public void doFilter(final ServletRequest servletRequest, final ServletResponse servletResponse, final FilterChain filterChain) throws IOException, ServletException {
 
-        assertNotNull("callbackLogic", callbackLogic);
-        assertNotNull("config", config);
+        final SessionStore<JEEContext> bestSessionStore = FindBest.sessionStore(null, config, ShiroSessionStore.INSTANCE);
+        final HttpActionAdapter<Object, JEEContext> bestAdapter = FindBest.httpActionAdapter(httpActionAdapter, config, JEEHttpActionAdapter.INSTANCE);
+        final CallbackLogic<Object, JEEContext> bestLogic = FindBest.callbackLogic(callbackLogic, config, ShiroCallbackLogic.INSTANCE);
 
-        final HttpServletRequest request = (HttpServletRequest) servletRequest;
-        final HttpServletResponse response = (HttpServletResponse) servletResponse;
-        final SessionStore<JEEContext> sessionStore = config.getSessionStore();
-        final JEEContext context = new JEEContext(request, response, sessionStore != null ? sessionStore : ShiroSessionStore.INSTANCE);
-
-        callbackLogic.perform(context, config, JEEHttpActionAdapter.findBestAdapter(httpActionAdapter, config),
-                this.defaultUrl, this.saveInSession, this.multiProfile, false, this.defaultClient);
+        final JEEContext context = new JEEContext((HttpServletRequest) servletRequest, (HttpServletResponse) servletResponse, bestSessionStore);
+        bestLogic.perform(context, config, bestAdapter, defaultUrl, saveInSession, multiProfile, false, defaultClient);
     }
 
     @Override

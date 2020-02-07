@@ -15,6 +15,8 @@ import io.buji.pac4j.profile.ShiroProfileManager;
  */
 public class ShiroCallbackLogic<R, C extends WebContext> extends DefaultCallbackLogic<R, C> {
 
+    public static final ShiroCallbackLogic INSTANCE = new ShiroCallbackLogic();
+
     public ShiroCallbackLogic() {
         super();
         this.setProfileManagerFactory(ShiroProfileManager::new);

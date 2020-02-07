@@ -18,8 +18,6 @@
  */
 package io.buji.pac4j.filter;
 
-import static org.pac4j.core.util.CommonHelper.assertNotNull;
-
 import java.io.IOException;
 
 import javax.servlet.Filter;
@@ -35,10 +33,12 @@ import org.pac4j.core.config.Config;
 import org.pac4j.core.context.JEEContext;
 import org.pac4j.core.context.session.SessionStore;
 import org.pac4j.core.engine.SecurityLogic;
+import org.pac4j.core.http.adapter.HttpActionAdapter;
 import org.pac4j.core.http.adapter.JEEHttpActionAdapter;
 
 import io.buji.pac4j.context.ShiroSessionStore;
 import io.buji.pac4j.engine.ShiroSecurityLogic;
+import org.pac4j.core.util.FindBest;
 
 /**
  * <p>This filter protects an url, based on the {@link #securityLogic}.</p>
@@ -63,30 +63,25 @@ public class SecurityFilter implements Filter {
 
     private Boolean multiProfile;
 
-    public SecurityFilter() {
-        securityLogic = new ShiroSecurityLogic<>();
-    }
-
     @Override
     public void init(final FilterConfig filterConfig) throws ServletException {}
 
     @Override
     public void doFilter(final ServletRequest servletRequest, final ServletResponse servletResponse, final FilterChain filterChain) throws IOException, ServletException {
 
-        assertNotNull("securityLogic", securityLogic);
-        assertNotNull("config", config);
+        final SessionStore<JEEContext> bestSessionStore = FindBest.sessionStore(null, config, ShiroSessionStore.INSTANCE);
+        final HttpActionAdapter<Object, JEEContext> bestAdapter = FindBest.httpActionAdapter(null, config, JEEHttpActionAdapter.INSTANCE);
+        final SecurityLogic<Object, JEEContext> bestLogic = FindBest.securityLogic(securityLogic, config, ShiroSecurityLogic.INSTANCE);
 
         final HttpServletRequest request = (HttpServletRequest) servletRequest;
         final HttpServletResponse response = (HttpServletResponse) servletResponse;
-        final SessionStore<JEEContext> sessionStore = config.getSessionStore();
-        final JEEContext context = new JEEContext(request, response, sessionStore != null ? sessionStore : ShiroSessionStore.INSTANCE);
-
-        securityLogic.perform(context, config, (ctx, profiles, parameters) -> {
+        final JEEContext context = new JEEContext(request, response, bestSessionStore);
+        bestLogic.perform(context, config, (ctx, profiles, parameters) -> {
 
             filterChain.doFilter(request, response);
             return null;
 
-        }, JEEHttpActionAdapter.findBestAdapter(null, config), clients, authorizers, matchers, multiProfile);
+        }, bestAdapter, clients, authorizers, matchers, multiProfile);
     }
 
     @Override

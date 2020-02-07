@@ -6,7 +6,7 @@ import org.pac4j.core.engine.DefaultSecurityLogic;
 import io.buji.pac4j.profile.ShiroProfileManager;
 
 /**
- * Specialized SecurityLogic aimed for buji : makes a clean use of the ShiroProfileManager.
+ * Specialized SecurityLogic aimed for buji: makes a clean use of the ShiroProfileManager.
  *
  * @see DefaultSecurityLogic
  *
@@ -15,9 +15,10 @@ import io.buji.pac4j.profile.ShiroProfileManager;
  */
 public class ShiroSecurityLogic<R, C extends WebContext> extends DefaultSecurityLogic<R, C> {
 
+    public static final ShiroSecurityLogic INSTANCE = new ShiroSecurityLogic();
+
     public ShiroSecurityLogic() {
         super();
         this.setProfileManagerFactory(ShiroProfileManager::new);
     }
-
 }
