@@ -41,10 +41,7 @@ import io.buji.pac4j.engine.ShiroSecurityLogic;
 import org.pac4j.core.util.FindBest;
 
 /**
- * <p>This filter protects an url, based on the {@link #securityLogic}.</p>
- *
- * <p>The configuration can be provided via setter methods: {@link #setConfig(Config)} (security configuration), {@link #setClients(String)} (list of clients for authentication),
- * {@link #setAuthorizers(String)} (list of authorizers), {@link #setMatchers(String)} and {@link #setMultiProfile(Boolean)} (whether multiple profiles should be kept).</p>
+ * <p>This filter protects an url.</p>
  *
  * @author Jerome Leleu
  * @since 2.0.0

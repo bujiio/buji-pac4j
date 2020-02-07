@@ -41,16 +41,7 @@ import io.buji.pac4j.context.ShiroSessionStore;
 import org.pac4j.core.util.FindBest;
 
 /**
- * <p>This filter finishes the login process for an indirect client, based on the {@link #callbackLogic}.</p>
- *
- * <p>The configuration can be provided via setter methods:</p>
- * <ul>
- *     <li><code>{@link #setConfig(Config)}</code> (security configuration)</li>
- *     <li><code>{@link #setDefaultUrl(String)}</code> (default url after login if none was requested)</li>
- *     <li><code>{@link #setSaveInSession(Boolean)}</code> (whether the profile should be saved into the session)</li>
- *     <li><code>{@link #setMultiProfile(Boolean)}</code> (whether multiple profiles should be kept)</li>
- *     <li><code>{@link #setDefaultClient(String)}</code> (the default client if none is provided on the URL)</li>
- * </ul>
+ * <p>This filter finishes the login process for an indirect client.</p>
  *
  * @author Jerome Leleu
  * @since 2.0.0

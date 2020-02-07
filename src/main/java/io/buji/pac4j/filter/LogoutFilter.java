@@ -17,11 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * <p>This filter handles the (application + identity provider) logout process, based on the {@link #logoutLogic}.</p>
- *
- * <p>The configuration can be provided via setter methods: {@link #setConfig(Config)} (security configuration), {@link #setDefaultUrl(String)} (default logourl url),
- * {@link #setLogoutUrlPattern(String)} (pattern that logout urls must match), {@link #setLocalLogout(Boolean)} (whether the application logout must be performed)
- * and {@link #setCentralLogout(Boolean)} (whether the centralLogout must be performed).</p>
+ * <p>This filter handles the (application + identity provider) logout process.</p>
  *
  * @author Jerome Leleu
  * @since 3.0.0
