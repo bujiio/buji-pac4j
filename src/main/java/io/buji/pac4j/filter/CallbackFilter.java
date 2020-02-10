@@ -29,11 +29,11 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import io.buji.pac4j.engine.ShiroCallbackLogic;
 import org.pac4j.core.config.Config;
 import org.pac4j.core.context.JEEContext;
 import org.pac4j.core.context.session.SessionStore;
 import org.pac4j.core.engine.CallbackLogic;
+import org.pac4j.core.engine.DefaultCallbackLogic;
 import org.pac4j.core.http.adapter.HttpActionAdapter;
 import org.pac4j.core.http.adapter.JEEHttpActionAdapter;
 
@@ -70,7 +70,7 @@ public class CallbackFilter implements Filter {
 
         final SessionStore<JEEContext> bestSessionStore = FindBest.sessionStore(null, config, ShiroSessionStore.INSTANCE);
         final HttpActionAdapter<Object, JEEContext> bestAdapter = FindBest.httpActionAdapter(httpActionAdapter, config, JEEHttpActionAdapter.INSTANCE);
-        final CallbackLogic<Object, JEEContext> bestLogic = FindBest.callbackLogic(callbackLogic, config, ShiroCallbackLogic.INSTANCE);
+        final CallbackLogic<Object, JEEContext> bestLogic = FindBest.callbackLogic(callbackLogic, config, DefaultCallbackLogic.INSTANCE);
 
         final JEEContext context = new JEEContext((HttpServletRequest) servletRequest, (HttpServletResponse) servletResponse, bestSessionStore);
         bestLogic.perform(context, config, bestAdapter, defaultUrl, saveInSession, multiProfile, false, defaultClient);

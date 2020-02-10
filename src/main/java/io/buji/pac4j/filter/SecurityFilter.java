@@ -29,15 +29,16 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import io.buji.pac4j.profile.ShiroProfileManager;
 import org.pac4j.core.config.Config;
 import org.pac4j.core.context.JEEContext;
 import org.pac4j.core.context.session.SessionStore;
+import org.pac4j.core.engine.DefaultSecurityLogic;
 import org.pac4j.core.engine.SecurityLogic;
 import org.pac4j.core.http.adapter.HttpActionAdapter;
 import org.pac4j.core.http.adapter.JEEHttpActionAdapter;
 
 import io.buji.pac4j.context.ShiroSessionStore;
-import io.buji.pac4j.engine.ShiroSecurityLogic;
 import org.pac4j.core.util.FindBest;
 
 /**
@@ -47,6 +48,10 @@ import org.pac4j.core.util.FindBest;
  * @since 2.0.0
  */
 public class SecurityFilter implements Filter {
+
+    static {
+        Config.defaultProfileManagerFactory("ShiroProfileManager", ctx -> new ShiroProfileManager(ctx));
+    }
 
     private SecurityLogic<Object, JEEContext> securityLogic;
 
@@ -68,7 +73,7 @@ public class SecurityFilter implements Filter {
 
         final SessionStore<JEEContext> bestSessionStore = FindBest.sessionStore(null, config, ShiroSessionStore.INSTANCE);
         final HttpActionAdapter<Object, JEEContext> bestAdapter = FindBest.httpActionAdapter(null, config, JEEHttpActionAdapter.INSTANCE);
-        final SecurityLogic<Object, JEEContext> bestLogic = FindBest.securityLogic(securityLogic, config, ShiroSecurityLogic.INSTANCE);
+        final SecurityLogic<Object, JEEContext> bestLogic = FindBest.securityLogic(securityLogic, config, DefaultSecurityLogic.INSTANCE);
 
         final HttpServletRequest request = (HttpServletRequest) servletRequest;
         final HttpServletResponse response = (HttpServletResponse) servletResponse;

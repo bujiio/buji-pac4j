@@ -25,6 +25,8 @@ import org.pac4j.core.context.WebContext;
 import org.pac4j.core.profile.CommonProfile;
 import org.pac4j.core.profile.ProfileManager;
 
+import java.util.LinkedHashMap;
+
 /**
  * Specific profile manager for Shiro.
  *
@@ -38,11 +40,11 @@ public class ShiroProfileManager extends ProfileManager<CommonProfile> {
     }
 
     @Override
-    public void save(final boolean saveInSession, final CommonProfile profile, final boolean multiProfile) {
-        super.save(saveInSession, profile, multiProfile);
+    protected void saveAll(LinkedHashMap<String, CommonProfile> profiles, final boolean saveInSession) {
+        super.saveAll(profiles, saveInSession);
 
         try {
-            ShiroHelper.populateSubject(retrieveAll(saveInSession));
+            ShiroHelper.populateSubject(profiles);
         } catch (final AuthenticationException e) {
             super.remove(saveInSession);
             throw e;
