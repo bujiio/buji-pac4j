@@ -3,12 +3,12 @@ package io.buji.pac4j.subject;
 import org.apache.shiro.io.DefaultSerializer;
 import org.junit.Test;
 import org.pac4j.core.profile.CommonProfile;
+import org.pac4j.core.util.Pac4jConstants;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.*;
-import org.pac4j.core.context.Pac4jConstants;
 
 /**
  * Tests {@link Pac4jPrincipal}.
