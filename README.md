@@ -16,11 +16,13 @@ It's based on Java 8, Shiro 1.4 and on the **[pac4j security engine](https://git
 
 &#9656; Roles / permissions - Anonymous / remember-me / (fully) authenticated - Profile type, attribute -  CORS - CSRF - Security headers - IP address, HTTP method
 
-3) The `SecurityFilter` protects an url by checking that the user is authenticated and that the authorizations are valid, according to the clients and authorizers configuration. If the user is not authenticated, it performs authentication for direct clients or starts the login process for indirect clients
+3) A [**matcher**](http://www.pac4j.org/docs/matchers.html) defines whether the `SecurityFilter` must be applied and can be used for additional web processing.
 
-4) The `CallbackFilter` finishes the login process for an indirect client
+4) The `SecurityFilter` protects an url by checking that the user is authenticated and that the authorizations are valid, according to the clients and authorizers configuration. If the user is not authenticated, it performs authentication for direct clients or starts the login process for indirect clients
 
-5) The `LogoutFilter` logs out the user from the application and triggers the logout at the identity provider level
+5) The `CallbackFilter` finishes the login process for an indirect client
+
+6) The `LogoutFilter` logs out the user from the application and triggers the logout at the identity provider level
 
 
 ## Usage
