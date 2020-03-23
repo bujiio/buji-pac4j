@@ -85,7 +85,7 @@
   <properties>
     <pac4j.version>4.0.0-RC3</pac4j.version>
     <java.version>1.8</java.version>
-    <shiro.version>1.5.1</shiro.version>
+    <shiro.version>1.5.2</shiro.version>
     <servlet.version>3.1.0</servlet.version>
   </properties>
 
