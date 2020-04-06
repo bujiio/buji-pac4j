@@ -58,7 +58,7 @@
     <!--repository>
       <id>apache-staging-repo</id>
       <name>Apache Staging Repository</name>
-      <url>https://repository.apache.org/content/repositories/orgapacheshiro-1018/</url>
+      <url>https://repository.apache.org/content/repositories/orgapacheshiro-xxx/</url>
       <releases>
         <enabled>true</enabled>
       </releases>
