@@ -51,6 +51,7 @@ public class SecurityFilter implements Filter {
 
     static {
         Config.defaultProfileManagerFactory("ShiroProfileManager", ctx -> new ShiroProfileManager(ctx));
+        Config.defaultProfileManagerFactory2("ShiroProfileManager2", (ctx, store) -> new ShiroProfileManager(ctx, store));
     }
 
     private SecurityLogic<Object, JEEContext> securityLogic;

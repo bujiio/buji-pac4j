@@ -21,7 +21,9 @@ package io.buji.pac4j.profile;
 import io.buji.pac4j.util.ShiroHelper;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
+import org.pac4j.core.context.JEEContext;
 import org.pac4j.core.context.WebContext;
+import org.pac4j.core.context.session.SessionStore;
 import org.pac4j.core.profile.CommonProfile;
 import org.pac4j.core.profile.ProfileManager;
 
@@ -37,6 +39,10 @@ public class ShiroProfileManager extends ProfileManager<CommonProfile> {
 
     public ShiroProfileManager(final WebContext context) {
         super(context);
+    }
+
+    public ShiroProfileManager(final WebContext context, final SessionStore<JEEContext> sessionStore) {
+        super(context, sessionStore);
     }
 
     @Override
