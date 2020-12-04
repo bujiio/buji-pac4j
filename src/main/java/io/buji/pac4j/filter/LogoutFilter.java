@@ -2,7 +2,8 @@ package io.buji.pac4j.filter;
 
 import io.buji.pac4j.context.ShiroSessionStore;
 import org.pac4j.core.config.Config;
-import org.pac4j.core.context.JEEContext;
+import org.pac4j.core.context.JEEContextFactory;
+import org.pac4j.core.context.WebContext;
 import org.pac4j.core.context.session.SessionStore;
 import org.pac4j.core.engine.DefaultLogoutLogic;
 import org.pac4j.core.engine.LogoutLogic;
@@ -11,8 +12,6 @@ import org.pac4j.core.http.adapter.JEEHttpActionAdapter;
 import org.pac4j.core.util.FindBest;
 
 import javax.servlet.*;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
@@ -24,7 +23,7 @@ import java.io.IOException;
  */
 public class LogoutFilter implements Filter {
 
-    private LogoutLogic<Object, JEEContext> logoutLogic;
+    private LogoutLogic logoutLogic;
 
     private Config config;
 
@@ -42,11 +41,12 @@ public class LogoutFilter implements Filter {
     @Override
     public void doFilter(final ServletRequest servletRequest, final ServletResponse servletResponse, final FilterChain filterChain) throws IOException, ServletException {
 
-        final SessionStore<JEEContext> bestSessionStore = FindBest.sessionStore(null, config, ShiroSessionStore.INSTANCE);
-        final HttpActionAdapter<Object, JEEContext> bestAdapter = FindBest.httpActionAdapter(null, config, JEEHttpActionAdapter.INSTANCE);
-        final LogoutLogic<Object, JEEContext> bestLogic = FindBest.logoutLogic(logoutLogic, config, DefaultLogoutLogic.INSTANCE);
+        final SessionStore bestSessionStore = FindBest.sessionStore(null, config, ShiroSessionStore.INSTANCE);
+        final HttpActionAdapter bestAdapter = FindBest.httpActionAdapter(null, config, JEEHttpActionAdapter.INSTANCE);
+        final LogoutLogic bestLogic = FindBest.logoutLogic(logoutLogic, config, DefaultLogoutLogic.INSTANCE);
 
-        final JEEContext context = new JEEContext((HttpServletRequest) servletRequest, (HttpServletResponse) servletResponse, bestSessionStore);
+        final WebContext context = FindBest.webContextFactory(null, config, JEEContextFactory.INSTANCE).newContext(servletRequest, servletResponse, bestSessionStore);
+
         bestLogic.perform(context, config, bestAdapter, defaultUrl, logoutUrlPattern, localLogout, false, centralLogout);
     }
 
@@ -77,11 +77,11 @@ public class LogoutFilter implements Filter {
         this.logoutUrlPattern = logoutUrlPattern;
     }
 
-    public LogoutLogic<Object, JEEContext> getLogoutLogic() {
+    public LogoutLogic getLogoutLogic() {
         return logoutLogic;
     }
 
-    public void setLogoutLogic(final LogoutLogic<Object, JEEContext> logoutLogic) {
+    public void setLogoutLogic(final LogoutLogic logoutLogic) {
         this.logoutLogic = logoutLogic;
     }
 

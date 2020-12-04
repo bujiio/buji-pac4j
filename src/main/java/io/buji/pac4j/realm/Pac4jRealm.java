@@ -30,6 +30,7 @@ import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.pac4j.core.profile.CommonProfile;
+import org.pac4j.core.profile.UserProfile;
 
 import java.util.*;
 
@@ -78,7 +79,7 @@ public class Pac4jRealm extends AuthorizingRealm {
             throws AuthenticationException {
 
         final Pac4jToken token = (Pac4jToken) authenticationToken;
-        final List<CommonProfile> profiles = token.getProfiles();
+        final List<UserProfile> profiles = token.getProfiles();
 
         final Pac4jPrincipal principal = new Pac4jPrincipal(profiles, principalNameAttribute);
         final PrincipalCollection principalCollection = new SimplePrincipalCollection(principal, getName());
@@ -91,8 +92,8 @@ public class Pac4jRealm extends AuthorizingRealm {
         final Set<String> permissions = new HashSet<>();
         final Pac4jPrincipal principal = principals.oneByType(Pac4jPrincipal.class);
         if (principal != null) {
-            final List<CommonProfile> profiles = principal.getProfiles();
-            for (CommonProfile profile : profiles) {
+            final List<UserProfile> profiles = principal.getProfiles();
+            for (final UserProfile profile : profiles) {
                 if (profile != null) {
                     roles.addAll(profile.getRoles());
                     permissions.addAll(profile.getPermissions());

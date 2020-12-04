@@ -21,11 +21,9 @@ package io.buji.pac4j.profile;
 import io.buji.pac4j.util.ShiroHelper;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
-import org.pac4j.core.context.JEEContext;
 import org.pac4j.core.context.WebContext;
-import org.pac4j.core.context.session.SessionStore;
-import org.pac4j.core.profile.CommonProfile;
 import org.pac4j.core.profile.ProfileManager;
+import org.pac4j.core.profile.UserProfile;
 
 import java.util.LinkedHashMap;
 
@@ -35,31 +33,27 @@ import java.util.LinkedHashMap;
  * @author Jerome Leleu
  * @since 2.0.2
  */
-public class ShiroProfileManager extends ProfileManager<CommonProfile> {
+public class ShiroProfileManager extends ProfileManager {
 
     public ShiroProfileManager(final WebContext context) {
         super(context);
     }
 
-    public ShiroProfileManager(final WebContext context, final SessionStore<JEEContext> sessionStore) {
-        super(context, sessionStore);
-    }
-
     @Override
-    protected void saveAll(LinkedHashMap<String, CommonProfile> profiles, final boolean saveInSession) {
+    protected void saveAll(LinkedHashMap<String, UserProfile> profiles, final boolean saveInSession) {
         super.saveAll(profiles, saveInSession);
 
         try {
             ShiroHelper.populateSubject(profiles);
         } catch (final AuthenticationException e) {
-            super.remove(saveInSession);
+            super.removeProfiles();
             throw e;
         }
     }
 
     @Override
-    public void remove(final boolean removeFromSession) {
-        super.remove(removeFromSession);
+    public void removeProfiles() {
+        super.removeProfiles();
 
         SecurityUtils.getSubject().logout();
     }

@@ -26,12 +26,11 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import io.buji.pac4j.profile.ShiroProfileManager;
 import org.pac4j.core.config.Config;
-import org.pac4j.core.context.JEEContext;
+import org.pac4j.core.context.JEEContextFactory;
+import org.pac4j.core.context.WebContext;
 import org.pac4j.core.context.session.SessionStore;
 import org.pac4j.core.engine.DefaultSecurityLogic;
 import org.pac4j.core.engine.SecurityLogic;
@@ -42,7 +41,7 @@ import io.buji.pac4j.context.ShiroSessionStore;
 import org.pac4j.core.util.FindBest;
 
 /**
- * <p>This filter protects an url.</p>
+ * <p>This filter protects an URL.</p>
  *
  * @author Jerome Leleu
  * @since 2.0.0
@@ -51,10 +50,9 @@ public class SecurityFilter implements Filter {
 
     static {
         Config.defaultProfileManagerFactory("ShiroProfileManager", ctx -> new ShiroProfileManager(ctx));
-        Config.defaultProfileManagerFactory2("ShiroProfileManager2", (ctx, store) -> new ShiroProfileManager(ctx, store));
     }
 
-    private SecurityLogic<Object, JEEContext> securityLogic;
+    private SecurityLogic securityLogic;
 
     private Config config;
 
@@ -64,37 +62,34 @@ public class SecurityFilter implements Filter {
 
     private String matchers;
 
-    private Boolean multiProfile;
-
     @Override
     public void init(final FilterConfig filterConfig) throws ServletException {}
 
     @Override
     public void doFilter(final ServletRequest servletRequest, final ServletResponse servletResponse, final FilterChain filterChain) throws IOException, ServletException {
 
-        final SessionStore<JEEContext> bestSessionStore = FindBest.sessionStore(null, config, ShiroSessionStore.INSTANCE);
-        final HttpActionAdapter<Object, JEEContext> bestAdapter = FindBest.httpActionAdapter(null, config, JEEHttpActionAdapter.INSTANCE);
-        final SecurityLogic<Object, JEEContext> bestLogic = FindBest.securityLogic(securityLogic, config, DefaultSecurityLogic.INSTANCE);
+        final SessionStore bestSessionStore = FindBest.sessionStore(null, config, ShiroSessionStore.INSTANCE);
+        final HttpActionAdapter bestAdapter = FindBest.httpActionAdapter(null, config, JEEHttpActionAdapter.INSTANCE);
+        final SecurityLogic bestLogic = FindBest.securityLogic(securityLogic, config, DefaultSecurityLogic.INSTANCE);
 
-        final HttpServletRequest request = (HttpServletRequest) servletRequest;
-        final HttpServletResponse response = (HttpServletResponse) servletResponse;
-        final JEEContext context = new JEEContext(request, response, bestSessionStore);
+        final WebContext context = FindBest.webContextFactory(null, config, JEEContextFactory.INSTANCE).newContext(servletRequest, servletResponse, bestSessionStore);
+
         bestLogic.perform(context, config, (ctx, profiles, parameters) -> {
 
-            filterChain.doFilter(request, response);
+            filterChain.doFilter(servletRequest, servletResponse);
             return null;
 
-        }, bestAdapter, clients, authorizers, matchers, multiProfile);
+        }, bestAdapter, clients, authorizers, matchers);
     }
 
     @Override
     public void destroy() {}
 
-    public SecurityLogic<Object, JEEContext> getSecurityLogic() {
+    public SecurityLogic getSecurityLogic() {
         return securityLogic;
     }
 
-    public void setSecurityLogic(final SecurityLogic<Object, JEEContext> securityLogic) {
+    public void setSecurityLogic(final SecurityLogic securityLogic) {
         this.securityLogic = securityLogic;
     }
 
@@ -128,13 +123,5 @@ public class SecurityFilter implements Filter {
 
     public void setMatchers(final String matchers) {
         this.matchers = matchers;
-    }
-
-    public Boolean getMultiProfile() {
-        return multiProfile;
-    }
-
-    public void setMultiProfile(final Boolean multiProfile) {
-        this.multiProfile = multiProfile;
     }
 }

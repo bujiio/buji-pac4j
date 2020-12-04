@@ -7,7 +7,7 @@ script: "mvn package --settings travis/settings.xml"
 dist: trusty
 
 jdk:
-  - oraclejdk8
+  - openjdk11
 
 env:
   global:

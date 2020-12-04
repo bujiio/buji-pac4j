@@ -25,8 +25,8 @@ import org.pac4j.core.authorization.authorizer.IsFullyAuthenticatedAuthorizer;
 import org.pac4j.core.authorization.authorizer.IsRememberedAuthorizer;
 import org.pac4j.core.exception.http.HttpAction;
 import org.pac4j.core.exception.TechnicalException;
-import org.pac4j.core.profile.CommonProfile;
 import org.pac4j.core.profile.ProfileHelper;
+import org.pac4j.core.profile.UserProfile;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -39,18 +39,18 @@ import java.util.List;
  */
 public class ShiroHelper {
 
-    private final static Authorizer<CommonProfile> IS_REMEMBERED_AUTHORIZER = new IsRememberedAuthorizer<>();
+    private final static Authorizer IS_REMEMBERED_AUTHORIZER = new IsRememberedAuthorizer();
 
-    private final static Authorizer<CommonProfile> IS_FULLY_AUTHENTICATED_AUTHORIZER = new IsFullyAuthenticatedAuthorizer<>();
+    private final static Authorizer IS_FULLY_AUTHENTICATED_AUTHORIZER = new IsFullyAuthenticatedAuthorizer();
 
     /**
      * Populate the authenticated user profiles in the Shiro subject.
      *
      * @param profiles the linked hashmap of profiles
      */
-    public static void populateSubject(final LinkedHashMap<String, CommonProfile> profiles) {
+    public static void populateSubject(final LinkedHashMap<String, UserProfile> profiles) {
         if (profiles != null && profiles.size() > 0) {
-            final List<CommonProfile> listProfiles = ProfileHelper.flatIntoAProfileList(profiles);
+            final List<UserProfile> listProfiles = ProfileHelper.flatIntoAProfileList(profiles);
             try {
                 if (IS_FULLY_AUTHENTICATED_AUTHORIZER.isAuthorized(null, listProfiles)) {
                     SecurityUtils.getSubject().login(new Pac4jToken(listProfiles, false));

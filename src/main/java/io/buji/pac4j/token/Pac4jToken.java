@@ -19,8 +19,8 @@
 package io.buji.pac4j.token;
 
 import org.apache.shiro.authc.RememberMeAuthenticationToken;
-import org.pac4j.core.profile.CommonProfile;
 import org.pac4j.core.profile.ProfileHelper;
+import org.pac4j.core.profile.UserProfile;
 
 import java.util.List;
 
@@ -32,11 +32,11 @@ import java.util.List;
  */
 public class Pac4jToken implements RememberMeAuthenticationToken {
 
-    private final List<CommonProfile> profiles;
+    private final List<UserProfile> profiles;
 
     private final boolean isRemembered;
 
-    public Pac4jToken(final List<CommonProfile> profiles, final boolean isRemembered) {
+    public Pac4jToken(final List<UserProfile> profiles, final boolean isRemembered) {
         this.profiles = profiles;
         this.isRemembered = isRemembered;
     }
@@ -56,7 +56,7 @@ public class Pac4jToken implements RememberMeAuthenticationToken {
         return this.isRemembered;
     }
 
-    public List<CommonProfile> getProfiles() {
+    public List<UserProfile> getProfiles() {
         return profiles;
     }
 }

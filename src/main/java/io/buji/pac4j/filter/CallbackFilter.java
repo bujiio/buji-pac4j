@@ -26,11 +26,10 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.pac4j.core.config.Config;
-import org.pac4j.core.context.JEEContext;
+import org.pac4j.core.context.JEEContextFactory;
+import org.pac4j.core.context.WebContext;
 import org.pac4j.core.context.session.SessionStore;
 import org.pac4j.core.engine.CallbackLogic;
 import org.pac4j.core.engine.DefaultCallbackLogic;
@@ -48,19 +47,15 @@ import org.pac4j.core.util.FindBest;
  */
 public class CallbackFilter implements Filter {
 
-    private CallbackLogic<Object, JEEContext> callbackLogic;
+    private CallbackLogic callbackLogic;
 
     private Config config;
 
     private String defaultUrl;
 
-    private Boolean saveInSession;
-
-    private Boolean multiProfile;
-
     private String defaultClient;
 
-    private HttpActionAdapter<Object, JEEContext> httpActionAdapter;
+    private HttpActionAdapter httpActionAdapter;
 
     @Override
     public void init(final FilterConfig filterConfig) throws ServletException {}
@@ -68,22 +63,23 @@ public class CallbackFilter implements Filter {
     @Override
     public void doFilter(final ServletRequest servletRequest, final ServletResponse servletResponse, final FilterChain filterChain) throws IOException, ServletException {
 
-        final SessionStore<JEEContext> bestSessionStore = FindBest.sessionStore(null, config, ShiroSessionStore.INSTANCE);
-        final HttpActionAdapter<Object, JEEContext> bestAdapter = FindBest.httpActionAdapter(httpActionAdapter, config, JEEHttpActionAdapter.INSTANCE);
-        final CallbackLogic<Object, JEEContext> bestLogic = FindBest.callbackLogic(callbackLogic, config, DefaultCallbackLogic.INSTANCE);
+        final SessionStore bestSessionStore = FindBest.sessionStore(null, config, ShiroSessionStore.INSTANCE);
+        final HttpActionAdapter bestAdapter = FindBest.httpActionAdapter(httpActionAdapter, config, JEEHttpActionAdapter.INSTANCE);
+        final CallbackLogic bestLogic = FindBest.callbackLogic(callbackLogic, config, DefaultCallbackLogic.INSTANCE);
 
-        final JEEContext context = new JEEContext((HttpServletRequest) servletRequest, (HttpServletResponse) servletResponse, bestSessionStore);
-        bestLogic.perform(context, config, bestAdapter, defaultUrl, saveInSession, multiProfile, false, defaultClient);
+        final WebContext context = FindBest.webContextFactory(null, config, JEEContextFactory.INSTANCE).newContext(servletRequest, servletResponse, bestSessionStore);
+
+        bestLogic.perform(context, config, bestAdapter, defaultUrl, false, defaultClient);
     }
 
     @Override
     public void destroy() {}
 
-    public CallbackLogic<Object, JEEContext> getCallbackLogic() {
+    public CallbackLogic getCallbackLogic() {
         return callbackLogic;
     }
 
-    public void setCallbackLogic(final CallbackLogic<Object, JEEContext> callbackLogic) {
+    public void setCallbackLogic(final CallbackLogic callbackLogic) {
         this.callbackLogic = callbackLogic;
     }
 
@@ -103,22 +99,6 @@ public class CallbackFilter implements Filter {
         this.defaultUrl = defaultUrl;
     }
 
-    public Boolean getMultiProfile() {
-        return multiProfile;
-    }
-
-    public void setMultiProfile(final Boolean multiProfile) {
-        this.multiProfile = multiProfile;
-    }
-
-    public Boolean getSaveInSession() {
-        return saveInSession;
-    }
-
-    public void setSaveInSession(final Boolean saveInSession) {
-        this.saveInSession = saveInSession;
-    }
-
     public String getDefaultClient() {
         return defaultClient;
     }
@@ -127,11 +107,11 @@ public class CallbackFilter implements Filter {
         this.defaultClient = defaultClient;
     }
 
-    public HttpActionAdapter<Object, JEEContext> getHttpActionAdapter() {
+    public HttpActionAdapter getHttpActionAdapter() {
         return httpActionAdapter;
     }
 
-    public void setHttpActionAdapter(final HttpActionAdapter<Object, JEEContext> httpActionAdapter) {
+    public void setHttpActionAdapter(final HttpActionAdapter httpActionAdapter) {
         this.httpActionAdapter = httpActionAdapter;
     }
 }

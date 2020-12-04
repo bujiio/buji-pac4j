@@ -18,8 +18,8 @@
  */
 package io.buji.pac4j.subject;
 
-import org.pac4j.core.profile.CommonProfile;
 import org.pac4j.core.profile.ProfileHelper;
+import org.pac4j.core.profile.UserProfile;
 import org.pac4j.core.util.CommonHelper;
 
 import java.io.Serializable;
@@ -35,7 +35,7 @@ import java.util.List;
 public class Pac4jPrincipal implements Principal, Serializable {
 
     private final String principalNameAttribute;
-    private final List<CommonProfile> profiles;
+    private final List<UserProfile> profiles;
 
     /**
      * Construct a Pac4jPrincipal.  The principal name returned will be 
@@ -44,7 +44,7 @@ public class Pac4jPrincipal implements Principal, Serializable {
      * @param profiles A list containing all of the CommonProfiles created by Pac4j
      *          authorization.
      */
-    public Pac4jPrincipal(final List<CommonProfile> profiles) {
+    public Pac4jPrincipal(final List<UserProfile> profiles) {
         this.profiles = profiles;
         this.principalNameAttribute = null;
     }
@@ -59,7 +59,7 @@ public class Pac4jPrincipal implements Principal, Serializable {
      *          holds the principal name. A null or blank value means
      *          that CommonProfile.getId() should be used as the principal name.
      */
-    public Pac4jPrincipal(final List<CommonProfile> profiles, String principalNameAttribute) {
+    public Pac4jPrincipal(final List<UserProfile> profiles, String principalNameAttribute) {
         this.profiles = profiles;
         this.principalNameAttribute = CommonHelper.isBlank(principalNameAttribute) ?
                                         null : principalNameAttribute.trim();
@@ -70,7 +70,7 @@ public class Pac4jPrincipal implements Principal, Serializable {
      *
      * @return the main profile
      */
-    public CommonProfile getProfile() {
+    public UserProfile getProfile() {
         return ProfileHelper.flatIntoOneProfile(this.profiles).get();
     }
 
@@ -79,7 +79,7 @@ public class Pac4jPrincipal implements Principal, Serializable {
      *
      * @return the list of profiles
      */
-    public List<CommonProfile> getProfiles() {
+    public List<UserProfile> getProfiles() {
         return this.profiles;
     }
 
@@ -106,11 +106,11 @@ public class Pac4jPrincipal implements Principal, Serializable {
      */
     @Override
     public String getName() {
-        CommonProfile profile = this.getProfile();
-        if(null == principalNameAttribute) {
+        final UserProfile profile = this.getProfile();
+        if (null == principalNameAttribute) {
             return profile.getId();
         }
-        Object attrValue = profile.getAttribute(principalNameAttribute);
+        final Object attrValue = profile.getAttribute(principalNameAttribute);
         return (null == attrValue) ? null : String.valueOf(attrValue);
     }
 

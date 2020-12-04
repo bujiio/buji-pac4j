@@ -22,7 +22,7 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.UnavailableSecurityManagerException;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.support.DisabledSessionException;
-import org.pac4j.core.context.JEEContext;
+import org.pac4j.core.context.WebContext;
 import org.pac4j.core.context.session.SessionStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,11 +35,11 @@ import java.util.Optional;
  * @author Jerome Leleu
  * @since 1.4.0
  */
-public class ShiroSessionStore implements SessionStore<JEEContext> {
+public class ShiroSessionStore implements SessionStore {
 
-    private final static Logger logger = LoggerFactory.getLogger(ShiroSessionStore.class);
+    private static Logger LOGGER = LoggerFactory.getLogger(ShiroSessionStore.class);
 
-    public final static ShiroSessionStore INSTANCE = new ShiroSessionStore();
+    public static final ShiroSessionStore INSTANCE = new ShiroSessionStore();
 
     /**
      * Get the Shiro session (do not create it if it does not exist).
@@ -49,60 +49,75 @@ public class ShiroSessionStore implements SessionStore<JEEContext> {
      */
     protected Session getSession(final boolean createSession) {
         try {
-            return SecurityUtils.getSubject().getSession(createSession);
+            final Session session = SecurityUtils.getSubject().getSession(createSession);
+            LOGGER.debug("createSession: {}, retrieved session: {}", createSession, session);
+            return session;
         } catch (final DisabledSessionException e) {
             return null;
         }
     }
 
     @Override
-    public String getOrCreateSessionId(final JEEContext context) {
-        final Session session = getSession(true);
+    public Optional<String> getSessionId(final WebContext context, final boolean createSession) {
+        final Session session = getSession(createSession);
         if (session != null) {
-            return session.getId().toString();
+            final String sessionId = session.getId().toString();
+            LOGGER.debug("Get sessionId: {}", sessionId);
+            return Optional.of(sessionId);
+        } else {
+            LOGGER.debug("No sessionId");
+            return Optional.empty();
         }
-        return null;
     }
 
     @Override
-    public Optional<Object> get(final JEEContext context, final String key) {
+    public Optional<Object> get(final WebContext context, final String key) {
         final Session session = getSession(false);
         if (session != null) {
-            return Optional.ofNullable(session.getAttribute(key));
+            final Object value = session.getAttribute(key);
+            LOGGER.debug("Get value: {} for key: {}", value, key);
+            return Optional.ofNullable(value);
+        } else {
+            LOGGER.debug("Can't get value for key: {}, no session available", key);
+            return Optional.empty();
         }
-        return Optional.empty();
     }
 
     @Override
-    public void set(final JEEContext context, final String key, final Object value) {
+    public void set(final WebContext context, final String key, final Object value) {
         final Session session = getSession(true);
         if (session != null) {
             try {
+                if (value instanceof Exception) {
+                    LOGGER.debug("Set key: {} for value: {}", key, value.toString());
+                } else {
+                    LOGGER.debug("Set key: {} for value: {}", key, value);
+                }
                 session.setAttribute(key, value);
             } catch (final UnavailableSecurityManagerException e) {
-                logger.warn("Should happen just once at startup in some specific case of Shiro Spring configuration", e);
+                LOGGER.warn("Should happen just once at startup in some specific case of Shiro Spring configuration", e);
             }
         }
     }
 
     @Override
-    public boolean destroySession(final JEEContext context) {
+    public boolean destroySession(final WebContext context) {
         getSession(true).stop();
         return true;
     }
 
     @Override
-    public Optional getTrackableSession(final JEEContext context) {
+    public Optional getTrackableSession(final WebContext context) {
         return Optional.empty();
     }
 
     @Override
-    public Optional<SessionStore<JEEContext>> buildFromTrackableSession(final JEEContext context, final Object trackableSession) {
+    public Optional<SessionStore> buildFromTrackableSession(final WebContext context, final Object trackableSession) {
         return Optional.empty();
     }
 
     @Override
-    public boolean renewSession(final JEEContext context) {
+    public boolean renewSession(final WebContext context) {
         return false;
     }
 }
