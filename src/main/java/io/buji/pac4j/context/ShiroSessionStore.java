@@ -41,6 +41,8 @@ public class ShiroSessionStore implements SessionStore {
 
     public static final ShiroSessionStore INSTANCE = new ShiroSessionStore();
 
+    protected ShiroSessionStore() {}
+
     /**
      * Get the Shiro session (do not create it if it does not exist).
      *
