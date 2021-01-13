@@ -67,9 +67,9 @@ public class CallbackFilter implements Filter {
         final HttpActionAdapter bestAdapter = FindBest.httpActionAdapter(httpActionAdapter, config, JEEHttpActionAdapter.INSTANCE);
         final CallbackLogic bestLogic = FindBest.callbackLogic(callbackLogic, config, DefaultCallbackLogic.INSTANCE);
 
-        final WebContext context = FindBest.webContextFactory(null, config, JEEContextFactory.INSTANCE).newContext(servletRequest, servletResponse, bestSessionStore);
+        final WebContext context = FindBest.webContextFactory(null, config, JEEContextFactory.INSTANCE).newContext(servletRequest, servletResponse);
 
-        bestLogic.perform(context, config, bestAdapter, defaultUrl, false, defaultClient);
+        bestLogic.perform(context, bestSessionStore, config, bestAdapter, defaultUrl, false, defaultClient);
     }
 
     @Override

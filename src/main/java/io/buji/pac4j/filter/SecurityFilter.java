@@ -49,7 +49,7 @@ import org.pac4j.core.util.FindBest;
 public class SecurityFilter implements Filter {
 
     static {
-        Config.defaultProfileManagerFactory("ShiroProfileManager", ctx -> new ShiroProfileManager(ctx));
+        Config.defaultProfileManagerFactory("ShiroProfileManager", (ctx, session) -> new ShiroProfileManager(ctx, session));
     }
 
     private SecurityLogic securityLogic;
@@ -72,9 +72,9 @@ public class SecurityFilter implements Filter {
         final HttpActionAdapter bestAdapter = FindBest.httpActionAdapter(null, config, JEEHttpActionAdapter.INSTANCE);
         final SecurityLogic bestLogic = FindBest.securityLogic(securityLogic, config, DefaultSecurityLogic.INSTANCE);
 
-        final WebContext context = FindBest.webContextFactory(null, config, JEEContextFactory.INSTANCE).newContext(servletRequest, servletResponse, bestSessionStore);
+        final WebContext context = FindBest.webContextFactory(null, config, JEEContextFactory.INSTANCE).newContext(servletRequest, servletResponse);
 
-        bestLogic.perform(context, config, (ctx, profiles, parameters) -> {
+        bestLogic.perform(context, bestSessionStore, config, (ctx, session, profiles, parameters) -> {
 
             filterChain.doFilter(servletRequest, servletResponse);
             return null;
