@@ -20,7 +20,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <artifactId>buji-pac4j</artifactId>
-  <version>6.0.0-RC1</version>
+  <version>6.0.0-RC2-SNAPSHOT</version>
   <packaging>jar</packaging>
   <name>pac4j implementation for Shiro</name>
   <description>Security library for Shiro based on pac4j</description>
