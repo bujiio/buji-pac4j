@@ -87,7 +87,7 @@
     <java.version>11</java.version>
     <shiro.version>1.8.0</shiro.version>
     <servlet.version>4.0.1</servlet.version>
-    <pmdVersion>6.38.0</pmdVersion>
+    <pmdVersion>6.41.0</pmdVersion>
   </properties>
 
   <dependencies>
