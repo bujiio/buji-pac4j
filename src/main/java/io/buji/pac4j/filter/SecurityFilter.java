@@ -29,16 +29,16 @@ import javax.servlet.ServletResponse;
 
 import io.buji.pac4j.profile.ShiroProfileManager;
 import org.pac4j.core.config.Config;
-import org.pac4j.core.context.JEEContextFactory;
 import org.pac4j.core.context.WebContext;
 import org.pac4j.core.context.session.SessionStore;
 import org.pac4j.core.engine.DefaultSecurityLogic;
 import org.pac4j.core.engine.SecurityLogic;
 import org.pac4j.core.http.adapter.HttpActionAdapter;
-import org.pac4j.core.http.adapter.JEEHttpActionAdapter;
 
 import io.buji.pac4j.context.ShiroSessionStore;
 import org.pac4j.core.util.FindBest;
+import org.pac4j.jee.context.JEEContextFactory;
+import org.pac4j.jee.http.adapter.JEEHttpActionAdapter;
 
 /**
  * <p>This filter protects an URL.</p>

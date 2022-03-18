@@ -2,14 +2,14 @@ package io.buji.pac4j.filter;
 
 import io.buji.pac4j.context.ShiroSessionStore;
 import org.pac4j.core.config.Config;
-import org.pac4j.core.context.JEEContextFactory;
 import org.pac4j.core.context.WebContext;
 import org.pac4j.core.context.session.SessionStore;
 import org.pac4j.core.engine.DefaultLogoutLogic;
 import org.pac4j.core.engine.LogoutLogic;
 import org.pac4j.core.http.adapter.HttpActionAdapter;
-import org.pac4j.core.http.adapter.JEEHttpActionAdapter;
 import org.pac4j.core.util.FindBest;
+import org.pac4j.jee.context.JEEContextFactory;
+import org.pac4j.jee.http.adapter.JEEHttpActionAdapter;
 
 import javax.servlet.*;
 
