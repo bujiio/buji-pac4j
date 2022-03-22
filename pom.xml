@@ -85,7 +85,7 @@
   <properties>
     <pac4j.version>5.4.0-SNAPSHOT</pac4j.version>
     <java.version>11</java.version>
-    <shiro.version>1.8.0</shiro.version>
+    <shiro.version>1.9.0</shiro.version>
     <servlet.version>4.0.1</servlet.version>
     <pmdVersion>6.43.0</pmdVersion>
   </properties>
