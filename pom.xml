@@ -22,8 +22,8 @@
   <artifactId>buji-pac4j</artifactId>
   <version>8.0.0-SNAPSHOT</version>
   <packaging>jar</packaging>
-  <name>pac4j implementation for Shiro</name>
-  <description>Security library for Shiro based on pac4j</description>
+  <name>pac4j bridge for Shiro</name>
+  <description>Bridge from the pac4j security library to Shiro</description>
   <url>https://github.com/bujiio/buji-pac4j</url>
 
   <parent>
