@@ -10,6 +10,8 @@ It's based on Java 11, Shiro 1.9 and on the **[pac4j security engine](https://gi
 - certainly, the [javaee-pac4j](https://github.com/pac4j/jee-pac4j) implementation
 - or maybe, if you use Spring MVC, the [spring-webmvc-pac4j](https://github.com/pac4j/spring-webmvc-pac4j) implementation.
 
+While it is always better to directly use a pac4j security library alone, this bridge can be used to keep legacy software and avoid full migration.
+
 
 ## Usage
 
