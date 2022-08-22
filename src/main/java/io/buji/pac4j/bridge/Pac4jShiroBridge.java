@@ -19,7 +19,7 @@ public class Pac4jShiroBridge {
     public void setConfig(final Config config) {
         LOGGER.info("Initializing pac4j to Shiro bridge...");
 
-        config.setProfileManagerFactory("ShiroProfileManager", (ctx, session) -> new ShiroProfileManager(ctx, session));
-        config.setSessionStore(ShiroSessionStore.INSTANCE);
+        config.defaultProfileManagerFactory((ctx, session) -> new ShiroProfileManager(ctx, session));
+        config.defaultSessionStore(ShiroSessionStore.INSTANCE);
     }
 }

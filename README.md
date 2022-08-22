@@ -2,26 +2,23 @@
   <img src="https://pac4j.github.io/pac4j/img/logo-shiro.png" width="300" />
 </p>
 
-
 The `buji-pac4j` project is a **bridge from pac4j to Shiro** to push the pac4j security context into the Shiro security context.  
 It's based on Java 11, Shiro 1.9 and on the **[pac4j security engine](https://github.com/pac4j/pac4j) v5**. It's available under the Apache 2 license.
 
 **It must be used with a [pac4j security library](https://www.pac4j.org/implementations.html)**:
-- certainly, the [javaee-pac4j](https://github.com/pac4j/jee-pac4j) implementation
+- certainly, the [javaee-pac4j](https://github.com/pac4j/jee-pac4j) implementation (which has the same filters than `buji-pac4j` version <= 7.x)
 - or maybe, if you use Spring MVC, the [spring-webmvc-pac4j](https://github.com/pac4j/spring-webmvc-pac4j) implementation.
 
-While it is always better to directly use a pac4j security library alone, this bridge can be used to keep legacy software and avoid full migration.
+While **it is always better to directly use a pac4j security library alone**, this bridge can be used to keep legacy software and avoid full migration.
 
 
 ## Usage
 
 ### 1) [Add the required dependencies](https://github.com/bujiio/buji-pac4j/wiki/Dependencies)
 
-### 2) [Add the bridge](https://github.com/bujiio/buji-pac4j/wiki/Bridge)
+### 2) Install, configure and use the pac4j security library
 
-### 3) Install, configure and use the pac4j security library
-
-You must refer to the documentation of the pac4j security library you use: [javaee-pac4j](https://github.com/pac4j/jee-pac4j) or maybe [spring-webmvc-pac4j](https://github.com/pac4j/spring-webmvc-pac4j).
+You must refer to the documentation of the pac4j security library you use: [javaee-pac4j](https://github.com/pac4j/jee-pac4j) (or maybe [spring-webmvc-pac4j](https://github.com/pac4j/spring-webmvc-pac4j)).
 
 
 ## Demo
