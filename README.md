@@ -6,7 +6,7 @@ The `buji-pac4j` project is a **bridge from pac4j to Shiro** to push the pac4j s
 It's based on Java 11, Shiro 1.9 and on the **[pac4j security engine](https://github.com/pac4j/pac4j) v5**. It's available under the Apache 2 license.
 
 **It must be used with a [pac4j security library](https://www.pac4j.org/implementations.html)**:
-- certainly, the [javaee-pac4j](https://github.com/pac4j/jee-pac4j) implementation (which has the same filters than `buji-pac4j` version <= 7.x)
+- certainly, the [javaee-pac4j](https://github.com/pac4j/jee-pac4j) implementation (which has the same filters as `buji-pac4j` version <= 7.x)
 - or maybe, if you use Spring MVC, the [spring-webmvc-pac4j](https://github.com/pac4j/spring-webmvc-pac4j) implementation.
 
 While **it is always better to directly use a pac4j security library alone**, this bridge can be used to keep legacy software and avoid full migration.
