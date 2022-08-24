@@ -16,7 +16,11 @@ While **it is always better to directly use a pac4j security library alone**, th
 
 ### 1) [Add the required dependencies](https://github.com/bujiio/buji-pac4j/wiki/Dependencies)
 
-### 2) Install, configure and use the pac4j security library
+### 2) The bridge is automatically installed
+
+See the whole [configuration](https://github.com/bujiio/buji-pac4j/blob/master/src/main/resources/buji-pac4j-default.ini) that is loaded by default.
+
+### 3) Install, configure and use the pac4j security library
 
 You must refer to the documentation of the pac4j security library you use: [javaee-pac4j](https://github.com/pac4j/jee-pac4j) (or maybe [spring-webmvc-pac4j](https://github.com/pac4j/spring-webmvc-pac4j)).
 
