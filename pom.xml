@@ -86,7 +86,7 @@
     <pac4j.version>5.6.0</pac4j.version>
     <java.version>11</java.version>
     <shiro.version>1.9.1</shiro.version>
-    <pmdVersion>6.49.0</pmdVersion>
+    <pmdVersion>6.50.0</pmdVersion>
   </properties>
 
   <dependencies>
