@@ -32,7 +32,9 @@ import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.pac4j.core.profile.CommonProfile;
 import org.pac4j.core.profile.UserProfile;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Realm based on pac4j token (authentication has already occurred).
@@ -89,21 +91,19 @@ public class Pac4jRealm extends AuthorizingRealm {
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(final PrincipalCollection principals) {
         final Set<String> roles = new HashSet<>();
-        final Set<String> permissions = new HashSet<>();
         final Pac4jPrincipal principal = principals.oneByType(Pac4jPrincipal.class);
         if (principal != null) {
             final List<UserProfile> profiles = principal.getProfiles();
             for (final UserProfile profile : profiles) {
                 if (profile != null) {
                     roles.addAll(profile.getRoles());
-                    permissions.addAll(profile.getPermissions());
                 }
             }
         }
 
         final SimpleAuthorizationInfo simpleAuthorizationInfo = new SimpleAuthorizationInfo();
         simpleAuthorizationInfo.addRoles(roles);
-        simpleAuthorizationInfo.addStringPermissions(permissions);
+        simpleAuthorizationInfo.addStringPermissions(new HashSet<>());
         return simpleAuthorizationInfo;
     }
 }

@@ -20,7 +20,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <artifactId>buji-pac4j</artifactId>
-  <version>8.0.1-SNAPSHOT</version>
+  <version>9.0.0-SNAPSHOT</version>
   <packaging>jar</packaging>
   <name>pac4j bridge for Shiro</name>
   <description>Bridge from the pac4j security library to Shiro</description>
@@ -83,8 +83,8 @@
   </scm>
 
   <properties>
-    <pac4j.version>5.7.0</pac4j.version>
-    <java.version>11</java.version>
+    <pac4j.version>6.0.0-RC6-SNAPSHOT</pac4j.version>
+    <java.version>17</java.version>
     <shiro.version>1.11.0</shiro.version>
     <pmdVersion>6.54.0</pmdVersion>
   </properties>
@@ -97,8 +97,13 @@
     </dependency>
     <dependency>
       <groupId>org.pac4j</groupId>
-      <artifactId>pac4j-core</artifactId>
+      <artifactId>pac4j-javaee</artifactId>
       <version>${pac4j.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <version>1.18.24</version>
     </dependency>
     <dependency>
       <groupId>junit</groupId>

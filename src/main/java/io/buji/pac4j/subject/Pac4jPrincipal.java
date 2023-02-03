@@ -18,6 +18,7 @@
  */
 package io.buji.pac4j.subject;
 
+import lombok.ToString;
 import org.pac4j.core.profile.ProfileHelper;
 import org.pac4j.core.profile.UserProfile;
 import org.pac4j.core.util.CommonHelper;
@@ -27,11 +28,12 @@ import java.security.Principal;
 import java.util.List;
 
 /**
- * A principal created by Pac4JRealm that wraps a CommonProfile.
+ * A principal created by Pac4JRealm that wraps a pac4j UserProfile.
  * 
  * @author Jerome Leleu
  * @since 2.0.0
  */
+@ToString
 public class Pac4jPrincipal implements Principal, Serializable {
 
     private final String principalNameAttribute;
@@ -112,10 +114,5 @@ public class Pac4jPrincipal implements Principal, Serializable {
         }
         final Object attrValue = profile.getAttribute(principalNameAttribute);
         return (null == attrValue) ? null : String.valueOf(attrValue);
-    }
-
-    @Override
-    public String toString() {
-        return CommonHelper.toNiceString(this.getClass(), "profiles", getProfiles());
     }
 }
