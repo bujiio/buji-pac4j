@@ -1,5 +1,6 @@
 package io.buji.pac4j.ini;
 
+import org.apache.commons.beanutils.FluentPropertyBeanIntrospector;
 import org.apache.commons.beanutils.PropertyUtilsBean;
 import org.junit.Test;
 import org.pac4j.cas.config.CasConfiguration;
@@ -26,6 +27,7 @@ public class IniTests {
         assertEquals(LOGIN_URL, casConfig.getLoginUrl());*/
         final CasConfiguration casConfig = new CasConfiguration();
         final PropertyUtilsBean prop = new PropertyUtilsBean();
+        prop.addBeanIntrospector(new FluentPropertyBeanIntrospector());
         final PropertyDescriptor descriptor = prop.getPropertyDescriptor(casConfig, "loginUrl");
         assertNotNull(descriptor.getWriteMethod());
     }
