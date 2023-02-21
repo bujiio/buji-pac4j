@@ -1,5 +1,6 @@
 package io.buji.pac4j.env;
 
+import io.buji.pac4j.config.Pac4jReflectionBuilder;
 import org.apache.shiro.config.Ini;
 import org.apache.shiro.web.env.IniWebEnvironment;
 
@@ -10,6 +11,11 @@ import org.apache.shiro.web.env.IniWebEnvironment;
  * @since 2.2.0
  */
 public class Pac4jIniEnvironment extends IniWebEnvironment {
+
+    public Pac4jIniEnvironment() {
+        super();
+        getSecurityManagerFactory().setReflectionBuilder(new Pac4jReflectionBuilder());
+    }
 
     @Override
     protected Ini getFrameworkIni() {
