@@ -1,6 +1,9 @@
 package io.buji.pac4j.config;
 
-import org.apache.commons.beanutils.*;
+import org.apache.commons.beanutils.BeanUtilsBean;
+import org.apache.commons.beanutils.ConvertUtilsBean;
+import org.apache.commons.beanutils.FluentPropertyBeanIntrospector;
+import org.apache.commons.beanutils.SuppressPropertiesBeanIntrospector;
 import org.apache.shiro.codec.Base64;
 import org.apache.shiro.codec.Hex;
 import org.apache.shiro.config.*;
@@ -93,8 +96,9 @@ public class Pac4jReflectionBuilder extends ReflectionBuilder {
             }
         });
         beanUtilsBean.getPropertyUtils().addBeanIntrospector(SuppressPropertiesBeanIntrospector.SUPPRESS_CLASS);
-        beanUtilsBean.getPropertyUtils().removeBeanIntrospector(DefaultBeanIntrospector.INSTANCE);
+        // CUSTO>>
         beanUtilsBean.getPropertyUtils().addBeanIntrospector(new FluentPropertyBeanIntrospector());
+        // <<CUSTO
 
         this.interpolator = createInterpolator();
 
