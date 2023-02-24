@@ -20,7 +20,7 @@ import java.beans.PropertyDescriptor;
 import java.util.*;
 
 /**
- * Copy/pasted from the original Shiro class.
+ * Copy/pasted from the original Shiro class. To be removed when upgrading to Shiro > 1.11.0
  *
  * @author Jerome LELEU
  * @since 9.0.0

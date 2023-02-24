@@ -1,10 +1,21 @@
 <FindBugsFilter>
     <Match>
         <Class name="~.*Pac4jReflectionBuilder.*"/>
-        <Bug pattern="SIC_INNER_SHOULD_BE_STATIC"/>
     </Match>
     <Match>
-        <Class name="~.*Pac4jReflectionBuilder.*"/>
-        <Bug pattern="DM_BOXED_PRIMITIVE_FOR_PARSING"/>
+        <Class name="~.*Pac4jPrincipal"/>
+        <Bug pattern="EI_EXPOSE_REP"/>
+    </Match>
+    <Match>
+        <Class name="~.*Pac4jPrincipal"/>
+        <Bug pattern="EI_EXPOSE_REP2"/>
+    </Match>
+    <Match>
+        <Class name="~.*Pac4jToken"/>
+        <Bug pattern="EI_EXPOSE_REP"/>
+    </Match>
+    <Match>
+        <Class name="~.*Pac4jToken"/>
+        <Bug pattern="EI_EXPOSE_REP2"/>
     </Match>
 </FindBugsFilter>

@@ -18,6 +18,8 @@
  */
 package io.buji.pac4j.token;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import org.apache.shiro.authc.RememberMeAuthenticationToken;
 import org.pac4j.core.profile.ProfileHelper;
 import org.pac4j.core.profile.UserProfile;
@@ -30,16 +32,19 @@ import java.util.List;
  * @author Jerome Leleu
  * @since 2.0.0
  */
+@RequiredArgsConstructor
 public class Pac4jToken implements RememberMeAuthenticationToken {
 
+    /**
+     * The use profiles.
+     */
+    @Getter
     private final List<UserProfile> profiles;
 
+    /**
+     * Whether the user is remembered.
+     */
     private final boolean isRemembered;
-
-    public Pac4jToken(final List<UserProfile> profiles, final boolean isRemembered) {
-        this.profiles = profiles;
-        this.isRemembered = isRemembered;
-    }
 
     @Override
     public Object getPrincipal() {
@@ -54,9 +59,5 @@ public class Pac4jToken implements RememberMeAuthenticationToken {
     @Override
     public boolean isRememberMe() {
         return this.isRemembered;
-    }
-
-    public List<UserProfile> getProfiles() {
-        return profiles;
     }
 }

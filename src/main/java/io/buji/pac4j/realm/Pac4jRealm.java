@@ -46,6 +46,9 @@ public class Pac4jRealm extends AuthorizingRealm {
     
     private String principalNameAttribute;
 
+    /**
+     * Constructor.
+     */
     public Pac4jRealm() {
         setAuthenticationTokenClass(Pac4jToken.class);
     }

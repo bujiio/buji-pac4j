@@ -36,6 +36,12 @@ import java.util.LinkedHashMap;
  */
 public class ShiroProfileManager extends ProfileManager {
 
+    /**
+     * Constructor.
+     *
+     * @param context the web context
+     * @param sessionStore the session store
+     */
     public ShiroProfileManager(final WebContext context, final SessionStore sessionStore) {
         super(context, sessionStore);
     }

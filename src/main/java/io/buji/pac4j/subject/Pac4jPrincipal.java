@@ -36,8 +36,14 @@ import java.util.List;
 @ToString
 public class Pac4jPrincipal implements Principal, Serializable {
 
-    private final String principalNameAttribute;
+    /**
+     * The user profiles.
+     */
     private final List<UserProfile> profiles;
+    /**
+     * The principal name attribute.
+     */
+    private final String principalNameAttribute;
 
     /**
      * Construct a Pac4jPrincipal.  The principal name returned will be 
@@ -61,7 +67,7 @@ public class Pac4jPrincipal implements Principal, Serializable {
      *          holds the principal name. A null or blank value means
      *          that CommonProfile.getId() should be used as the principal name.
      */
-    public Pac4jPrincipal(final List<UserProfile> profiles, String principalNameAttribute) {
+    public Pac4jPrincipal(final List<UserProfile> profiles, final String principalNameAttribute) {
         this.profiles = profiles;
         this.principalNameAttribute = CommonHelper.isBlank(principalNameAttribute) ?
                                         null : principalNameAttribute.trim();

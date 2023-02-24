@@ -39,8 +39,14 @@ public class ShiroSessionStore implements SessionStore {
 
     private static Logger LOGGER = LoggerFactory.getLogger(ShiroSessionStore.class);
 
+    /**
+     * The instance.
+     */
     public static final ShiroSessionStore INSTANCE = new ShiroSessionStore();
 
+    /**
+     * Protected constructor.
+     */
     protected ShiroSessionStore() {}
 
     /**

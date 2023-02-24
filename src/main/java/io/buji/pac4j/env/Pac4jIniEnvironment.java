@@ -12,6 +12,9 @@ import org.apache.shiro.web.env.IniWebEnvironment;
  */
 public class Pac4jIniEnvironment extends IniWebEnvironment {
 
+    /**
+     * Constructor.
+     */
     public Pac4jIniEnvironment() {
         super();
         getSecurityManagerFactory().setReflectionBuilder(new Pac4jReflectionBuilder());
