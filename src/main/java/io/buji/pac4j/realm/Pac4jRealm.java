@@ -20,6 +20,7 @@ package io.buji.pac4j.realm;
 
 import io.buji.pac4j.subject.Pac4jPrincipal;
 import io.buji.pac4j.token.Pac4jToken;
+import lombok.val;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
@@ -43,7 +44,9 @@ import java.util.Set;
  * @since 2.0.0
  */
 public class Pac4jRealm extends AuthorizingRealm {
-    
+
+    public static final String SHIRO_PERMISSIONS = "$shiro_permissions$";
+
     private String principalNameAttribute;
 
     /**
@@ -94,19 +97,27 @@ public class Pac4jRealm extends AuthorizingRealm {
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(final PrincipalCollection principals) {
         final Set<String> roles = new HashSet<>();
+        final Set<String> permissions = new HashSet<>();
         final Pac4jPrincipal principal = principals.oneByType(Pac4jPrincipal.class);
         if (principal != null) {
             final List<UserProfile> profiles = principal.getProfiles();
             for (final UserProfile profile : profiles) {
                 if (profile != null) {
                     roles.addAll(profile.getRoles());
+                    // assuming: profile.addAttribute(Pac4jRealm.SHIRO_PERMISSIONS, Arrays.asList("PERM1", "PERM2"));
+                    val perm = profile.getAttribute(SHIRO_PERMISSIONS);
+                    if (perm instanceof List) {
+                        permissions.addAll((List) perm);
+                    } else if (perm instanceof Set) {
+                        permissions.addAll((Set) perm);
+                    }
                 }
             }
         }
 
         final SimpleAuthorizationInfo simpleAuthorizationInfo = new SimpleAuthorizationInfo();
         simpleAuthorizationInfo.addRoles(roles);
-        simpleAuthorizationInfo.addStringPermissions(new HashSet<>());
+        simpleAuthorizationInfo.addStringPermissions(permissions);
         return simpleAuthorizationInfo;
     }
 }
