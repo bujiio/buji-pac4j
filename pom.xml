@@ -83,7 +83,7 @@
   </scm>
 
   <properties>
-    <pac4j.version>6.0.0-RC6-SNAPSHOT</pac4j.version>
+    <pac4j.version>6.0.0-RC7-SNAPSHOT</pac4j.version>
     <java.version>17</java.version>
     <shiro.version>1.11.0</shiro.version>
     <pmdVersion>6.55.0</pmdVersion>
