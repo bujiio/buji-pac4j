@@ -7,10 +7,10 @@ env:
 on:
   push:
     branches:
-      - 8.0.x
+      - 8.1.x
   pull_request:
     branches:
-      - 8.0.x
+      - 8.1.x
 
 jobs:
   build:
