@@ -118,9 +118,4 @@ public class Pac4jPrincipal implements Principal, Serializable {
         final Object attrValue = profile.getAttribute(principalNameAttribute);
         return (null == attrValue) ? null : String.valueOf(attrValue);
     }
-
-    @Override
-    public String toString() {
-        return CommonHelper.toNiceString(this.getClass(), "profiles", getProfiles());
-    }
 }
