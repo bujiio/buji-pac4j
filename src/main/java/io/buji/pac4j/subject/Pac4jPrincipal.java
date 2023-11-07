@@ -97,6 +97,11 @@ public class Pac4jPrincipal implements Principal, Serializable {
         return profiles != null ? profiles.hashCode() : 0;
     }
 
+    @Override
+    public String toString() {
+        return getName();
+    }
+
     /**
      * Returns a name for the principal based upon one of the attributes
      * of the main CommonProfile.  The attribute name used to query the CommonProfile 
