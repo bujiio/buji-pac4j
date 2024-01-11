@@ -7,7 +7,7 @@ It's based on the **[pac4j security engine](https://github.com/pac4j/pac4j)**. I
 
 | buji-pac4j   | JDK | pac4j | Shiro | Operating philosophy        | Usage of Lombok | Status           |
 |--------------|-----|-------|-------|-----------------------------|-----------------|------------------|
-| version >= 9 | 17  | v6    | v1.11 | Bridge only                 | Yes             | In development   |
+| version >= 9 | 17  | v6    | v1.11 | Bridge only                 | Yes             | Production ready |
 | version >= 8 | 11  | v5    | v1.9  | Bridge only                 | No              | Production ready |
 | version >= 6 | 11  | v5    | v1.8  | Standalone security library | No              | Production ready |
 | version >= 5 | 8   | v4    | v1.5  | Standalone security library | No              | Production ready |
@@ -42,7 +42,7 @@ Shiro demo: [buji-pac4j-demo](https://github.com/pac4j/buji-pac4j-demo).
 The latest released version is the [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.buji/buji-pac4j/badge.svg?style=flat)](https://maven-badges.herokuapp.com/maven-central/io.buji/buji-pac4j), available in the [Maven central repository](https://repo.maven.apache.org/maven2).
 The [next version](https://github.com/bujiio/buji-pac4j/wiki/Next-version) is under development.
 
-See the [release notes](https://github.com/bujiio/buji-pac4j/wiki/Release-Notes). Learn more by browsing the [pac4j documentation](https://www.javadoc.io/doc/org.pac4j/pac4j-core/5.4.6/index.html) and the [buji-pac4j Javadoc](http://www.javadoc.io/doc/io.buji/buji-pac4j/8.0.0).
+See the [release notes](https://github.com/bujiio/buji-pac4j/wiki/Release-Notes). Learn more by browsing the [pac4j documentation](https://www.javadoc.io/doc/org.pac4j/pac4j-core/6.0.1/index.html) and the [buji-pac4j Javadoc](http://www.javadoc.io/doc/io.buji/buji-pac4j/9.0.0).
 
 See the [migration guide](https://github.com/bujiio/buji-pac4j/wiki/Migration-guide) as well.
 
