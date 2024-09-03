@@ -18,7 +18,6 @@
  */
 package io.buji.pac4j.subject;
 
-import lombok.ToString;
 import org.pac4j.core.profile.ProfileHelper;
 import org.pac4j.core.profile.UserProfile;
 import org.pac4j.core.util.CommonHelper;
@@ -33,7 +32,6 @@ import java.util.List;
  * @author Jerome Leleu
  * @since 2.0.0
  */
-@ToString
 public class Pac4jPrincipal implements Principal, Serializable {
 
     /**
