@@ -32,7 +32,10 @@ import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.pac4j.core.profile.CommonProfile;
 import org.pac4j.core.profile.UserProfile;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Realm based on pac4j token (authentication has already occurred).
@@ -82,7 +85,8 @@ public class Pac4jRealm extends AuthorizingRealm {
         final List<UserProfile> profiles = token.getProfiles();
 
         final Pac4jPrincipal principal = new Pac4jPrincipal(profiles, principalNameAttribute);
-        final PrincipalCollection principalCollection = new SimplePrincipalCollection(principal, getName());
+        final String username = principal.getName();
+        final PrincipalCollection principalCollection = new SimplePrincipalCollection(Arrays.asList(username, principal), getName());
         return new SimpleAuthenticationInfo(principalCollection, profiles.hashCode());
     }
 
