@@ -83,9 +83,9 @@
   </scm>
 
   <properties>
-    <pac4j.version>5.7.0</pac4j.version>
+    <pac4j.version>5.7.7</pac4j.version>
     <java.version>11</java.version>
-    <shiro.version>1.11.0</shiro.version>
+    <shiro.version>2.0.2</shiro.version>
     <pmdVersion>6.54.0</pmdVersion>
   </properties>
 

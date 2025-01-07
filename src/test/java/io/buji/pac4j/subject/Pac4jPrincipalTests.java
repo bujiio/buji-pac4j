@@ -1,6 +1,6 @@
 package io.buji.pac4j.subject;
 
-import org.apache.shiro.io.DefaultSerializer;
+import org.apache.shiro.lang.io.DefaultSerializer;
 import org.junit.Test;
 import org.pac4j.core.profile.CommonProfile;
 import org.pac4j.core.profile.UserProfile;
