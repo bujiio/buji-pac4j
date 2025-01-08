@@ -1,6 +1,6 @@
 package io.buji.pac4j.subject;
 
-import org.apache.shiro.io.DefaultSerializer;
+import org.apache.shiro.lang.io.DefaultSerializer;
 import org.junit.Test;
 import org.pac4j.core.profile.CommonProfile;
 import org.pac4j.core.profile.UserProfile;
@@ -9,7 +9,8 @@ import org.pac4j.core.util.Pac4jConstants;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 /**
  * Tests {@link Pac4jPrincipal}.
