@@ -5,12 +5,13 @@
 The `buji-pac4j` project is a **bridge from pac4j to Shiro** to push the pac4j security context into the Shiro security context.  
 It's based on the **[pac4j security engine](https://github.com/pac4j/pac4j)**. It's available under the Apache 2 license.
 
-| buji-pac4j   | JDK | pac4j | Shiro | Operating philosophy        | Usage of Lombok | Status           |
-|--------------|-----|-------|-------|-----------------------------|-----------------|------------------|
-| version >= 9 | 17  | v6    | v1.11 | Bridge only                 | Yes             | Production ready |
-| version >= 8 | 11  | v5    | v1.9  | Bridge only                 | No              | Production ready |
-| version >= 6 | 11  | v5    | v1.8  | Standalone security library | No              | Production ready |
-| version >= 5 | 8   | v4    | v1.5  | Standalone security library | No              | Production ready |
+| buji-pac4j     | JDK | pac4j | Shiro  | Operating philosophy        | Usage of Lombok | Status           |
+|----------------|-----|-------|--------|-----------------------------|-----------------|------------------|
+| version >= 9.1 | 17  | v6    | v2.0.2 | Bridge only                 | Yes             | Production ready |
+| version >= 9   | 17  | v6    | v1.11  | Bridge only                 | Yes             | Production ready |
+| version >= 8   | 11  | v5    | v1.9   | Bridge only                 | No              | Production ready |
+| version >= 6   | 11  | v5    | v1.8   | Standalone security library | No              | Production ready |
+| version >= 5   | 8   | v4    | v1.5   | Standalone security library | No              | Production ready |
 
 **It must be used with a [pac4j security library](https://www.pac4j.org/implementations.html)**:
 - certainly, the [javaee-pac4j](https://github.com/pac4j/jee-pac4j) implementation (which has the same filters as `buji-pac4j` version <= 7.x)
