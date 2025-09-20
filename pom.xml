@@ -32,11 +32,19 @@
     <version>1</version>
   </parent>
 
+  <distributionManagement>
+    <snapshotRepository>
+      <name>Central Portal Snapshots</name>
+      <id>central-portal-snapshots</id>
+      <url>https://central.sonatype.com/repository/maven-snapshots/</url>
+    </snapshotRepository>
+  </distributionManagement>
+
   <repositories>
     <repository>
-      <id>sonatype-nexus-snapshots</id>
-      <name>Sonatype Nexus Snapshots</name>
-      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+      <name>Central Portal Snapshots</name>
+      <id>central-portal-snapshots</id>
+      <url>https://central.sonatype.com/repository/maven-snapshots/</url>
       <releases>
         <enabled>false</enabled>
       </releases>
@@ -44,28 +52,6 @@
         <enabled>true</enabled>
       </snapshots>
     </repository>
-    <repository>
-      <id>apache-snapshots</id>
-      <name>Apache Snapshots</name>
-      <url>https://repository.apache.org/snapshots/</url>
-      <releases>
-        <enabled>false</enabled>
-      </releases>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-    </repository>
-    <!--repository>
-      <id>apache-staging-repo</id>
-      <name>Apache Staging Repository</name>
-      <url>https://repository.apache.org/content/repositories/orgapacheshiro-xxx/</url>
-      <releases>
-        <enabled>true</enabled>
-      </releases>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-    </repository-->
   </repositories>
 
   <licenses>
@@ -75,6 +61,14 @@
       <distribution>repo</distribution>
     </license>
   </licenses>
+
+  <developers>
+    <developer>
+      <id>leleuj</id>
+      <name>Jerome LELEU</name>
+      <email>leleuj@gmail.com</email>
+    </developer>
+  </developers>
 
   <scm>
     <connection>scm:git:git@github.com:bujiio/buji-pac4j.git</connection>
@@ -127,6 +121,15 @@
 
   <build>
     <plugins>
+      <plugin>
+        <groupId>org.sonatype.central</groupId>
+        <artifactId>central-publishing-maven-plugin</artifactId>
+        <version>0.8.0</version>
+        <extensions>true</extensions>
+        <configuration>
+          <publishingServerId>central</publishingServerId>
+        </configuration>
+      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>

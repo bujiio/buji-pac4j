@@ -46,6 +46,9 @@ import java.util.Set;
  */
 public class Pac4jRealm extends AuthorizingRealm {
 
+    /**
+     * The Shiro permissions.
+     */
     public static final String SHIRO_PERMISSIONS = "$shiro_permissions$";
 
     private String principalNameAttribute;
