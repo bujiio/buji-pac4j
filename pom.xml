@@ -77,7 +77,7 @@
   </scm>
 
   <properties>
-    <pac4j.version>6.2.2</pac4j.version>
+    <pac4j.version>6.3.0</pac4j.version>
     <java.version>17</java.version>
     <shiro.version>2.0.6</shiro.version>
     <pmdVersion>6.55.0</pmdVersion>
