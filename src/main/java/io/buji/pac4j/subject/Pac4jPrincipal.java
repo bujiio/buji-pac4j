@@ -18,6 +18,8 @@
  */
 package io.buji.pac4j.subject;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.pac4j.core.profile.ProfileHelper;
 import org.pac4j.core.profile.UserProfile;
 import org.pac4j.core.util.CommonHelper;
@@ -35,9 +37,12 @@ import java.util.List;
 public class Pac4jPrincipal implements Principal, Serializable {
 
     /**
-     * The user profiles.
+     * All the profiles of the authenticated user. They are updated when the profiles are renewed (after a refresh
+     * token exchange for example) without any new Shiro authentication.
      */
-    private final List<UserProfile> profiles;
+    @Getter
+    @Setter
+    private List<UserProfile> profiles;
     /**
      * The principal name attribute.
      */
@@ -78,15 +83,6 @@ public class Pac4jPrincipal implements Principal, Serializable {
      */
     public UserProfile getProfile() {
         return ProfileHelper.flatIntoOneProfile(this.profiles).get();
-    }
-
-    /**
-     * Get all the profiles of the authenticated user.
-     *
-     * @return the list of profiles
-     */
-    public List<UserProfile> getProfiles() {
-        return this.profiles;
     }
 
     @Override

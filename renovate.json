@@ -2,5 +2,13 @@
     "$schema": "https://docs.renovatebot.com/renovate-schema.json",
     "extends": [
         "github>pac4j/renovate-config"
+    ],
+    "packageRules": [
+        {
+            "description": "Shiro v3+ is based on jakarta.servlet while this bridge relies on pac4j-javaee (javax.servlet): stay on Shiro v2",
+            "matchDatasources": ["maven"],
+            "matchPackageNames": ["org.apache.shiro:*"],
+            "allowedVersions": "[2,3)"
+        }
     ]
 }
