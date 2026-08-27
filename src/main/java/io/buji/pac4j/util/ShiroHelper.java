@@ -20,6 +20,7 @@ package io.buji.pac4j.util;
 
 import io.buji.pac4j.subject.Pac4jPrincipal;
 import io.buji.pac4j.token.Pac4jToken;
+import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
@@ -27,13 +28,11 @@ import org.apache.shiro.subject.support.DefaultSubjectContext;
 import org.pac4j.core.authorization.authorizer.Authorizer;
 import org.pac4j.core.authorization.authorizer.IsFullyAuthenticatedAuthorizer;
 import org.pac4j.core.authorization.authorizer.IsRememberedAuthorizer;
-import org.pac4j.core.exception.http.HttpAction;
 import org.pac4j.core.exception.TechnicalException;
+import org.pac4j.core.exception.http.HttpAction;
 import org.pac4j.core.profile.ProfileHelper;
 import org.pac4j.core.profile.UserProfile;
 import org.pac4j.core.util.CommonHelper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -44,9 +43,8 @@ import java.util.List;
  * @author Jerome Leleu
  * @since 2.0.0
  */
+@Slf4j
 public class ShiroHelper {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(ShiroHelper.class);
 
     private final static Authorizer IS_REMEMBERED_AUTHORIZER = new IsRememberedAuthorizer();
 
