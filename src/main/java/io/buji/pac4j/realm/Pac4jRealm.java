@@ -20,20 +20,24 @@ package io.buji.pac4j.realm;
 
 import io.buji.pac4j.subject.Pac4jPrincipal;
 import io.buji.pac4j.token.Pac4jToken;
-import lombok.val;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.SimpleAuthenticationInfo;
 import org.apache.shiro.authz.AuthorizationInfo;
+import org.apache.shiro.authz.Permission;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.pac4j.core.profile.CommonProfile;
 import org.pac4j.core.profile.UserProfile;
+import org.pac4j.core.util.CommonHelper;
 
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -44,6 +48,7 @@ import java.util.Set;
  * @author Jerome Leleu
  * @since 2.0.0
  */
+@Slf4j
 public class Pac4jRealm extends AuthorizingRealm {
 
     /**
@@ -94,15 +99,48 @@ public class Pac4jRealm extends AuthorizingRealm {
         final List<UserProfile> profiles = token.getProfiles();
 
         final Pac4jPrincipal principal = new Pac4jPrincipal(profiles, principalNameAttribute);
-        final String username = principal.getName();
+        if (principal.getProfile() == null || CommonHelper.isBlank(principal.getProfile().getId())) {
+            throw new AuthenticationException("A user profile with an identifier is required");
+        }
+        String username = principal.getName();
+        // the primary principal must not be null: fall back to the profile identifier
+        if (username == null) {
+            username = principal.getProfile().getId();
+            LOGGER.debug("No '{}' attribute in the user profile: using its identifier as the principal name",
+                principalNameAttribute);
+        }
         final PrincipalCollection principalCollection = new SimplePrincipalCollection(Arrays.asList(username, principal), getName());
         return new SimpleAuthenticationInfo(principalCollection, profiles.hashCode());
+    }
+
+    @Override
+    protected boolean isAuthenticationCachingEnabled(final AuthenticationToken token, final AuthenticationInfo info) {
+        // Authentication already occurred in pac4j. Each login must wrap the current profiles in a new context;
+        // caching by user would reuse an earlier session's mutable profiles and authentication identifier.
+        return false;
+    }
+
+    @Override
+    protected Object getAuthorizationCacheKey(final PrincipalCollection principals) {
+        final Pac4jPrincipal principal = principals.oneByType(Pac4jPrincipal.class);
+        return principal == null ? super.getAuthorizationCacheKey(principals) : principal.getAuthenticationId();
+    }
+
+    /**
+     * Clear the cached authorization info: the roles and permissions must be recomputed when the profiles are renewed.
+     *
+     * @param principals the principals of the user
+     */
+    @Override
+    public void clearCachedAuthorizationInfo(final PrincipalCollection principals) {
+        super.clearCachedAuthorizationInfo(principals);
     }
 
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(final PrincipalCollection principals) {
         final Set<String> roles = new HashSet<>();
         final Set<String> permissions = new HashSet<>();
+        final Set<Permission> objectPermissions = new HashSet<>();
         final Pac4jPrincipal principal = principals.oneByType(Pac4jPrincipal.class);
         if (principal != null) {
             final List<UserProfile> profiles = principal.getProfiles();
@@ -110,11 +148,13 @@ public class Pac4jRealm extends AuthorizingRealm {
                 if (profile != null) {
                     roles.addAll(profile.getRoles());
                     // assuming: profile.addAttribute(Pac4jRealm.SHIRO_PERMISSIONS, Arrays.asList("PERM1", "PERM2"));
-                    val perm = profile.getAttribute(SHIRO_PERMISSIONS);
-                    if (perm instanceof List) {
-                        permissions.addAll((List) perm);
-                    } else if (perm instanceof Set) {
-                        permissions.addAll((Set) perm);
+                    // (a collection, an array or a single value, of String or Shiro Permission)
+                    for (final Object perm : toCollection(profile.getAttribute(SHIRO_PERMISSIONS))) {
+                        if (perm instanceof Permission permission) {
+                            objectPermissions.add(permission);
+                        } else if (perm instanceof String permission) {
+                            permissions.add(permission);
+                        }
                     }
                 }
             }
@@ -123,6 +163,19 @@ public class Pac4jRealm extends AuthorizingRealm {
         final SimpleAuthorizationInfo simpleAuthorizationInfo = new SimpleAuthorizationInfo();
         simpleAuthorizationInfo.addRoles(roles);
         simpleAuthorizationInfo.addStringPermissions(permissions);
+        simpleAuthorizationInfo.addObjectPermissions(objectPermissions);
         return simpleAuthorizationInfo;
+    }
+
+    private static Collection<?> toCollection(final Object value) {
+        if (value == null) {
+            return Collections.emptyList();
+        } else if (value instanceof Collection<?> collection) {
+            return collection;
+        } else if (value instanceof Object[] array) {
+            return Arrays.asList(array);
+        } else {
+            return Collections.singletonList(value);
+        }
     }
 }

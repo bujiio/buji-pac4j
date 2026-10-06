@@ -18,11 +18,14 @@
  */
 package io.buji.pac4j.util;
 
+import io.buji.pac4j.realm.Pac4jRealm;
 import io.buji.pac4j.subject.Pac4jPrincipal;
 import io.buji.pac4j.token.Pac4jToken;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.mgt.RealmSecurityManager;
+import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.subject.support.DefaultSubjectContext;
 import org.pac4j.core.authorization.authorizer.Authorizer;
@@ -36,6 +39,7 @@ import org.pac4j.core.util.CommonHelper;
 
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Helper for Shiro.
@@ -56,18 +60,29 @@ public class ShiroHelper {
      * @param profiles the linked hashmap of profiles
      */
     public static void populateSubject(final LinkedHashMap<String, UserProfile> profiles) {
+        val subject = SecurityUtils.getSubject();
         if (profiles != null && !profiles.isEmpty()) {
             val listProfiles = ProfileHelper.flatIntoAProfileList(profiles);
-            val subject = SecurityUtils.getSubject();
             try {
                 if (IS_FULLY_AUTHENTICATED_AUTHORIZER.isAuthorized(null, null, listProfiles)) {
                     login(subject, listProfiles, false, subject.isAuthenticated());
                 } else if (IS_REMEMBERED_AUTHORIZER.isAuthorized(null, null, listProfiles)) {
                     login(subject, listProfiles, true, subject.isRemembered());
+                } else {
+                    logoutPac4jSubject(subject);
                 }
             } catch (final HttpAction e) {
                 throw new TechnicalException(e);
             }
+        } else {
+            logoutPac4jSubject(subject);
+        }
+    }
+
+    private static void logoutPac4jSubject(final Subject subject) {
+        val principals = subject.getPrincipals();
+        if (principals != null && principals.oneByType(Pac4jPrincipal.class) != null) {
+            subject.logout();
         }
     }
 
@@ -85,6 +100,10 @@ public class ShiroHelper {
         if (alreadyLoggedIn && refreshProfiles(subject, profiles)) {
             LOGGER.debug("Same user already logged in: no new Subject.login");
             return;
+        }
+        // A new authentication replaces this session's old authorizations, including when no logout preceded it.
+        if (subject.getPrincipals() != null) {
+            clearCachedAuthorizationInfo(subject.getPrincipals());
         }
         subject.login(new Pac4jToken(profiles, rememberMe));
     }
@@ -106,23 +125,36 @@ public class ShiroHelper {
             return false;
         }
         val principal = principals.oneByType(Pac4jPrincipal.class);
-        if (principal == null || !isSameUser(principal.getProfiles(), profiles)) {
+        if (principal == null || !principal.hasSameIdentity(profiles)) {
             return false;
         }
-        val oldProfiles = principal.getProfiles();
-        val oldName = principal.getName();
-        principal.setProfiles(profiles);
         // the name is also stored as the primary principal by the realm: it must not change
-        if (!CommonHelper.areEquals(oldName, principal.getName())) {
-            principal.setProfiles(oldProfiles);
+        val replacement = new Pac4jPrincipal(profiles, principal.getPrincipalNameAttribute());
+        val name = replacement.getName();
+        val newName = name == null && replacement.getProfile() != null ? replacement.getProfile().getId() : name;
+        if (!Objects.equals(subject.getPrincipal(), newName)) {
             return false;
         }
+        // The cache key is the authentication identifier: it stays valid even after in-place profile changes.
+        clearCachedAuthorizationInfo(principals);
+        principal.setProfiles(profiles);
         // re-save the principals to handle the session stores which do not keep the objects by reference
         val session = subject.getSession(false);
         if (session != null && session.getAttribute(DefaultSubjectContext.PRINCIPALS_SESSION_KEY) != null) {
             session.setAttribute(DefaultSubjectContext.PRINCIPALS_SESSION_KEY, principals);
         }
         return true;
+    }
+
+    private static void clearCachedAuthorizationInfo(final PrincipalCollection principals) {
+        if (SecurityUtils.getSecurityManager() instanceof RealmSecurityManager realmSecurityManager
+            && realmSecurityManager.getRealms() != null) {
+            for (val realm : realmSecurityManager.getRealms()) {
+                if (realm instanceof Pac4jRealm pac4jRealm) {
+                    pac4jRealm.clearCachedAuthorizationInfo(principals);
+                }
+            }
+        }
     }
 
     /**

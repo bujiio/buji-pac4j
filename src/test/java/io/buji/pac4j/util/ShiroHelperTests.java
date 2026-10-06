@@ -25,6 +25,7 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
+import org.apache.shiro.cache.MemoryConstrainedCacheManager;
 import org.apache.shiro.mgt.DefaultSecurityManager;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.Subject;
@@ -215,5 +216,43 @@ public final class ShiroHelperTests {
 
         assertEquals(2, realm.nbAuthentications);
         assertSessionIdRenewed(sessionIdAfterLogin);
+    }
+
+    @Test
+    public void testMissingPrincipalNameAttributeFallsBackToTheId() {
+        realm.setPrincipalNameAttribute(EMAIL);
+        ShiroHelper.populateSubject(profiles(profile(CLIENT_NAME, ID, "at1")));
+
+        assertTrue(SecurityUtils.getSubject().isAuthenticated());
+        assertEquals(ID, SecurityUtils.getSubject().getPrincipal());
+    }
+
+    @Test
+    public void testProfileRenewalWithMissingPrincipalNameAttribute() {
+        realm.setPrincipalNameAttribute(EMAIL);
+        ShiroHelper.populateSubject(profiles(profile(CLIENT_NAME, ID, "at1")));
+
+        ShiroHelper.populateSubject(profiles(profile(CLIENT_NAME, ID, "at2")));
+
+        assertEquals(1, realm.nbAuthentications);
+        assertEquals(ID, SecurityUtils.getSubject().getPrincipal());
+        assertEquals("at2", shiroProfile().getAttribute(ACCESS_TOKEN));
+    }
+
+    @Test
+    public void testProfileRenewalDoesNotLeakTheCachedAuthorizations() {
+        realm.setCacheManager(new MemoryConstrainedCacheManager());
+        final CommonProfile admin = profile(CLIENT_NAME, ID, "at1");
+        admin.addRole("admin");
+        ShiroHelper.populateSubject(profiles(admin));
+        assertTrue(SecurityUtils.getSubject().hasRole("admin"));
+        assertEquals(1, realm.getAuthorizationCache().size());
+
+        ShiroHelper.populateSubject(profiles(profile(CLIENT_NAME, ID, "at2")));
+
+        assertEquals(1, realm.nbAuthentications);
+        assertFalse(SecurityUtils.getSubject().hasRole("admin"));
+        // the entry keyed on the previous profiles has been removed
+        assertEquals(1, realm.getAuthorizationCache().size());
     }
 }

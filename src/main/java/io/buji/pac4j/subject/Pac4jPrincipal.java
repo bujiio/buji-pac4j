@@ -25,8 +25,14 @@ import org.pac4j.core.profile.UserProfile;
 import org.pac4j.core.util.CommonHelper;
 
 import java.io.Serializable;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.security.Principal;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
 
 /**
  * A principal created by Pac4JRealm that wraps a pac4j UserProfile.
@@ -35,6 +41,11 @@ import java.util.List;
  * @since 2.0.0
  */
 public class Pac4jPrincipal implements Principal, Serializable {
+
+    /**
+     * The value computed for the v10.0.0 class: keep it to deserialize the principals saved by the previous versions.
+     */
+    private static final long serialVersionUID = -9105748728662216535L;
 
     /**
      * All the profiles of the authenticated user. They are updated when the profiles are renewed (after a refresh
@@ -46,7 +57,19 @@ public class Pac4jPrincipal implements Principal, Serializable {
     /**
      * The principal name attribute.
      */
+    @Getter
     private final String principalNameAttribute;
+
+    /**
+     * A stable identifier for this authentication, including across session serialization and profile renewal.
+     */
+    @Getter
+    private String authenticationId = UUID.randomUUID().toString();
+
+    /**
+     * Clients and identifiers captured at login, independently of later changes to the mutable profiles.
+     */
+    private List<List<String>> profileIdentities;
 
     /**
      * Construct a Pac4jPrincipal.  The principal name returned will be 
@@ -56,8 +79,7 @@ public class Pac4jPrincipal implements Principal, Serializable {
      *          authorization.
      */
     public Pac4jPrincipal(final List<UserProfile> profiles) {
-        this.profiles = profiles;
-        this.principalNameAttribute = null;
+        this(profiles, null);
     }
     
     /**
@@ -74,6 +96,7 @@ public class Pac4jPrincipal implements Principal, Serializable {
         this.profiles = profiles;
         this.principalNameAttribute = CommonHelper.isBlank(principalNameAttribute) ?
                                         null : principalNameAttribute.trim();
+        this.profileIdentities = identities(profiles);
     }
 
     /**
@@ -82,7 +105,46 @@ public class Pac4jPrincipal implements Principal, Serializable {
      * @return the main profile
      */
     public UserProfile getProfile() {
-        return ProfileHelper.flatIntoOneProfile(this.profiles).get();
+        return profiles == null ? null : ProfileHelper.flatIntoOneProfile(profiles).orElse(null);
+    }
+
+    /**
+     * Compare new profiles with the identity captured at login, even if the old profiles have already been mutated.
+     *
+     * @param newProfiles the new profiles
+     * @return whether the clients and identifiers still match the original authentication
+     */
+    public boolean hasSameIdentity(final List<UserProfile> newProfiles) {
+        return Objects.equals(profileIdentities, identities(newProfiles));
+    }
+
+    private static List<List<String>> identities(final List<UserProfile> profiles) {
+        if (profiles == null) {
+            return null;
+        }
+        final List<List<String>> result = new ArrayList<>();
+        for (final UserProfile profile : profiles) {
+            result.add(profile == null ? null : Arrays.asList(profile.getClientName(), profile.getId()));
+        }
+        return result;
+    }
+
+    /**
+     * Restore authentication identity fields absent from sessions written by v10.0.0.
+     *
+     * @param input the serialized principal
+     * @throws IOException if the principal cannot be read
+     * @throws ClassNotFoundException if a serialized class is unavailable
+     */
+    private void readObject(final ObjectInputStream input) throws IOException, ClassNotFoundException {
+        input.defaultReadObject();
+        // These fields are absent in sessions written by v10.0.0.
+        if (authenticationId == null) {
+            authenticationId = UUID.randomUUID().toString();
+        }
+        if (profileIdentities == null) {
+            profileIdentities = identities(profiles);
+        }
     }
 
     @Override
@@ -91,17 +153,18 @@ public class Pac4jPrincipal implements Principal, Serializable {
         if (o == null || getClass() != o.getClass()) return false;
 
         final Pac4jPrincipal that = (Pac4jPrincipal) o;
-        return profiles != null ? profiles.equals(that.profiles) : that.profiles == null;
+        // Different logins must differ: Shiro uses equals to decide whether to save new principals in the session.
+        return authenticationId.equals(that.authenticationId);
     }
 
     @Override
     public int hashCode() {
-        return profiles != null ? profiles.hashCode() : 0;
+        return authenticationId.hashCode();
     }
 
     @Override
     public String toString() {
-        return getName();
+        return Objects.toString(getName(), "");
     }
 
     /**
@@ -114,6 +177,9 @@ public class Pac4jPrincipal implements Principal, Serializable {
     @Override
     public String getName() {
         final UserProfile profile = this.getProfile();
+        if (profile == null) {
+            return null;
+        }
         if (null == principalNameAttribute) {
             return profile.getId();
         }

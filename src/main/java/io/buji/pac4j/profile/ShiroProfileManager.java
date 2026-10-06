@@ -20,7 +20,6 @@ package io.buji.pac4j.profile;
 
 import io.buji.pac4j.util.ShiroHelper;
 import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authc.AuthenticationException;
 import org.pac4j.core.context.WebContext;
 import org.pac4j.core.context.session.SessionStore;
 import org.pac4j.core.profile.ProfileManager;
@@ -48,20 +47,40 @@ public class ShiroProfileManager extends ProfileManager {
 
     @Override
     protected void saveAll(LinkedHashMap<String, UserProfile> profiles, final boolean saveInSession) {
-        super.saveAll(profiles, saveInSession);
-
         try {
+            super.saveAll(profiles, saveInSession);
             ShiroHelper.populateSubject(profiles);
-        } catch (final AuthenticationException e) {
-            super.removeProfiles();
+        } catch (final RuntimeException e) {
+            try {
+                removeProfiles();
+            } catch (final RuntimeException cleanupFailure) {
+                if (cleanupFailure != e) {
+                    e.addSuppressed(cleanupFailure);
+                }
+            }
             throw e;
         }
     }
 
     @Override
     public void removeProfiles() {
-        super.removeProfiles();
-
-        SecurityUtils.getSubject().logout();
+        RuntimeException failure = null;
+        try {
+            super.removeProfiles();
+        } catch (final RuntimeException e) {
+            failure = e;
+        }
+        try {
+            SecurityUtils.getSubject().logout();
+        } catch (final RuntimeException e) {
+            if (failure == null) {
+                failure = e;
+            } else if (failure != e) {
+                failure.addSuppressed(e);
+            }
+        }
+        if (failure != null) {
+            throw failure;
+        }
     }
 }

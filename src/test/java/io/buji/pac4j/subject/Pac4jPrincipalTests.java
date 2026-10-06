@@ -6,11 +6,15 @@ import org.pac4j.core.profile.CommonProfile;
 import org.pac4j.core.profile.UserProfile;
 import org.pac4j.core.util.Pac4jConstants;
 
+import java.io.ByteArrayInputStream;
+import java.io.ObjectInputStream;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 
 /**
  * Tests {@link Pac4jPrincipal}.
@@ -35,6 +39,25 @@ public final class Pac4jPrincipalTests {
         assertEquals(principal2, principal);
     }
     
+    /**
+     * A principal (no profile, "email" attribute) serialized with buji-pac4j v10.0.0.
+     */
+    private static final String V10_0_0_SERIALIZED_PRINCIPAL = "rO0ABXNyACRpby5idWppLnBhYzRqLnN1YmplY3QuUGFjNGpQcmluY2lw"
+        + "YWyBoeHGjh+wqQIAAkwAFnByaW5jaXBhbE5hbWVBdHRyaWJ1dGV0ABJMamF2YS9sYW5nL1N0cmluZztMAAhwcm9maWxlc3QAEExqYXZhL3V0aW"
+        + "wvTGlzdDt4cHQABWVtYWlsc3IAE2phdmEudXRpbC5BcnJheUxpc3R4gdIdmcdhnQMAAUkABHNpemV4cAAAAAB3BAAAAAB4";
+
+    @Test
+    public void testDeserializePreviousVersion() throws Exception {
+        final byte[] serialized = Base64.getDecoder().decode(V10_0_0_SERIALIZED_PRINCIPAL);
+        try (ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(serialized))) {
+            final Pac4jPrincipal principal = (Pac4jPrincipal) ois.readObject();
+            assertEquals("email", principal.getPrincipalNameAttribute());
+            assertTrue(principal.getProfiles().isEmpty());
+            assertNotNull(principal.getAuthenticationId());
+            assertTrue(principal.hasSameIdentity(new ArrayList<>()));
+        }
+    }
+
     @Test 
     public void testNoAttribute() {
         final List<UserProfile> profiles = createProfiles();
@@ -96,6 +119,47 @@ public final class Pac4jPrincipalTests {
         final List<UserProfile> profiles = createProfiles();
         final Pac4jPrincipal principal = new Pac4jPrincipal(profiles, "age");
         assertEquals(principal.getName(), "21");
+    }
+
+    @Test
+    public void testMutationDoesNotChangeTheHashOrBreakHashCollections() {
+        final List<UserProfile> profiles = createProfiles();
+        final Pac4jPrincipal principal = new Pac4jPrincipal(profiles);
+        final Set<Pac4jPrincipal> principals = new HashSet<>();
+        principals.add(principal);
+        final int hash = principal.hashCode();
+        profiles.get(0).addAttribute("access_token", "new-token");
+        assertEquals(hash, principal.hashCode());
+        assertTrue(principals.contains(principal));
+    }
+
+    @Test
+    public void testOriginalIdentitySurvivesInPlaceChangesAndSerialization() {
+        final List<UserProfile> profiles = createProfiles();
+        final Pac4jPrincipal principal = new Pac4jPrincipal(profiles);
+        final DefaultSerializer<Pac4jPrincipal> serializer = new DefaultSerializer<>();
+        final Pac4jPrincipal restored = serializer.deserialize(serializer.serialize(principal));
+        assertEquals(principal.getAuthenticationId(), restored.getAuthenticationId());
+        assertEquals(principal, restored);
+        assertTrue(restored.hasSameIdentity(profiles));
+        ((CommonProfile) profiles.get(0)).setId("other-user");
+        assertFalse(principal.hasSameIdentity(profiles));
+        assertFalse(restored.hasSameIdentity(profiles));
+    }
+
+    @Test
+    public void testTwoLoginsOfTheSameUserAreDifferentPrincipals() {
+        final List<UserProfile> profiles = createProfiles();
+        assertNotEquals(new Pac4jPrincipal(profiles), new Pac4jPrincipal(profiles));
+    }
+
+    @Test
+    public void testNoProfileHasNoName() {
+        final Pac4jPrincipal principal = new Pac4jPrincipal(new ArrayList<>());
+        assertNull(principal.getProfile());
+        assertNull(principal.getName());
+        assertEquals("", principal.toString());
+        assertNull(new Pac4jPrincipal(null).getProfile());
     }
     
     private static List<UserProfile> createProfiles() {

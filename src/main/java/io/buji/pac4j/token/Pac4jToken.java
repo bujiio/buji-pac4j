@@ -48,12 +48,12 @@ public class Pac4jToken implements RememberMeAuthenticationToken {
 
     @Override
     public Object getPrincipal() {
-        return ProfileHelper.flatIntoOneProfile(profiles);
+        return profiles == null ? null : ProfileHelper.flatIntoOneProfile(profiles).orElse(null);
     }
 
     @Override
     public Object getCredentials() {
-        return profiles.hashCode();
+        return profiles == null ? 0 : profiles.hashCode();
     }
 
     @Override

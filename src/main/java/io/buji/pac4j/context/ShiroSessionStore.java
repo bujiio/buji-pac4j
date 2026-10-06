@@ -58,7 +58,7 @@ public class ShiroSessionStore implements SessionStore {
     protected Session getSession(final boolean createSession) {
         try {
             final Session session = SecurityUtils.getSubject().getSession(createSession);
-            LOGGER.debug("createSession: {}, retrieved session: {}", createSession, session);
+            LOGGER.debug("createSession: {}, session available: {}", createSession, session != null);
             return session;
         } catch (final DisabledSessionException e) {
             return null;
@@ -70,7 +70,7 @@ public class ShiroSessionStore implements SessionStore {
         final Session session = getSession(createSession);
         if (session != null) {
             final String sessionId = session.getId().toString();
-            LOGGER.debug("Get sessionId: {}", sessionId);
+            LOGGER.debug("Session identifier available");
             return Optional.of(sessionId);
         } else {
             LOGGER.debug("No sessionId");
@@ -83,7 +83,7 @@ public class ShiroSessionStore implements SessionStore {
         final Session session = getSession(false);
         if (session != null) {
             final Object value = session.getAttribute(key);
-            LOGGER.debug("Get value: {} for key: {}", value, key);
+            LOGGER.debug("Get session attribute: {}, present: {}", key, value != null);
             return Optional.ofNullable(value);
         } else {
             LOGGER.debug("Can't get value for key: {}, no session available", key);
@@ -93,24 +93,27 @@ public class ShiroSessionStore implements SessionStore {
 
     @Override
     public void set(final WebContext context, final String key, final Object value) {
-        final Session session = getSession(true);
+        final Session session;
+        try {
+            // no need to create a session to remove a value
+            session = getSession(value != null);
+        } catch (final UnavailableSecurityManagerException e) {
+            LOGGER.warn("Should happen just once at startup in some specific case of Shiro Spring configuration", e);
+            return;
+        }
         if (session != null) {
-            try {
-                if (value instanceof Exception) {
-                    LOGGER.debug("Set key: {} for value: {}", key, value.toString());
-                } else {
-                    LOGGER.debug("Set key: {} for value: {}", key, value);
-                }
-                session.setAttribute(key, value);
-            } catch (final UnavailableSecurityManagerException e) {
-                LOGGER.warn("Should happen just once at startup in some specific case of Shiro Spring configuration", e);
-            }
+            LOGGER.debug("Set session attribute: {}", key);
+            session.setAttribute(key, value);
         }
     }
 
     @Override
     public boolean destroySession(final WebContext context) {
-        getSession(true).stop();
+        final Session session = getSession(false);
+        if (session != null) {
+            LOGGER.debug("Stop session");
+            session.stop();
+        }
         return true;
     }
 
