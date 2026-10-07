@@ -52,8 +52,8 @@ Shiro demo: [buji-pac4j-demo](https://github.com/pac4j/buji-pac4j-demo).
 
 ## Versions
 
-The latest released version is the [![Maven Central](https://img.shields.io/maven-central/v/io.buji/buji-pac4j.svg)](https://repo1.maven.org/maven2/io/buji/buji-pac4j).
-The [next version](https://github.com/bujiio/buji-pac4j/wiki/Next-version) is under development.
+The latest released version is the [![Maven Central](https://img.shields.io/maven-central/v/io.buji/buji-pac4j.svg)](https://repo1.maven.org/maven2/io/buji/buji-pac4j): **v10.0.1** (Shiro 3) / **v9.1.2** (Shiro 2).
+The [next versions](https://github.com/bujiio/buji-pac4j/wiki/Next-version) (10.0.2-SNAPSHOT / 9.1.3-SNAPSHOT) are under development.
 
 See the [release notes](https://github.com/bujiio/buji-pac4j/wiki/Release-Notes).
 
